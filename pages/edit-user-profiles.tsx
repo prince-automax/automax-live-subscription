@@ -8,8 +8,8 @@ import {
   useUpdateUserMutation,
   UpdateUserMutationVariables,
   UserStatusType,
-  useUsersQuery,
-  useDuplicateDataCheckQuery,
+//   useUsersQuery,
+//   useDuplicateDataCheckQuery,
 } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import withPrivateRoute from "../utils/withPrivateRoute";
@@ -114,67 +114,67 @@ function ProfileUpdate() {
   
     
 
-    const pancard = data ? data["user"]?.pancard.url : "";
+    const pancard = data ? data["user"]?.pancard?.url : "";
   
     
     
     
 
-  const { data: duplicateEmailCheckData } = useDuplicateDataCheckQuery(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    {
-      where: {
-        email: {
-          equals: emailCheckData,
-        },
-        id: {
-          not: {
-            equals: id,
-          },
-        },
-      },
-    },
-    {
-      enabled: emailEnabled && accessToken != "",
-    }
-  );
+//   const { data: duplicateEmailCheckData } = useDuplicateDataCheckQuery(
+//     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+//     {
+//       where: {
+//         email: {
+//           equals: emailCheckData,
+//         },
+//         id: {
+//           not: {
+//             equals: id,
+//           },
+//         },
+//       },
+//     },
+//     {
+//       enabled: emailEnabled && accessToken != "",
+//     }
+//   );
 
-  const { data: duplicatePanCheckData } = useDuplicateDataCheckQuery(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    {
-      where: {
-        pancardNo: {
-          equals: panCheckData,
-        },
-        id: {
-          not: {
-            equals: id,
-          },
-        },
-      },
-    },
-    {
-      enabled: panEnabled && accessToken != "",
-    }
-  );
+//   const { data: duplicatePanCheckData } = useDuplicateDataCheckQuery(
+//     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+//     {
+//       where: {
+//         pancardNo: {
+//           equals: panCheckData,
+//         },
+//         id: {
+//           not: {
+//             equals: id,
+//           },
+//         },
+//       },
+//     },
+//     {
+//       enabled: panEnabled && accessToken != "",
+//     }
+//   );
 
-  useEffect(() => {
-    if (duplicateEmailCheckData?.sudoUsersCount > 0 && emailEnabled) {
-      alert(
-        "The Email you have entered has already been connected with another account."
-      );
-      setEmailEnabled(false);
-    }
-  }, [duplicateEmailCheckData, emailEnabled]);
+//   useEffect(() => {
+//     if (duplicateEmailCheckData?.sudoUsersCount > 0 && emailEnabled) {
+//       alert(
+//         "The Email you have entered has already been connected with another account."
+//       );
+//       setEmailEnabled(false);
+//     }
+//   }, [duplicateEmailCheckData, emailEnabled]);
 
-  useEffect(() => {
-    if (duplicatePanCheckData?.sudoUsersCount > 0 && panEnabled) {
-      alert(
-        "The Pan you have entered has already been connected with another account."
-      );
-      setPanEnabled(false);
-    }
-  }, [duplicatePanCheckData, panEnabled]);
+//   useEffect(() => {
+//     if (duplicatePanCheckData?.sudoUsersCount > 0 && panEnabled) {
+//       alert(
+//         "The Pan you have entered has already been connected with another account."
+//       );
+//       setPanEnabled(false);
+//     }
+//   }, [duplicatePanCheckData, panEnabled]);
 
   const callUpdateUserMutation =
     useUpdateUserMutation<UpdateUserMutationVariables>(
@@ -343,20 +343,21 @@ function ProfileUpdate() {
               idProofBack: null,
             }}
             validationSchema={validationSchema}
+
             onSubmit={(values) => {
-              if (duplicateEmailCheckData?.sudoUsersCount > 0) {
-                alert(
-                  "The Email you have entered has already been connected with another account."
-                );
-                setEmailEnabled(false);
-              } else if (duplicatePanCheckData?.sudoUsersCount > 0) {
-                alert(
-                  "The Pan you have entered has already been connected with another account."
-                );
-                setPanEnabled(false);
-              } else {
-                onSubmit(values);
-              }
+            //   if (duplicateEmailCheckData?.sudoUsersCount > 0) {
+            //     alert(
+            //       "The Email you have entered has already been connected with another account."
+            //     );
+            //     setEmailEnabled(false);
+            //   } else if (duplicatePanCheckData?.sudoUsersCount > 0) {
+            //     alert(
+            //       "The Pan you have entered has already been connected with another account."
+            //     );
+            //     setPanEnabled(false);
+            //   } else {
+            //     onSubmit(values);
+            //   }
             }}
           >
             {(props) => (

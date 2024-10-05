@@ -31,7 +31,7 @@ import graphQLClient from "@utils/useGQLQuery";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Welcome from "../common/Welcome";
-import { useLiveEventscountQuery,LiveEventscountQueryVariables,useUpcomingEventsCountsQuery } from "@utils/graphql";
+// import { useLiveEventscountQuery,LiveEventscountQueryVariables,useUpcomingEventsCountsQuery } from "@utils/graphql";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -60,31 +60,31 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
 
 
 
-  const { data, isLoading,refetch} = useLiveEventscountQuery(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+  // const { data, isLoading,refetch} = useLiveEventscountQuery(
+  //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
   
-  );
-  const {data:upcoming}=useUpcomingEventsCountsQuery(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-  )
+  // );
+  // const {data:upcoming}=useUpcomingEventsCountsQuery(
+  //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+  // )
   
  
 
 
-useEffect(()=>{
-  if(data?.liveEvents[0]){
-    const liveOnline=data?.liveEvents?.filter((online)=>online?.eventCategory=='online')
-    const openlive=data?.liveEvents?.filter((online)=>online?.eventCategory=='open')
+// useEffect(()=>{
+//   if(data?.liveEvents[0]){
+//     const liveOnline=data?.liveEvents?.filter((online)=>online?.eventCategory=='online')
+//     const openlive=data?.liveEvents?.filter((online)=>online?.eventCategory=='open')
  
-    setLiveOnline(liveOnline?.length)
-    setLiveOpen(openlive?.length)
-  }
-  if(upcoming?.upcomingEvents){
-    setUpcoming(upcoming?.upcomingEvents?.length)
+//     setLiveOnline(liveOnline?.length)
+//     setLiveOpen(openlive?.length)
+//   }
+//   if(upcoming?.upcomingEvents){
+//     setUpcoming(upcoming?.upcomingEvents?.length)
    
     
-  }
-},[data,upcoming])
+//   }
+// },[data,upcoming])
 
 ;
 
@@ -221,7 +221,7 @@ useEffect(() => {
    
   ];
 
-  const mobileNavigation=[...eventsNavigations,...activityNavigations,...accountNavigations]
+  // const mobileNavigation=[...eventsNavigations,...activityNavigations,...accountNavigations]
 
   
 
@@ -246,7 +246,7 @@ useEffect(() => {
               <nav className="mt-1 sm:max-lg:mt-8 space-y-4 max-md:w-full  ">
                 <div className=" text-black bg-white lg:hidden flex w-full space-x-4  overflow-x-scroll scrollbar-hide ">
               
-{mobileNavigation.map((item, index) => (
+{/* {mobileNavigation.map((item, index) => (
   <ul key={index} className="space-x-4">
     <li className="space-x-4 ">
       <Link key={item.name} href={item.href}>
@@ -258,7 +258,7 @@ useEffect(() => {
             "group rounded-md px-3 py-2 flex items-center text-sm font-medium border shadow-inner shadow-slate-200"
           )}
           onClick={(e) => {
-            e.preventDefault(); // Prevent the default behavior
+            e.preventDefault();
             setNavigationLink(item.href);
           }}
         >
@@ -267,7 +267,7 @@ useEffect(() => {
       </Link>
     </li>
   </ul>
-))}
+))} */}
 
               
                 </div>

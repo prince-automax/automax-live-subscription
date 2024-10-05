@@ -2,20 +2,10 @@ import { useEffect, useState, useMemo } from "react";
 import Datatable from "../ui/Datatable";
 import Loader from "../ui/Loader";
 import moment from "moment";
-import {
-  CalendarIcon,
-  DocumentDownloadIcon,
-  PrinterIcon,
+import {CalendarIcon,DocumentDownloadIcon,PrinterIcon,
 } from "@heroicons/react/outline";
 import AlertModal from "../ui/AlertModal";
-import {
-  LiveEventsQuery,
-  useLiveEventsQuery,
-  GetUserQueryVariables,
-  useGetUserQuery,
-  useUserWorkBookQuery,
-  UserWorkBookQueryVariables,
-} from "@utils/graphql";
+import {LiveEventsQuery,useLiveEventsQuery,GetUserQueryVariables,useGetUserQuery,} from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import Router from "next/router";
 import Link from "next/link";
@@ -52,8 +42,8 @@ export default function EventsTable({
   const { data, isLoading, refetch, isFetching } =
     useLiveEventsQuery<LiveEventsQuery>(
       graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-      variables,
-      { enabled: accessToken != "", refetchOnWindowFocus: false }
+      // variables,
+      // { enabled: accessToken != "", refetchOnWindowFocus: false }
     );
 
   console.log("Live event table", data);
@@ -71,7 +61,7 @@ export default function EventsTable({
       }
     );
 
-  const payment = userData ? userData["user"]?.payments : "";
+const payment = userData ? userData["user"]?.payments : "";
 
   const PaymentStatus = () => {
     toast(
@@ -79,9 +69,6 @@ export default function EventsTable({
       {
         duration: 5000,
         position: "top-right",
-
-        // Styling
-        // Styling
         style: {
           bottom: "80px",
           background: "rgb(95, 99, 93)",
@@ -200,13 +187,14 @@ export default function EventsTable({
   ];
 
   return (
+   
     <>
       <div className="relative bg-white">
-        {data?.liveEvents?.length > 0 ? (
+        {data?.events?.length > 0 ? (
           <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
             {showHeadings && (
               <div className="pt-8 pb-8">
-                {data?.liveEvents?.length == 0 ? (
+                {data?.events?.length == 0 ? (
                   <p className="mt-px text-3xl font-extrabold text-gray-900 tracking-tight sm:text-3xl animate-pulse">
                     No Live Events ...
                   </p>
@@ -215,14 +203,7 @@ export default function EventsTable({
                     Live Events
                   </h2>
                 )}
-                {/* <p className="mt-2 text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">
-                Most recent events
-              </p>
-              <p className="mt-5 max-w-prose mx-auto text-xl text-gray-500">
-                Open auction or closed auction!! Know your deal better with list
-                of locations, type of auction, date and many more features, An
-                updates on our most recent events.
-              </p> */}
+                
               </div>
             )}
 
@@ -230,11 +211,10 @@ export default function EventsTable({
               <Loader />
             ) : (
               <>
-                {/* {!data?.liveEvents?.length && <div>No Auctions Found</div>} */}
-                {/* {data?.liveEvents && data?.liveEvents?.length > 0 && ( */}
+                
                 <>
                   <div className="sm:hidden">
-                    {data?.liveEvents?.map((event, eventIdx) => {
+                    {data?.events?.map((event, eventIdx) => {
                       return (
                         <MobielViewCard
                           key={eventIdx}
@@ -251,7 +231,7 @@ export default function EventsTable({
                   <div className="hidden sm:block">
                     <Datatable
                       hideSearch={hideSearch}
-                      tableData={data?.liveEvents}
+                      tableData={data?.events}
                       tableColumns={columns}
                     />
                   </div>

@@ -1,17 +1,26 @@
-import DashboardTemplate from "../components/templates/DashboardTemplate"
-import WorkBookTable from "../components/tables/WorkBookTable"
-import withPrivateRoute from "../utils/withPrivateRoute";
+// import DashboardTemplate from "../components/templates/DashboardTemplate"
+// import WorkBookTable from "../components/tables/WorkBookTable"
+// import withPrivateRoute from "../utils/withPrivateRoute";
 
-function WorkBookCalender() {
+// function WorkBookCalender() {
 
-    return (
-        <DashboardTemplate heading="Work Book">
-            <WorkBookTable showHeadings={false} allowDownload={true} />
-        </DashboardTemplate>
-    )
+//     return (
+//         <DashboardTemplate heading="Work Book">
+//             <WorkBookTable showHeadings={false} allowDownload={true} />
+//         </DashboardTemplate>
+//     )
+// }
+
+
+// export default withPrivateRoute(WorkBookCalender);
+
+
+import React from 'react'
+
+const showworkbook = () => {
+  return (
+    <div>showworkbook</div>
+  )
 }
 
-
-export default withPrivateRoute(WorkBookCalender);
-
-
+export default showworkbook

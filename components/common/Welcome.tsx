@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import {
-  useQueryQuery,
-  QueryQueryVariables,
-  GetUserQueryVariables,
-  useGetUserQuery,
-} from "@utils/graphql";
+// import {
+//   useQueryQuery,
+//   QueryQueryVariables,
+//   GetUserQueryVariables,
+//   useGetUserQuery,
+// } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
 export default function Welcome() {
@@ -35,33 +35,33 @@ export default function Welcome() {
     return () => clearInterval(timer);
   }, []);
 
-  const { data: userData, isLoading } = useGetUserQuery<GetUserQueryVariables>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    { where: { id } },
-    {
-      enabled: accessToken !== "",
-    }
-  );
+  // const { data: userData, isLoading } = useGetUserQuery<GetUserQueryVariables>(
+  //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+  //   { where: { id } },
+  //   {
+  //     enabled: accessToken !== "",
+  //   }
+  // );
 
-  const username = userData ? userData["user"]?.username : "";
+  // const username = userData ? userData["user"]?.username : "";
  
 
-  if (username) {
-    localStorage.setItem("username", username);
-  }
+  // if (username) {
+  //   localStorage.setItem("username", username);
+  // }
 
-  const { data } = useQueryQuery<QueryQueryVariables>(
-    graphQLClient(),
-    {},
-    { refetchInterval: 60000 }
-  );
+  // const { data } = useQueryQuery<QueryQueryVariables>(
+  //   graphQLClient(),
+  //   {},
+  //   { refetchInterval: 60000 }
+  // );
 
-  useEffect(() => {
-    if (data && data.time) {
-      setTick(0);
-      setserverTime(data.time);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data && data.time) {
+  //     setTick(0);
+  //     setserverTime(data.time);
+  //   }
+  // }, [data]);
 
   return (
     <div className="flex flex-col space-y-1 sm:space-y-0">

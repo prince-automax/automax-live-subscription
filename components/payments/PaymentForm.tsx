@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import { Formik, Form, ErrorMessage, Field } from "formik";
 import {
   CreatePaymentMutationVariables,
+  PaymentStatusType,
   useCreatePaymentMutation,
 } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
@@ -21,25 +22,17 @@ export default function PaymentForm() {
   const paymentOptions = [
     {
       label: "Registration Pay",
-      value: "registrations",
+      value: "Registrations",
     },
     {
       label: "EMD Payment",
-      value: "emd",
+      value: "Emd",
     },
     {
       label: "Open Bid Payment",
-      value: "openBids",
+      value: "OpenBids",
     },
-    {
-      label: "Refund",
-      value: "refund",
-    },
-    {
-      label: "Other",
-      value: "other",
-    },
-  ];
+   ];
 
   const [accessToken, setAccessToken] = useState("");
 
@@ -58,43 +51,51 @@ export default function PaymentForm() {
   const validationSchema = Yup.object({
     amount: Yup.string().required("Amount is required"),
     paymentFor: Yup.string().required("Payment for is required"),
-    proof: Yup.mixed()
-      .required("Proof is required")
-      .test(
-        "fileFormat",
-        "Unsupported Format. Please upload a file with one of the following formats: " +
-          SUPPORTED_FORMATS.join(", "),
-        (value) => value && SUPPORTED_FORMATS.includes(value.type)
-      ),
+    // proof: Yup.mixed()
+    //   .required("Proof is required")
+    //   .test(
+    //     "fileFormat",
+    //     "Unsupported Format. Please upload a file with one of the following formats: " +
+    //       SUPPORTED_FORMATS.join(", "),
+    //     (value) => value && SUPPORTED_FORMATS.includes(value.type)
+    //   ),
     description: Yup.string().required("Description is required"),
   });
 
   const onSubmit = async (values, resetForm) => {
-    await callPaymentCreate
-      .mutateAsync({
-        data: {
+    console.log("values for payment", values);
+    
+    try {
+      await callPaymentCreate.mutateAsync({
+        createPaymentInput: {
           amount: parseInt(values.amount),
           paymentFor: values.paymentFor,
-          image: {
-            upload: values.proof,
-          },
           description: values.description,
+          status:PaymentStatusType.Pending
+          // status: "Pending",
         },
-      })
-      .then(() => {
-        toast.success("Request submitted Successfully.");
-        resetForm({ proof: "" });
-      })
-      .catch((ex) => {
-        toast.error("Request was not submitted. Please try again.");
       });
+  
+      toast.success("Request submitted Successfully.");
+      resetForm({ proof: "" });
+    } catch (error) {
+      const errorMessage = error?.response?.errors?.[0]?.message;
+  
+      // Show this errorMessage to the user
+      if (errorMessage) {
+        toast.error(errorMessage);
+      } else {
+        toast.error("Request was not submitted. Please try again.");
+      }
+    }
   };
+  
 
   return (
     <Formik
       initialValues={{
         amount: "",
-        paymentFor: "registrations",
+        paymentFor: "Registrations",
         image: null,
         description: "",
       }}
@@ -133,11 +134,10 @@ export default function PaymentForm() {
                 field="select"
                 name="paymentFor"
                 label="Payment For"
-               
                 required
                 width="w-full"
                 options={paymentOptions}
-                onChange={ e => {
+                onChange={(e) => {
                   const { value } = e.target;
                   props.setFieldValue("paymentFor", value);
                 }}
@@ -155,9 +155,10 @@ export default function PaymentForm() {
                 <textarea
                   rows={4}
                   name="description"
+                  placeholder="Eg: For Registration"
                   id="description"
-                  className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                  defaultValue={""}
+                  className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md text-center placeholder:text-center pt-10"
+                  
                   value={props.values.description}
                   onChange={(event) => {
                     props.setFieldValue("description", event.target.value);
@@ -169,7 +170,7 @@ export default function PaymentForm() {
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <label
                 htmlFor="image"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
@@ -207,8 +208,9 @@ export default function PaymentForm() {
                 <ErrorMessage name="proof" />
               </div>
             </div>
+             */}
             <ButtonLoading
-              loading={callPaymentCreate.isLoading ? 1 : 0}
+              // loading={callPaymentCreate.isLoading ? 1 : 0}
               type="submit"
               color="indigo"
             >

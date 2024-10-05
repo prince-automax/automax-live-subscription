@@ -1,17 +1,15 @@
 import { MailIcon, PhoneIcon } from "@heroicons/react/outline";
 import * as Yup from "yup";
-import { Formik, Form,Field, ErrorMessage } from "formik";
-import FormField from "../components/ui/FormField";
-import ButtonLoading from "../components/ui/ButtonLoading";
-import graphQLClient from "@utils/useGQLQuery";
-import withPrivateRoute from "../utils/withPrivateRoute";
-import Loader from "@components/ui/Loader"; 
-import { UserCircleIcon } from "@heroicons/react/outline";
-import Router from "next/router";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import toast from "react-hot-toast";
-import Swal from "sweetalert2";
-import { useRef } from 'react';
-import {useCreateContactUsMutation,CreateContactUsMutationVariables} from '@utils/graphql'
+import graphQLClient from "@utils/useGQLQuery";
+import { states } from "@utils/stateData";
+import { useRef } from "react";
+import {
+  useCreateEnquiryMutation,
+  CreateEnquiryMutationVariables,
+} from "@utils/graphql";
+
 const offices = [
   {
     id: 1,
@@ -20,49 +18,49 @@ const offices = [
   },
   { id: 2, city: "Mumbai", address: ["coming Soon..."] },
   { id: 3, city: "Hyderabad", address: ["coming Soon..."] },
-  { id: 4, city: "Kochi", address: [ "Green Earth Building"," palarivattam ,682024"] },
-  
+  {
+    id: 4,
+    city: "Kochi",
+    address: ["Green Earth Building", " palarivattam ,682024"],
+  },
 ];
-
+console.log("123", states);
 
 export default function Contact() {
-
   const formikRef = useRef(null);
 
   const callCreateContactus =
-  useCreateContactUsMutation<CreateContactUsMutationVariables>(
-      graphQLClient()
-    );
+    useCreateEnquiryMutation<CreateEnquiryMutationVariables>(graphQLClient());
 
-  const onSubmitData=async(values ,{ resetForm })=>{
-   
+  const onSubmitData = async (values, { resetForm }) => {
+    console.log("values", values);
 
-    const result = await callCreateContactus.mutateAsync({
-      data:{
-        firstName : values['firstname'],
-        lastName : values['lastname'],
-        mobile : values['phone'].toString(),
-        // field has been changed to state instead of email 
-        state:values['email'],
-        message:values["message"],
-        subject:values['subject']
-      }
-    }).then(() => {
-      toast.success('Thank you. Your request has been recorded. Our Team will contact you soon', {
-        duration: 5000,
-        position: 'top-center'
+    try {
+      // Ensure the object matches the expected type
+      const result = await callCreateContactus.mutateAsync({
+        createEnquiryInput: {
+          firstName: values["firstname"],
+          lastName: values["lastname"],
+          mobile: values["phone"].toString(),
+          state: values["state"], // Assuming 'email' is intended to store state here
+          message: values["message"],
+        },
       });
-      // resetForm({ proof: "" });
-      resetForm();
-    })
-    .catch((ex) => {
-      toast.error("Request was not submitted. Please try again.");
-    });
-    
-    
 
-    // resetForm();
-  }
+      toast.success(
+        "Thank you. Your request has been recorded. Our Team will contact you soon",
+        {
+          duration: 5000,
+          position: "top-center",
+        }
+      );
+
+      resetForm(); // Reset the form after successful submission
+    } catch (ex) {
+      toast.error("Request was not submitted. Please try again.");
+    }
+  };
+
   return (
     <div>
       <main className="overflow-hidden">
@@ -74,7 +72,8 @@ export default function Contact() {
                 Contact us
               </h1>
               <p className="mt-6 text-xl text-gray-500 max-w-3xl">
-                For all enquiries, please fill up and submit  the below form.<br></br>Our team will contact you soon.
+                For all enquiries, please fill up and submit the below form.
+                <br></br>Our team will contact you soon.
               </p>
             </div>
           </div>
@@ -284,102 +283,110 @@ export default function Contact() {
                   <h3 className="text-lg font-medium text-gray-900">
                     Send us a message
                   </h3>
-                  <Formik  initialValues={{ firstname:'',lastname:'',email:'',phone:'',subject:'',message:''}} onSubmit={onSubmitData
-                  }
+                  <Formik
+                    initialValues={{
+                      firstname: "",
+                      lastname: "",
+                      states: "",
+                      phone: "",
 
-            
-                  innerRef={formikRef}
-                
-           >
+                      message: "",
+                    }}
+                    onSubmit={onSubmitData}
+                    innerRef={formikRef}
+                  >
+                    {({ isSubmitting }) => (
+                      <Form className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
+                        <div>
+                          <label
+                            htmlFor="firstname"
+                            className="block text-sm font-medium text-gray-900"
+                          >
+                            First name
+                          </label>
+                          <div className="mt-1">
+                            <Field
+                              maxLength={10}
+                              type="text"
+                              name="firstname"
+                              id="firstname"
+                              autoComplete="given-name"
+                              className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor="lastname"
+                            className="block text-sm font-medium text-gray-900"
+                          >
+                            Last name
+                          </label>
+                          <div className="mt-1">
+                            <Field
+                              type="text"
+                              name="lastname"
+                              id="lastname"
+                              autoComplete="family-name"
+                              className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+                            />
+                          </div>
+                        </div>
 
-                
+                        <div>
+                          <label
+                            htmlFor="state"
+                            className="block text-sm font-medium text-gray-900"
+                          >
+                            State
+                          </label>
+                          <div className="mt-1">
+                            <Field
+                              as="select"
+                              required
+                              id="state"
+                              name="state"
+                              autoComplete="state"
+                              className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+                            >
+                              <option value=""> select a state </option>
+                              {states.map((state) => (
+                                <option key={state} value={state}>
+                                  {state.replace(/_/g, " ")}
+                                </option>
+                              ))}
+                            </Field>
+                          </div>
+                        </div>
 
-{({ isSubmitting }) => (
-                  <Form className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
-                    <div>
-                      <label
-                        htmlFor="firstname"
-                        className="block text-sm font-medium text-gray-900"
-                      >
-                        First name
-                      </label>
-                      <div className="mt-1">
-                        <Field
-                          maxLength={10}
-                          
-                          type="text"
-                          name="firstname"
-                          id="firstname"
-                          autoComplete="given-name"
-                          className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="lastname"
-                        className="block text-sm font-medium text-gray-900"
-                      >
-                        Last name
-                      </label>
-                      <div className="mt-1">
-                        <Field
-                      
-                          type="text"
-                          name="lastname"
-                          id="lastname"
-                          autoComplete="family-name"
-                          className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-gray-900"
-                      >
-                        State
-                      </label>
-                      <div className="mt-1">
-
-                        <Field
-                          required
-                          id="email"
-                          name="email"
-                          type="text"
-                          autoComplete="email"
-                          className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between">
-                        <label
-                          htmlFor="phone"
-                          className="block text-sm font-medium text-gray-900"
-                        >
-                          Phone
-                        </label>
-                        <span
-                          id="phone-optional"
-                          className="text-sm text-gray-500"
-                        >
-                          Optional
-                        </span>
-                      </div>
-                      <div className="mt-1">
-                        <Field
-                        required
-                          type="number"
-                          name="phone"
-                          id="phone"
-                          autoComplete="tel"
-                          className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
-                          aria-describedby="phone-optional"
-                        />
-                      </div>
-                    </div>
-                    {/* <div className="sm:col-span-2">
+                        <div>
+                          <div className="flex justify-between">
+                            <label
+                              htmlFor="phone"
+                              className="block text-sm font-medium text-gray-900"
+                            >
+                              Phone
+                            </label>
+                            <span
+                              id="phone-optional"
+                              className="text-sm text-gray-500"
+                            >
+                              Optional
+                            </span>
+                          </div>
+                          <div className="mt-1">
+                            <Field
+                              required
+                              type="number"
+                              name="phone"
+                              id="phone"
+                              autoComplete="tel"
+                              className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+                              aria-describedby="phone-optional"
+                            />
+                          </div>
+                        </div>
+                        {/* <div className="sm:col-span-2">
                       <label
                         htmlFor="subject"
                         className="block text-sm font-medium text-gray-900"
@@ -396,46 +403,45 @@ export default function Contact() {
                         />
                       </div>
                     </div> */}
-                    <div className="sm:col-span-2">
-                      <div className="flex justify-between">
-                        <label
-                          htmlFor="message"
-                          className="block text-sm font-medium text-gray-900"
-                        >
-                          Message
-                        </label>
-                        <span
-                          id="message"
-                          className="text-sm text-gray-500"
-                        >
-                          Max. 500 characters
-                        </span>
-                      </div>
-                      <div className="mt-1">
-                        <Field
-                       
-                        as="textarea"
-                          id="message"
-                          name="message"
-                          rows={4}
-                          className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md"
-                          aria-describedby="message-max"
-                          // defaultValue={""}
-                        />
-                      </div>
-                    </div>
-                    <div className="sm:col-span-2 sm:flex sm:justify-end">
-                      <button
-                        type="submit"
-                        className="mt-2 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:w-auto"
-                        disabled={isSubmitting}
-                      >
-                        Submit
-                      </button>
-                    </div>
-                    </Form>
-                      )}
-                  {/* </form> */}
+                        <div className="sm:col-span-2">
+                          <div className="flex justify-between">
+                            <label
+                              htmlFor="message"
+                              className="block text-sm font-medium text-gray-900"
+                            >
+                              Message
+                            </label>
+                            <span
+                              id="message"
+                              className="text-sm text-gray-500"
+                            >
+                              Max. 500 characters
+                            </span>
+                          </div>
+                          <div className="mt-1">
+                            <Field
+                              as="textarea"
+                              id="message"
+                              name="message"
+                              rows={4}
+                              className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md"
+                              aria-describedby="message-max"
+                              // defaultValue={""}
+                            />
+                          </div>
+                        </div>
+                        <div className="sm:col-span-2 sm:flex sm:justify-end">
+                          <button
+                            type="submit"
+                            className="mt-2 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:w-auto"
+                            disabled={isSubmitting}
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </Form>
+                    )}
+                    {/* </form> */}
                   </Formik>
                 </div>
               </div>

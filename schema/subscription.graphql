@@ -1,0 +1,5 @@
+# subscription LiveEvent($liveEventId: ID!) {
+#   liveEvent(id: $liveEventId) {
+#     eventNo
+#   }
+# }

@@ -9,12 +9,14 @@ import {
 } from "@heroicons/react/outline";
 import { useEffect, useState } from "react";
 import AlertModal from "../ui/AlertModal";
-import {
-  GetUserQueryVariables,
-  UpcomingEventsQuery,
-  useGetUserQuery,
-  useUpcomingEventsQuery,
-} from "@utils/graphql";
+
+// import {
+//   GetUserQueryVariables,
+//   UpcomingEventsQuery,
+//   useGetUserQuery,
+//   useUpcomingEventsQuery,
+// } from "@utils/graphql";
+
 import graphQLClient from "@utils/useGQLQuery";
 import Router from "next/router";
 
@@ -39,19 +41,8 @@ export function UpcomingEventHomePage({
     skip: 0,
     take: 10,
   };
-  const { data, isLoading, refetch } =
-    useUpcomingEventsQuery<UpcomingEventsQuery>(
-      graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-      variables
-    );
 
- console.log("data table on upcoming event",data);
  
-
-  useEffect(() => {
-    refetch();
-  }, [data]);
-
 
 
   const columns = [
@@ -89,7 +80,7 @@ export function UpcomingEventHomePage({
 
   return (
     <>
-      <div className=" bg-white ">
+      {/* <div className=" bg-white ">
         <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
         
 
@@ -129,11 +120,11 @@ export function UpcomingEventHomePage({
                   />
                 </div>
               </>
-              {/* )}  */}
+            
             </>
           )}
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

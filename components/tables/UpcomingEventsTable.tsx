@@ -13,12 +13,12 @@ import {
 } from "@heroicons/react/outline";
 import { useEffect, useState } from "react";
 import AlertModal from "../ui/AlertModal";
-import {
-  GetUserQueryVariables,
-  UpcomingEventsQuery,
-  useGetUserQuery,
-  useUpcomingEventsQuery,
-} from "@utils/graphql";
+// import {
+//   GetUserQueryVariables,
+//   UpcomingEventsQuery,
+//   useGetUserQuery,
+//   useUpcomingEventsQuery,
+// } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import Router from "next/router";
 
@@ -43,49 +43,50 @@ export default function UpcomingEventsTable({
     skip: 0,
     take: 10,
   };
-  const { data, isLoading, refetch } =
-    useUpcomingEventsQuery<UpcomingEventsQuery>(
-      graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-      variables
-    );
+
+  // const { data, isLoading, refetch } =
+  //   useUpcomingEventsQuery<UpcomingEventsQuery>(
+  //     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+  //     variables
+  //   );
 
    
     
 
-  useEffect(() => {
-    refetch();
- }, [data]);
+//   useEffect(() => {
+//     refetch();
+//  }, [data]);
 
  
 
-  const { data: userData, isLoading: loading } =
-    useGetUserQuery<GetUserQueryVariables>(
-      graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-      { where: { id } },
-      {
-        enabled: accessToken !== "",
-      }
-    );
+  // const { data: userData, isLoading: loading } =
+  //   useGetUserQuery<GetUserQueryVariables>(
+  //     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+  //     { where: { id } },
+  //     {
+  //       enabled: accessToken !== "",
+  //     }
+  //   );
 
-  const payment = userData ? userData["user"]?.payments : "";
+  // const payment = userData ? userData["user"]?.payments : "";
 
-  useEffect(() => {
-    if (payment) {
-      payment?.map((item) => {
-        if (item.paymentFor === "registrations") {
-          if (item.status === "success") {
-            setRegistered(true);
-          } else {
-            setRegisteredStatus(item.status);
-          }
+  // useEffect(() => {
+  //   if (payment) {
+  //     payment?.map((item) => {
+  //       if (item.paymentFor === "registrations") {
+  //         if (item.status === "success") {
+  //           setRegistered(true);
+  //         } else {
+  //           setRegisteredStatus(item.status);
+  //         }
 
-          // console.log("trueeeee");
-        } else {
-          // console.log("falseeeeeeeeeee");
-        }
-      });
-    }
-  }, [payment]);
+  //         // console.log("trueeeee");
+  //       } else {
+  //         // console.log("falseeeeeeeeeee");
+  //       }
+  //     });
+  //   }
+  // }, [payment]);
 
   const PaymentStatus = () => {
     toast("Your Access to this service has been disabled. Please contact Autobse for assistance", {
@@ -177,7 +178,7 @@ export default function UpcomingEventsTable({
 
   return (
     <>
-      <div className="relative bg-white">
+      {/* <div className="relative bg-white">
         { data?.upcomingEvents?.length > 0 ? ( <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
           {showHeadings && (
             <div className="pt-4 pb-1">
@@ -199,9 +200,7 @@ export default function UpcomingEventsTable({
             <Loader />
           ) : (
             <>
-              {/* {data &&
-                data?.upcomingEvents &&
-                data?.upcomingEvents?.length > 0 && ( */}
+             
               <>
                 <div className="sm:hidden">
                   {data?.upcomingEvents?.map((event, eventIdx) => {
@@ -228,7 +227,7 @@ export default function UpcomingEventsTable({
                   />
                 </div>
               </>
-              {/* )}  */}
+            
             </>
           )}
         </div>):(
@@ -238,7 +237,7 @@ export default function UpcomingEventsTable({
           </div>
         )}
        
-      </div>
+      </div> */}
     </>
   );
 }

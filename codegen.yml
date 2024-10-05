@@ -1,6 +1,6 @@
 overwrite: true
-schema: https://api-dev.autobse.com/api/graphql
- documents: "schema/*.graphql"
+schema: https://api-dev.autobse.com/graphql
+documents: "schema/*.graphql"  # Fixes formatting issue
 generates:
   ./utils/graphql.ts:
     plugins:
