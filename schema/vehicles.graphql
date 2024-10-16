@@ -1,180 +1,261 @@
-mutation UpdateVehicle(
-  $where: VehicleWhereUniqueInput!
-  $data: VehicleUpdateInput!
-) {
-  updateVehicle(where: $where, data: $data) {
-    id
-  }
-}
-
-query Vehicles(
-  $where: VehicleWhereInput!
-  $take: Int
-  $skip: Int!
-  $userVehicleBidsOrderBy2: [BidOrderByInput!]!
-) {
-  vehicles(where: $where) {
-    vehicleEventStatus
-    registrationNumber
-    make
-    model
-    varient
-    categoty
-    fuel
-    type
-    rcStatus
-    yearOfManufacture
-    ownership
-    kmReading
-    insuranceStatus
-    frontImage
-    backImage
-    leftImage
-    rightImage
-    currentBidAmount
-    bidStartTime
-    bidTimeExpire
-    vehicleIndexNo
-    myBidRank
-    id
-    startPrice
-    powerSteering
-    shape
-    color
-    state
-    city
-    engineNo
-    chassisNo
-    permit
-    fitness
-    fitnessPermit
-    tax
-    insurance
-    insuranceValidTill
-    taxValidityDate
-    yardLocation
-    mileage
-    gearBox
-    paymentTerms
-    dateOfRegistration
-    hypothication
-    climateControl
-    doorCount
-    area
-    vehicleCondition
-    inspectionLink
-    event {
-      startDate
-      noOfBids
-      bidLock
-    }
-    userVehicleBidsCount
-    totalBids
-    myBidRank
-    quoteIncreament
-    userVehicleBids(
-      take: $take
-      skip: $skip
-      orderBy: $userVehicleBidsOrderBy2
-    ) {
-      amount
-    }
-    repoDt
-    veicleLocation
-    autobseContact
-    autobse_contact_person
-    clientContactPerson
-    clientContactNo
-    buyerFees
-    vehicleRemarks
-    registeredOwnerName
-    loanAgreementNo
-    parkingCharges
-    additionalRemarks
-    parkingRate
-  }
-}
-
-# query OpenAuctionVehicles($where: VehicleWhereInput!) {
-#   vehicles(where: $where) {
-#     vehicleEventStatus
-#     registrationNumber
-#     make
-#     model
-#     varient
-#     categoty
-#     fuel
-#     type
-#     rcStatus
-#     yearOfManufacture
-#     ownership
-#     kmReading
-#     insuranceStatus
-#     frontImage
-#     backImage
-#     leftImage
-#     rightImage
-#     currentBidAmount
-#     bidStartTime
-#     bidTimeExpire
-#     vehicleIndexNo
-#     myBidRank
+# mutation UpdateVehicle(
+#   $where: VehicleWhereUniqueInput!
+#   $data: VehicleUpdateInput!
+# ) {
+#   updateVehicle(where: $where, data: $data) {
 #     id
-#     startPrice
 #   }
 # }
 
+# # query Vehicles(
+# #   $where: VehicleWhereInput!
+# #   $take: Int
+# #   $skip: Int!
+# #   $userVehicleBidsOrderBy2: [BidOrderByInput!]!
+# # ) {
+# #   vehicles(where: $where) {
+# #     vehicleEventStatus
+# #     registrationNumber
+# #     make
+# #     model
+# #     varient
+# #     categoty
+# #     fuel
+# #     type
+# #     rcStatus
+# #     yearOfManufacture
+# #     ownership
+# #     kmReading
+# #     insuranceStatus
+# #     frontImage
+# #     backImage
+# #     leftImage
+# #     rightImage
+# #     currentBidAmount
+# #     bidStartTime
+# #     bidTimeExpire
+# #     vehicleIndexNo
+# #     myBidRank
+# #     id
+# #     startPrice
+# #     powerSteering
+# #     shape
+# #     color
+# #     state
+# #     city
+# #     engineNo
+# #     chassisNo
+# #     permit
+# #     fitness
+# #     fitnessPermit
+# #     tax
+# #     insurance
+# #     insuranceValidTill
+# #     taxValidityDate
+# #     yardLocation
+# #     mileage
+# #     gearBox
+# #     paymentTerms
+# #     dateOfRegistration
+# #     hypothication
+# #     climateControl
+# #     doorCount
+# #     area
+# #     vehicleCondition
+# #     inspectionLink
+# #     event {
+# #       startDate
+# #       noOfBids
+# #       bidLock
+# #     }
+# #     userVehicleBidsCount
+# #     totalBids
+# #     myBidRank
+# #     quoteIncreament
+# #     userVehicleBids(
+# #       take: $take
+# #       skip: $skip
+# #       orderBy: $userVehicleBidsOrderBy2
+# #     ) {
+# #       amount
+# #     }
+# #     repoDt
+# #     veicleLocation
+# #     autobseContact
+# #     autobse_contact_person
+# #     clientContactPerson
+# #     clientContactNo
+# #     buyerFees
+# #     vehicleRemarks
+# #     registeredOwnerName
+# #     loanAgreementNo
+# #     parkingCharges
+# #     additionalRemarks
+# #     parkingRate
+# #   }
+# # }
 
-query OpenAuctionVehicles($where: VehicleWhereInput!) {
-  vehicles(where: $where) {
-    vehicleEventStatus
-    registrationNumber
+# # query OpenAuctionVehicles($where: VehicleWhereInput!) {
+# #   vehicles(where: $where) {
+# #     vehicleEventStatus
+# #     registrationNumber
+# #     make
+# #     model
+# #     varient
+# #     categoty
+# #     fuel
+# #     type
+# #     rcStatus
+# #     yearOfManufacture
+# #     ownership
+# #     kmReading
+# #     insuranceStatus
+# #     frontImage
+# #     backImage
+# #     leftImage
+# #     rightImage
+# #     currentBidAmount
+# #     bidStartTime
+# #     bidTimeExpire
+# #     vehicleIndexNo
+# #     myBidRank
+# #     id
+# #     startPrice
+# #   }
+# # }
+
+
+# # query OpenAuctionVehicles($where: VehicleWhereInput!) {
+# #   vehicles(where: $where) {
+# #     vehicleEventStatus
+# #     registrationNumber
+# #     make
+# #     model
+# #     varient
+# #     categoty
+# #     createdAt
+# #     fuel
+# #     type
+# #     rcStatus
+# #     yearOfManufacture
+# #     ownership
+# #     kmReading
+# #     insuranceStatus
+# #     loanAgreementNo
+# #     mileage
+# #     yardLocation
+# #     veicleLocation
+# #     vehicleRemarks
+# #     engineNo
+# #     chassisNo
+# #     insuranceValidTill
+# #     repoDt
+# #     shape
+# #    frontImage
+# #     backImage
+# #     leftImage
+# #     rightImage
+# #     currentBidAmount
+# #     bidStartTime
+# #     bidTimeExpire
+# #     vehicleIndexNo
+# #     myBidRank
+# #     id
+# #     bidStatus
+# #     quoteIncreament
+# #     startBidAmount
+# #     startPrice
+# #   event {
+    
+# #     gapInBetweenVehicles
+# #     endDate
+# #     status
+# #     eventNo
+# #      seller {
+# #        name 
+# #        contactPerson
+# #       }
+# #     }
+# # }
+# # }
+
+query GetVehicle($where: VehicleWhereUniqueInput!) {
+  vehicle(where: $where) {
+    YOM
+    additionalRemarks
+    approxParkingCharges
+    area
+    auctionManager
+    autobseContact
+    autobse_contact_person
+    bidAmountUpdate
+    bidStartTime
+    bidStatus
+    bidTimeExpire
+    buyerFees
+    category
+    chassisNo
+    city
+    clientContactNo
+    clientContactPerson
+    climateControl
+    color
+    createdAt
+    createdById
+    currentBidAmount
+    dateOfRegistration
+    doorCount
+    engineNo
+    fitness
+    fuel
+    gearBox
+    hypothication
+    id
+     event {
+       startDate
+       noOfBids
+       bidLock
+    }
+    image
+    inspectionLink
+    insurance
+    insuranceStatus
+    insuranceValidTill
+    kmReading
+    loanAgreementNo
+    lotNumber
     make
     model
-    varient
-    categoty
-    createdAt
-    fuel
-    type
-    rcStatus
-    yearOfManufacture
-    ownership
-    kmReading
-    insuranceStatus
-    loanAgreementNo
     mileage
-    yardLocation
-    veicleLocation
-    vehicleRemarks
-    engineNo
-    chassisNo
-    insuranceValidTill
-    repoDt
-    shape
-   frontImage
-    backImage
-    leftImage
-    rightImage
-    currentBidAmount
-    bidStartTime
-    bidTimeExpire
-    vehicleIndexNo
-    myBidRank
-    id
-    bidStatus
+    ownership
+    parkingCharges
+    parkingRate
+    paymentTerms
+    permit
+    powerSteering
     quoteIncreament
+    rcStatus
+    registeredOwnerName
+    registrationNumber
+    repoDt
+    reservePrice
+    rtoFine
+    shape
     startBidAmount
+      userVehicleBidsCount
+    totalBids
+    myBidRank
     startPrice
-  event {
-    
-    gapInBetweenVehicles
-    endDate
-    status
-    eventNo
-     seller {
-       name 
-       contactPerson
-      }
-    }
-}
+    state
+    tax
+    taxValidityDate
+    type
+    updatedAt
+    varient
+    vehicleCondition
+    vehicleIndexNo
+    vehicleRemarks
+    veicleLocation
+    yardLocation
+  }
 }

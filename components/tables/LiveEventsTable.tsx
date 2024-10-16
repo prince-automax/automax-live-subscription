@@ -9,12 +9,12 @@ import {
 } from "@heroicons/react/outline";
 import AlertModal from "../ui/AlertModal";
 import {
-  LiveEventsQuery,
   useLiveEventsQuery,
-  GetUserQueryVariables,
+  LiveEventsQueryVariables,
+  LiveEventsQuery,
   useGetUserQuery,
-  useUserWorkBookQuery,
-  UserWorkBookQueryVariables,
+  GetUserQueryVariables,
+  GetUserQuery,
 } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import Router from "next/router";
@@ -40,21 +40,26 @@ export default function EventsTable({
     }
   }, []);
 
+  console.log("access token", accessToken);
+
   const variables = {
     skip: 0,
     take: 10,
-    where: {
-      eventCategory: {
-        equals: eventCategory,
-      },
-    },
+    // where: {
+    //   eventCategory: {
+    //     equals: eventCategory,
+    //   },
+    // },
   };
+
   const { data, isLoading, refetch, isFetching } =
     useLiveEventsQuery<LiveEventsQuery>(
       graphQLClient({ Authorization: `Bearer ${accessToken}` }),
       variables,
+      // {},
       { enabled: accessToken != "", refetchOnWindowFocus: false }
     );
+
 
   console.log("Live event table", data);
 
@@ -62,8 +67,10 @@ export default function EventsTable({
     refetch();
   }, [data]);
 
+
+
   const { data: userData, isLoading: loading } =
-    useGetUserQuery<GetUserQueryVariables>(
+    useGetUserQuery<GetUserQuery>(
       graphQLClient({ Authorization: `Bearer ${accessToken}` }),
       { where: { id } },
       {
@@ -73,15 +80,16 @@ export default function EventsTable({
 
   const payment = userData ? userData["user"]?.payments : "";
 
+  console.log(' User payments',userData);
+  console.log(' User payments stTUA',registered);
+  
+
   const PaymentStatus = () => {
     toast(
       "Your Access to this service has been disabled. Please contact Autobse for assistance",
       {
         duration: 5000,
         position: "top-right",
-
-        // Styling
-        // Styling
         style: {
           bottom: "80px",
           background: "rgb(95, 99, 93)",
@@ -113,7 +121,7 @@ export default function EventsTable({
     if (payment) {
       payment?.map((item) => {
         if (item.paymentFor === "registrations") {
-          if (item.status === "success") {
+          if (item.status === "approved") {
             setRegistered(true);
           } else {
             setRegisteredStatus(item.status);
@@ -150,7 +158,7 @@ export default function EventsTable({
     },
     {
       Header: "Category",
-      accessor: "eventType",
+      accessor: "vehicleCategory",
       Cell: ({ cell: { value } }) => RenderEventTypes(value),
     },
     {
@@ -215,14 +223,7 @@ export default function EventsTable({
                     Live Events
                   </h2>
                 )}
-                {/* <p className="mt-2 text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">
-                Most recent events
-              </p>
-              <p className="mt-5 max-w-prose mx-auto text-xl text-gray-500">
-                Open auction or closed auction!! Know your deal better with list
-                of locations, type of auction, date and many more features, An
-                updates on our most recent events.
-              </p> */}
+                
               </div>
             )}
 
@@ -230,8 +231,7 @@ export default function EventsTable({
               <Loader />
             ) : (
               <>
-                {/* {!data?.liveEvents?.length && <div>No Auctions Found</div>} */}
-                {/* {data?.liveEvents && data?.liveEvents?.length > 0 && ( */}
+                
                 <>
                   <div className="sm:hidden">
                     {data?.liveEvents?.map((event, eventIdx) => {
@@ -256,7 +256,7 @@ export default function EventsTable({
                     />
                   </div>
                 </>
-                {/* )} */}
+                
               </>
             )}
           </div>
@@ -306,16 +306,27 @@ function View(value, eventCategory) {
 }
 
 function RenderEventTypes(eventTypes) {
-  if (eventTypes && eventTypes.length > 0) {
+  console.log('eventTypes',eventTypes);
+  
+  // if (eventTypes && eventTypes.length > 0) {
+  //   return (
+  //     <div>
+  //       {eventTypes.map((type, index) => {
+  //         return (
+  //           <div key={`d${index}`}>
+  //             <span>{type.name}</span>
+  //           </div>
+  //         );
+  //       })}
+  //     </div>
+  //   );
+  // } else {
+  //   return <div />;
+  // }
+  if (eventTypes) {
     return (
       <div>
-        {eventTypes.map((type, index) => {
-          return (
-            <div key={`d${index}`}>
-              <span>{type.name}</span>
-            </div>
-          );
-        })}
+        {eventTypes?.name}
       </div>
     );
   } else {

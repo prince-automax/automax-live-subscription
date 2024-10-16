@@ -8,12 +8,12 @@ import {
   PrinterIcon,
 } from "@heroicons/react/outline";
 import AlertModal from "../ui/AlertModal";
-import {
-  LiveEventsQuery,
-  useLiveEventsQuery,
-  UpcomingEventsQuery,
-  useUpcomingEventsQuery,
-} from "@utils/graphql";
+// import {
+//   LiveEventsQuery,
+//   useLiveEventsQuery,
+//   UpcomingEventsQuery,
+//   useUpcomingEventsQuery,
+// } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import Router from "next/router";
 import Link from "next/link";
@@ -37,11 +37,11 @@ export default function AllEventsTable({
     skip: 0,
     take: 10,
   };
-  const { data: upcomingEvents, isLoading } =
-    useUpcomingEventsQuery<UpcomingEventsQuery>(
-      graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-      variablesUpcoming
-    );
+  // const { data: upcomingEvents, isLoading } =
+  //   useUpcomingEventsQuery<UpcomingEventsQuery>(
+  //     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+  //     variablesUpcoming
+  //   );
 
   const variablesLive = {
     skip: 0,
@@ -61,16 +61,16 @@ export default function AllEventsTable({
       ],
     },
   };
-  const { data: liveEvents } = useLiveEventsQuery<LiveEventsQuery>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    variablesLive
-  );
+  // const { data: liveEvents } = useLiveEventsQuery<LiveEventsQuery>(
+  //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+  //   variablesLive
+  // );
 
-  const events = [
-    ...Object.values(upcomingEvents || []),
-    ...Object.values(liveEvents || []),
-  ];
-  const eventdata = events.flat();
+  // const events = [
+  //   ...Object.values(upcomingEvents || []),
+  //   ...Object.values(liveEvents || []),
+  // ];
+  // const eventdata = events.flat();
 
 
 
@@ -108,20 +108,13 @@ export default function AllEventsTable({
   return (
     <>
       <div className="relative bg-white">
-        <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
+        {/* <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
           {showHeadings && (
             <div className="pt-8 pb-8">
               <h2 className="text-base font-extrabold tracking-wider text-black uppercase">
                 Events Calender
               </h2>
-              {/* <p className="mt-2 text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">
-                Most recent events
-              </p>
-              <p className="mt-5 max-w-prose mx-auto text-xl text-gray-500">
-                Open auction or closed auction!! Know your deal better with list
-                of locations, type of auction, date and many more features, An
-                updates on our most recent events.
-              </p> */}
+              
             </div>
           )}
 
@@ -159,7 +152,7 @@ export default function AllEventsTable({
               )}
             </>
           )}
-        </div>
+        </div> */}
       </div>
     </>
   );

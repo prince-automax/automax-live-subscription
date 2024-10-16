@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import {
-    CreateUserMutationVariables,
-    SendOtpMutationVariables,
-    useCreateUserMutation,
-    useSendOtpMutation,
-    useVerifyOtpMutation,
-    VerifyOtpMutationVariables,
-    UserStatusType,
+// import {
+//     CreateUserMutationVariables,
+//     SendOtpMutationVariables,
+//     useCreateUserMutation,
+//     useSendOtpMutation,
+//     useVerifyOtpMutation,
+//     VerifyOtpMutationVariables,
+//     UserStatusType,
 
-    useDeleteUserMutation,
-    DeleteUserMutationVariables
+//     useDeleteUserMutation,
+//     DeleteUserMutationVariables
 
-  } from "@utils/graphql";
+//   } from "@utils/graphql";
   import graphQLClient from "@utils/useGQLQuery";
   import toast from "react-hot-toast";
 
@@ -63,31 +63,31 @@ const Modal = ({isModalOpend,closeModals}) => {
     e.stopPropagation();
   };
 
-  const userDeleteMutation=useDeleteUserMutation<DeleteUserMutationVariables>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` })
-  )
+  // const userDeleteMutation=useDeleteUserMutation<DeleteUserMutationVariables>(
+  //   graphQLClient({ Authorization: `Bearer ${accessToken}` })
+  // )
 
-const onSubmit=async()=>{
+// const onSubmit=async()=>{
 
 
-  closeModals();
-    try {
-      const result=await userDeleteMutation.mutateAsync({
-        where: { id: userId as string },
-    })
+//   closeModals();
+//     try {
+//       const result=await userDeleteMutation.mutateAsync({
+//         where: { id: userId as string },
+//     })
     
-    toast.success('your Account has being successfully Deleted')
+//     toast.success('your Account has being successfully Deleted')
    
   
-    localStorage.clear();
-    router.push(`/`);
+//     localStorage.clear();
+//     router.push(`/`);
  
     
-    } catch (error) {
+//     } catch (error) {
      
       
-    }
-}
+//     }
+// }
 
 
   return (
@@ -152,7 +152,7 @@ const onSubmit=async()=>{
               <div className="flex justify-end mt-6">
                 <button
                   className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded mr-2"
-                  onClick={onSubmit}
+                  // onClick={onSubmit}
                 >
                   Ok
                 </button>

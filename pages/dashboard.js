@@ -40,9 +40,9 @@ function Dashboard() {
             <Tab.Panel className={"rounded-xl bg-white focus:outline-none"}>
               <LiveEventsTable showHeadings={false} allowDownload={true} />
             </Tab.Panel>
-            <Tab.Panel className={"rounded-xl bg-white  focus:outline-none"}>
+            {/* <Tab.Panel className={"rounded-xl bg-white  focus:outline-none"}>
               <CompletedEventsTable showHeadings={false} allowDownload={true} />
-            </Tab.Panel>
+            </Tab.Panel> */}
           </Tab.Panels>
         </Tab.Group>
       </div>

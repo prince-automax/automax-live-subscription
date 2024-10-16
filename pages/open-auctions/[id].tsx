@@ -31,17 +31,19 @@ import { Tab } from "@headlessui/react";
 import { useRouter } from "next/router";
 import moment from "moment";
 import graphQLClient from "@utils/useGQLQuery";
-import {
-  useOpenAuctionVehiclesQuery,
-  OpenAuctionVehiclesQuery,
-  useCreateBidMutation,
-  CreateBidMutationVariables,
-  QueryQueryVariables,
-  useQueryQuery,
-  OrderDirection,
-  useSudoBidsQuery,
-  SudoBidsQuery,
-} from "@utils/graphql";
+
+// import {
+//   useOpenAuctionVehiclesQuery,
+//   OpenAuctionVehiclesQuery,
+//   useCreateBidMutation,
+//   CreateBidMutationVariables,
+//   QueryQueryVariables,
+//   useQueryQuery,
+//   OrderDirection,
+//   useSudoBidsQuery,
+//   SudoBidsQuery,
+// } from "@utils/graphql";
+
 import ImageCarouselModal from "@components/modals/ImageCarouselModal";
 
 import Swal from "sweetalert2";
@@ -127,64 +129,64 @@ function OpenAuctions() {
     return () => clearInterval(timer);
   }, []);
 
-  const { data: timeData } = useQueryQuery<QueryQueryVariables>(
-    graphQLClient(),
-    {},
-    { refetchInterval: 60000 }
-  );
+  // const { data: timeData } = useQueryQuery<QueryQueryVariables>(
+  //   graphQLClient(),
+  //   {},
+  //   { refetchInterval: 60000 }
+  // );
 
-  useEffect(() => {
-    if (timeData && timeData.time) {
-      setTick(0);
-      setserverTime(timeData.time);
-    }
-  }, [timeData]);
+  // useEffect(() => {
+  //   if (timeData && timeData.time) {
+  //     setTick(0);
+  //     setserverTime(timeData.time);
+  //   }
+  // }, [timeData]);
 
-  const { data, isLoading } =
-    useOpenAuctionVehiclesQuery<OpenAuctionVehiclesQuery>(
-      graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-      {
-        where: {
-          event: {
-            id: {
-              equals: id ? id.toString() : "",
-            },
-          },
-        },
-      },
-      {
-        cacheTime: 5,
-        refetchInterval: rInterval,
-        enabled: id !== undefined && id != "" && accessToken !== "",
-      }
-    );
+  // const { data, isLoading } =
+  //   useOpenAuctionVehiclesQuery<OpenAuctionVehiclesQuery>(
+  //     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+  //     {
+  //       where: {
+  //         event: {
+  //           id: {
+  //             equals: id ? id.toString() : "",
+  //           },
+  //         },
+  //       },
+  //     },
+  //     {
+  //       cacheTime: 5,
+  //       refetchInterval: rInterval,
+  //       enabled: id !== undefined && id != "" && accessToken !== "",
+  //     }
+  //   );
 
-    console.log('open auction',data);
+  //   console.log('open auction',data);
     
 
-  // let duration=data?.vehicles[0]?.event?.gapInBetweenVehicles
+  // // let duration=data?.vehicles[0]?.event?.gapInBetweenVehicles
 
-  const { data: bidHistory } = useSudoBidsQuery<SudoBidsQuery>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    {
-      where: {
-        bidVehicle: {
-          id: {
-            equals:
-              liveItem && liveItem.id && liveItem.id !== undefined
-                ? liveItem.id
-                : "",
-          },
-        },
-      },
-    },
-    {
-      cacheTime: 5,
-      refetchInterval: 7500,
-      enabled:
-        liveItem != null && liveItem.id != null && liveItem.id != undefined,
-    }
-  );
+  // const { data: bidHistory } = useSudoBidsQuery<SudoBidsQuery>(
+  //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+  //   {
+  //     where: {
+  //       bidVehicle: {
+  //         id: {
+  //           equals:
+  //             liveItem && liveItem.id && liveItem.id !== undefined
+  //               ? liveItem.id
+  //               : "",
+  //         },
+  //       },
+  //     },
+  //   },
+  //   {
+  //     cacheTime: 5,
+  //     refetchInterval: 7500,
+  //     enabled:
+  //       liveItem != null && liveItem.id != null && liveItem.id != undefined,
+  //   }
+  // );
 
   function compare(a, b) {
     if (a.bidStartTime < b.bidStartTime) {
@@ -205,83 +207,83 @@ function OpenAuctions() {
     }
   };
 
-  useEffect(() => {
-    if (data && data.vehicles.length > 0) {
-      const startAmnt = data?.vehicles[0]?.startBidAmount;
+  // useEffect(() => {
+  //   if (data && data.vehicles.length > 0) {
+  //     const startAmnt = data?.vehicles[0]?.startBidAmount;
 
-      const live = data?.vehicles.find(
-        (element) => element.vehicleEventStatus == "live"
-      );
+  //     const live = data?.vehicles.find(
+  //       (element) => element.vehicleEventStatus == "live"
+  //     );
 
-      const upcomingVehicles = data.vehicles.filter(
-        (element) => element.vehicleEventStatus == "upcoming"
-      );
-      const sortedUpcoming = upcomingVehicles.sort(compare);
-      setUpcoming(sortedUpcoming);
-      //   bidStartTime;
-      if (live) {
-        setLiveItem(live);
+  //     const upcomingVehicles = data.vehicles.filter(
+  //       (element) => element.vehicleEventStatus == "upcoming"
+  //     );
+  //     const sortedUpcoming = upcomingVehicles.sort(compare);
+  //     setUpcoming(sortedUpcoming);
+  //     //   bidStartTime;
+  //     if (live) {
+  //       setLiveItem(live);
 
-        // if(live?.startPrice>bidAmount)
-        // {
-        const strtprice =
-          live.currentBidAmount !== 0
-            ? live.currentBidAmount
-            : live.startBidAmount;
+  //       // if(live?.startPrice>bidAmount)
+  //       // {
+  //       const strtprice =
+  //         live.currentBidAmount !== 0
+  //           ? live.currentBidAmount
+  //           : live.startBidAmount;
 
-        setBidAmount(strtprice);
-        // }
-      } else {
-        setLiveItem(null);
-      }
-    } else {
-      setLiveItem(null);
-    }
-  }, [data]);
+  //       setBidAmount(strtprice);
+  //       // }
+  //     } else {
+  //       setLiveItem(null);
+  //     }
+  //   } else {
+  //     setLiveItem(null);
+  //   }
+  // }, [data]);
 
-  console.log('LIVE ITEM', liveItem);
+  // console.log('LIVE ITEM', liveItem);
   
 
-  const callCreateBid = useCreateBidMutation<CreateBidMutationVariables>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` })
-  );
+  // const callCreateBid = useCreateBidMutation<CreateBidMutationVariables>(
+  //   graphQLClient({ Authorization: `Bearer ${accessToken}` })
+  // );
 
-  async function CallBid(amount, vehicleId) {
-    const confirmed = await Swal.fire({
-      text: "Are you sure to bid for Rs. " + amount + "?",
-      title: "BID CONFIMATION",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, bid for it!",
-      customClass: {
-        popup: "animated bounceInDown",
-        container: "custom-swal-container",
-      },
-    });
+  // async function CallBid(amount, vehicleId) {
+  //   const confirmed = await Swal.fire({
+  //     text: "Are you sure to bid for Rs. " + amount + "?",
+  //     title: "BID CONFIMATION",
+  //     icon: "question",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "Yes, bid for it!",
+  //     customClass: {
+  //       popup: "animated bounceInDown",
+  //       container: "custom-swal-container",
+  //     },
+  //   });
 
-    if (confirmed.value) {
-      callCreateBid
-        .mutateAsync({
-          data: {
-            amount: parseInt(amount),
-            bidVehicle: {
-              connect: {
-                id: vehicleId,
-              },
-            },
-          },
-        })
-        .then(() => {
-          Swal.fire("Success!", "Your bid has been submitted.", "success");
-        })
-        .catch((error) => {
-          // Handle the error
-          Swal.fire("Error!", error.message, "error");
-        });
-    }
-  }
+  //   if (confirmed.value) {
+  //     callCreateBid
+  //       .mutateAsync({
+  //         data: {
+  //           amount: parseInt(amount),
+  //           bidVehicle: {
+  //             connect: {
+  //               id: vehicleId,
+  //             },
+  //           },
+  //         },
+  //       })
+  //       .then(() => {
+  //         Swal.fire("Success!", "Your bid has been submitted.", "success");
+  //       })
+  //       .catch((error) => {
+  //         // Handle the error
+  //         Swal.fire("Error!", error.message, "error");
+  //       });
+  //   }
+  // }
 
   function SecondsLeft() {
     // expiry - server + tick
@@ -647,7 +649,7 @@ function OpenAuctions() {
           </div> */}
 
                   <div className="bg-[#EEF1FB] max-h-48 overflow-y-scroll font-semibold  border">
-                    {BidHistory(bidHistory, liveItem)}
+                    {/* {BidHistory(bidHistory, liveItem)} */}
                     {/* new timer added */}
                   </div>
 
@@ -744,7 +746,7 @@ function OpenAuctions() {
                               position: "top",
                             });
                           } else {
-                            CallBid(bidAmount, liveItem.id);
+                            // CallBid(bidAmount, liveItem.id);
                           }
                         }}
                         className="w-full h-12    flex items-center justify-center px-5 py-3 border border-transparent text-base font-semibold rounded-md text-white bg-indigo-400 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -853,7 +855,7 @@ function OpenAuctions() {
                               position: "top",
                             });
                           } else {
-                            CallBid(bidAmount, liveItem.id);
+                            // CallBid(bidAmount, liveItem.id);
                           }
                         }}
                         className="w-full h-12    flex items-center justify-center px-5 py-3 border border-transparent text-base font-semibold rounded-md text-white bg-indigo-400 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -1812,7 +1814,7 @@ function OpenAuctions() {
                                   position: "top",
                                 });
                               } else {
-                                CallBid(bidAmount, liveItem.id);
+                                // CallBid(bidAmount, liveItem.id);
                               }
                             }}
                             className="w-full flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -1841,7 +1843,7 @@ function OpenAuctions() {
             </p>
           </div> */}
 
-                  {BidHistory(bidHistory, liveItem)}
+                  {/* {BidHistory(bidHistory, liveItem)} */}
                 </section>
 
                 {/* Vehicles Details */}

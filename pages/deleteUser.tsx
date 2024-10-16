@@ -117,102 +117,102 @@ const DeleteUser = () => {
     }
   }, [success, error]);
 
-  async function CallOTP() {
-    let isValid = true;
-    if (!IsValidValue(mobile) || !IsValidMobile(mobile)) {
-      setError({ text: "Please enter a valid Mobile Number" });
-      isValid = false;
-    }
-    if (isValid) {
-      const result = await callOTPMutation.mutateAsync({ mobile });
+//   async function CallOTP() {
+//     let isValid = true;
+//     if (!IsValidValue(mobile) || !IsValidMobile(mobile)) {
+//       setError({ text: "Please enter a valid Mobile Number" });
+//       isValid = false;
+//     }
+//     if (isValid) {
+//       const result = await callOTPMutation.mutateAsync({ mobile });
 
-      if (result.sendUserMagicAuthLink) {
-        setVerificationMode(true);
-        setSuccess({
-          text: "Please enter the OTP received on your registered mobile number.",
-        });
-      } else {
-        alert("no such user exsist");
-      }
-      //   else {
+//       if (result.sendUserMagicAuthLink) {
+//         setVerificationMode(true);
+//         setSuccess({
+//           text: "Please enter the OTP received on your registered mobile number.",
+//         });
+//       } else {
+//         alert("no such user exsist");
+//       }
+//       //   else {
 
-      //     const result2 = await callCreateUserMutation.mutateAsync({
-      //       data: {
-      //         mobile,
-      //         username: "sellacar" + mobile,
-      //         status: UserStatusType.Pending,
-      //       },
-      //     });
+//       //     const result2 = await callCreateUserMutation.mutateAsync({
+//       //       data: {
+//       //         mobile,
+//       //         username: "sellacar" + mobile,
+//       //         status: UserStatusType.Pending,
+//       //       },
+//       //     });
 
-      //     if (!result2.createUser?.id) {
-      //       setVerificationMode(false);
-      //       setError({
-      //         text: "Unable to send OTP. Please contact the support team.",
-      //       });
-      //     }
+//       //     if (!result2.createUser?.id) {
+//       //       setVerificationMode(false);
+//       //       setError({
+//       //         text: "Unable to send OTP. Please contact the support team.",
+//       //       });
+//       //     }
 
-      //     const result3 = await callOTPMutation.mutateAsync({ mobile });
-      //     if (result3.sendUserMagicAuthLink) {
-      //       setVerificationMode(true);
-      //       setSuccess({
-      //         text: "Please enter the OTP received on your registered mobile number.",
-      //       });
-      //     } else {
-      //       setVerificationMode(false);
-      //       setError({
-      //         text: "Unable to send OTP. Please contact the support team.",
-      //       });
-      //     }
-      //   }
-    }
-  }
+//       //     const result3 = await callOTPMutation.mutateAsync({ mobile });
+//       //     if (result3.sendUserMagicAuthLink) {
+//       //       setVerificationMode(true);
+//       //       setSuccess({
+//       //         text: "Please enter the OTP received on your registered mobile number.",
+//       //       });
+//       //     } else {
+//       //       setVerificationMode(false);
+//       //       setError({
+//       //         text: "Unable to send OTP. Please contact the support team.",
+//       //       });
+//       //     }
+//       //   }
+//     }
+//   }
 
-  async function CallOTPVerify() {
+//   async function CallOTPVerify() {
     
 
-    let isValid = true;
-    if (!IsValidValue(otp)) {
-      setError({ text: "Please enter a valid OTP." });
-      isValid = false;
-    }
-    if (isValid) {
-      const result = await callVerifyOTP.mutateAsync({ mobile, token: otp });
+//     let isValid = true;
+//     if (!IsValidValue(otp)) {
+//       setError({ text: "Please enter a valid OTP." });
+//       isValid = false;
+//     }
+//     if (isValid) {
+//       const result = await callVerifyOTP.mutateAsync({ mobile, token: otp });
 
-      if (result.redeemUserMagicAuthToken["token"] === undefined) {
+//       if (result.redeemUserMagicAuthToken["token"] === undefined) {
       
 
-        setError({ text: "Please enter a valid OTP." });
-      }
+//         setError({ text: "Please enter a valid OTP." });
+//       }
 
-      if (result.redeemUserMagicAuthToken["token"]) {
-        localStorage.setItem("token", result.redeemUserMagicAuthToken["token"]);
-        localStorage.setItem(
-          "id",
-          result.redeemUserMagicAuthToken["item"]["id"]
-        );
-        localStorage.setItem(
-          "status",
-          result.redeemUserMagicAuthToken["item"]["status"]
-        );
-        localStorage.setItem(
-          "name",
-          result.redeemUserMagicAuthToken["item"]["firstName"]
-        );
+//       if (result.redeemUserMagicAuthToken["token"]) {
+//         localStorage.setItem("token", result.redeemUserMagicAuthToken["token"]);
+//         localStorage.setItem(
+//           "id",
+//           result.redeemUserMagicAuthToken["item"]["id"]
+//         );
+//         localStorage.setItem(
+//           "status",
+//           result.redeemUserMagicAuthToken["item"]["status"]
+//         );
+//         localStorage.setItem(
+//           "name",
+//           result.redeemUserMagicAuthToken["item"]["firstName"]
+//         );
 
-        setToken(result.redeemUserMagicAuthToken["token"]);
-        setMobile("");
-        setOtpVerification(false)
-        setDeleteMessage(true);
-        setSuccess({
-          text: "You have been successfully Verified",
-        });
-      } else {
-        setError({
-          text: "OTP verification failed. Please contact the support team.",
-        });
-      }
-    }
-  }
+//         setToken(result.redeemUserMagicAuthToken["token"]);
+//         setMobile("");
+//         setOtpVerification(false)
+//         setDeleteMessage(true);
+//         setSuccess({
+//           text: "You have been successfully Verified",
+//         });
+//       } else {
+//         setError({
+//           text: "OTP verification failed. Please contact the support team.",
+//         });
+//       }
+//     }
+//   }
 
   return (
     <>
@@ -257,7 +257,7 @@ const DeleteUser = () => {
                   <button
                     type="submit"
                     color="indigo"
-                    onClick={CallOTP}
+                    // onClick={CallOTP}
                     className="text-white bg-[#135A9E] p-2 rounded-lg font-bold font-poppins text-sm  w-full "
                   >
                     Get Otp
@@ -297,7 +297,7 @@ const DeleteUser = () => {
                 </div>
                 <div className="w-[111px] text-center mb-6 bg-slate-600">
                   <button
-                    onClick={CallOTPVerify}
+                    // onClick={CallOTPVerify}
                     type="submit"
                     color="indigo"
                     className="text-white bg-[#135A9E]  hover:bg-[#6693e6]  p-2  shadow-md cursor-pointer font-bold font-poppins text-sm  w-full  "
@@ -312,7 +312,7 @@ const DeleteUser = () => {
                   </p>
                   <button
                     className="text-center text-xs sm:text-lg  font-inter font-normal text-[#135A9E] "
-                    onClick={CallOTP}
+                    // onClick={CallOTP}
                   >
                     Resend
                   </button>

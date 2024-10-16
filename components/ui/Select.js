@@ -5,6 +5,8 @@ function classNames(...classes) {
 }
 
 export default function Select(props) {
+  // console.log('props from sleect field',props);
+  
 
 
   return (
@@ -36,6 +38,9 @@ export default function Select(props) {
             'block w-full mt-1 sm:text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md',
             props.width
           )}>
+            <option >
+               {props?.placeholder}
+              </option>
           {props.options.map(option => {
             return (
               <option key={option.value} value={option.value}>

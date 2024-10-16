@@ -9,12 +9,12 @@ import {
 } from "@heroicons/react/outline";
 import { useEffect, useState } from "react";
 import AlertModal from "../ui/AlertModal";
-import {
-  GetUserQueryVariables,
-  useGetUserQuery,
-  useUserWorkBookQuery,
-  UserWorkBookQueryVariables,
-} from "@utils/graphql";
+// import {
+//   GetUserQueryVariables,
+//   useGetUserQuery,
+//   useUserWorkBookQuery,
+//   UserWorkBookQueryVariables,
+// } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import Router from "next/router";
 import Link from "next/link";
@@ -51,18 +51,18 @@ export default function WorkBookTable({
   }, []);
 
   
-  const { data: userData, isLoading: loading } =
-  useGetUserQuery<GetUserQueryVariables>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    { where: { id } },
-    {
-      enabled: accessToken !== "",
-    }
-  );
+  // const { data: userData, isLoading: loading } =
+  // useGetUserQuery<GetUserQueryVariables>(
+  //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+  //   { where: { id } },
+  //   {
+  //     enabled: accessToken !== "",
+  //   }
+  // );
 
-  const payment = userData ? userData["user"]?.payments : "";
+  // const payment = userData ? userData["user"]?.payments : "";
 
-  console.log("registerd",userData)
+  // console.log("registerd",userData)
   
 
 
@@ -102,34 +102,34 @@ export default function WorkBookTable({
   
 
 
-  useEffect(() => {
-    if (payment) {
-      payment?.map((item) => {
-        if (item.paymentFor === "registrations") {
+  // useEffect(() => {
+  //   if (payment) {
+  //     payment?.map((item) => {
+  //       if (item.paymentFor === "registrations") {
           
-          if (item.status === "success" && new Date(item?.RegistrationExpire)?.toISOString()  > new Date().toISOString()  ) {
-            setRegistered(true);
-          } else {
-            setRegisteredStatus(item.status);
-          }
+  //         if (item.status === "success" && new Date(item?.RegistrationExpire)?.toISOString()  > new Date().toISOString()  ) {
+  //           setRegistered(true);
+  //         } else {
+  //           setRegisteredStatus(item.status);
+  //         }
 
-          // console.log("trueeeee");
-        } else {
-          // console.log("falseeeeeeeeeee");
-        }
-      });
-    }
-  }, [payment]);
+  //         // console.log("trueeeee");
+  //       } else {
+  //         // console.log("falseeeeeeeeeee");
+  //       }
+  //     });
+  //   }
+  // }, [payment]);
 
 
-  const { data, isLoading, refetch } =
-    useUserWorkBookQuery<UserWorkBookQueryVariables>(
-      graphQLClient({ Authorization: `Bearer ${accessToken}` })
-    );
+  // const { data, isLoading, refetch } =
+  //   useUserWorkBookQuery<UserWorkBookQueryVariables>(
+  //     graphQLClient({ Authorization: `Bearer ${accessToken}` })
+  //   );
 
-  useEffect(() => {
-    refetch();
-  }, [data]);
+  // useEffect(() => {
+  //   refetch();
+  // }, [data]);
 
   const columns = [
     {
@@ -186,15 +186,15 @@ export default function WorkBookTable({
     );
   }
 
-  if (isLoading) {
-    // alert('loading')
+  // if (isLoading) {
+  //   // alert('loading')
 
-    return <Loader />;
-  }
+  //   return <Loader />;
+  // }
 
   return (
     <>
-      <div className="relative bg-white w-full  text-right ">
+      {/* <div className="relative bg-white w-full  text-right ">
         <Link href="/addworkbook">
           <a className="bg-blue-700 text-white  text-center rounded-md p-2">
             Add Vehicle
@@ -251,7 +251,7 @@ export default function WorkBookTable({
             </>
           )}
         </div>
-      </div>
+      </div> */}
     </>
   );
 }
