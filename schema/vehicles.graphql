@@ -178,3 +178,84 @@
 # #     }
 # # }
 # # }
+
+query GetVehicle($where: VehicleWhereUniqueInput!) {
+  vehicle(where: $where) {
+    YOM
+    additionalRemarks
+    approxParkingCharges
+    area
+    auctionManager
+    autobseContact
+    autobse_contact_person
+    bidAmountUpdate
+    bidStartTime
+    bidStatus
+    bidTimeExpire
+    buyerFees
+    category
+    chassisNo
+    city
+    clientContactNo
+    clientContactPerson
+    climateControl
+    color
+    createdAt
+    createdById
+    currentBidAmount
+    dateOfRegistration
+    doorCount
+    engineNo
+    fitness
+    fuel
+    gearBox
+    hypothication
+    id
+     event {
+       startDate
+       noOfBids
+       bidLock
+    }
+    image
+    inspectionLink
+    insurance
+    insuranceStatus
+    insuranceValidTill
+    kmReading
+    loanAgreementNo
+    lotNumber
+    make
+    model
+    mileage
+    ownership
+    parkingCharges
+    parkingRate
+    paymentTerms
+    permit
+    powerSteering
+    quoteIncreament
+    rcStatus
+    registeredOwnerName
+    registrationNumber
+    repoDt
+    reservePrice
+    rtoFine
+    shape
+    startBidAmount
+      userVehicleBidsCount
+    totalBids
+    myBidRank
+    startPrice
+    state
+    tax
+    taxValidityDate
+    type
+    updatedAt
+    varient
+    vehicleCondition
+    vehicleIndexNo
+    vehicleRemarks
+    veicleLocation
+    yardLocation
+  }
+}

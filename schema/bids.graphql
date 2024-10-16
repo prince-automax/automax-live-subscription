@@ -63,3 +63,13 @@
 #     name
 #   }
 # }
+
+mutation CreateBid($bidVehicleId: String!, $createBidInput: CreateBidInput!) {
+  createBid(bidVehicleId: $bidVehicleId, createBidInput: $createBidInput) {
+    amount
+    bidVehicleId
+    id
+    name
+    userId
+  }
+}

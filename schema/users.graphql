@@ -215,6 +215,11 @@ mutation UpdateUser($data: UpdateUserInput!, $where: UserWhereUniqueInput!) {
     status
     userCategory
     idProofType
+     aadharcard_back_image
+    aadharcard_front_image
+    driving_license_back_image
+    driving_license_front_image
+    pancard_image
     username
     state
     status
@@ -236,7 +241,15 @@ query getUser($where: UserWhereUniqueInput!) {
     aadharcard_back_image
     driving_license_back_image
     driving_license_front_image
+    pancard_image
     email
+    payments {
+    id
+    paymentFor
+    registrationExpire
+    status
+    amount
+   }
     idProofNo
     city
   }

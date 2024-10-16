@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-// import {
-//   useQueryQuery,
-//   QueryQueryVariables,
-//   GetUserQueryVariables,
-//   useGetUserQuery,
-// } from "@utils/graphql";
+import {
+  // useQueryQuery,
+  // QueryQueryVariables,
+  GetUserQueryVariables,
+  useGetUserQuery,
+  GetUserQuery
+} from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
 export default function Welcome() {
@@ -35,20 +36,21 @@ export default function Welcome() {
     return () => clearInterval(timer);
   }, []);
 
-  // const { data: userData, isLoading } = useGetUserQuery<GetUserQueryVariables>(
-  //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-  //   { where: { id } },
-  //   {
-  //     enabled: accessToken !== "",
-  //   }
-  // );
+  const { data: userData, isLoading } = useGetUserQuery<GetUserQuery>(
+    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+    { where: { id } },
+    {
+      enabled: accessToken !== "",
+    }
+  );
 
-  // const username = userData ? userData["user"]?.username : "";
+  const username = userData ? userData["user"]?.username : "";
  
+// console.log("username",username);
 
-  // if (username) {
-  //   localStorage.setItem("username", username);
-  // }
+  if (userData?.user?.username) {
+    localStorage.setItem("username", username);
+  }
 
   // const { data } = useQueryQuery<QueryQueryVariables>(
   //   graphQLClient(),

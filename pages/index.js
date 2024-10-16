@@ -1,5 +1,5 @@
 import HeroSection from "../components/home/HeroSection";
-import HomePageEventCalender from "../components/homepagecalender/homePageEventCalender"
+import HomePageEventCalender from "../components/homepagecalender/homePageEventCalender";
 import AllEventsTable from "../components/tables/AllEventsTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
@@ -18,9 +18,7 @@ function classNames(...classes) {
 export default function Example() {
   const [accessToken, setAccessToken] = useState("");
   const router = useRouter();
-  const isLoggedIn =
-    typeof window !== "undefined" && window.localStorage.getItem("token"); //typeof window !== 'undefined' check is used to prevent errors during server-side rendering when accessing the window object.
-  
+  const isLoggedIn = typeof window !== "undefined" && window.localStorage.getItem("token"); //typeof window !== 'undefined' check is used to prevent errors during server-side rendering when accessing the window object.
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -39,8 +37,8 @@ export default function Example() {
     <>
       <HeroSection />
 
-     {/* <HomePageEventCalender/> */}
-{/* <AllEventsTable/> */}
+      {/* <HomePageEventCalender/> */}
+      {/* <AllEventsTable/> */}
       <Cards />
       {/* <RecentlySold /> */}
       <LogoCloud />

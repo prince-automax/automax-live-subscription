@@ -11,8 +11,10 @@ import ButtonLoading from "@components/ui/ButtonLoading";
 import toast from "react-hot-toast";
 import FormField from "@components/ui/FormField";
 import { ResizeImage } from "../image-Resizing/imagePayment";
+import Loader from "@components/ui/Loader";
 
 export default function PaymentForm() {
+  const [isLoading, setIsLoading] = useState(false);
   const SUPPORTED_FORMATS = [
     "image/jpg",
     "image/jpeg",
@@ -22,17 +24,17 @@ export default function PaymentForm() {
   const paymentOptions = [
     {
       label: "Registration Pay",
-      value: "Registrations",
+      value: "registrations",
     },
     {
       label: "EMD Payment",
-      value: "Emd",
+      value: "emd",
     },
     {
       label: "Open Bid Payment",
-      value: "OpenBids",
+      value: "openBids",
     },
-   ];
+  ];
 
   const [accessToken, setAccessToken] = useState("");
 
@@ -51,46 +53,70 @@ export default function PaymentForm() {
   const validationSchema = Yup.object({
     amount: Yup.string().required("Amount is required"),
     paymentFor: Yup.string().required("Payment for is required"),
-    // proof: Yup.mixed()
-    //   .required("Proof is required")
-    //   .test(
-    //     "fileFormat",
-    //     "Unsupported Format. Please upload a file with one of the following formats: " +
-    //       SUPPORTED_FORMATS.join(", "),
-    //     (value) => value && SUPPORTED_FORMATS.includes(value.type)
-    //   ),
+
     description: Yup.string().required("Description is required"),
   });
 
   const onSubmit = async (values, resetForm) => {
-    console.log("values for payment", values);
-    
+    setIsLoading(true);
+    console.log("Submitting payment details:", values);
+
     try {
-      await callPaymentCreate.mutateAsync({
+      // Step 1: Call GraphQL API to create payment
+      const response = await callPaymentCreate.mutateAsync({
         createPaymentInput: {
           amount: parseInt(values.amount),
           paymentFor: values.paymentFor,
           description: values.description,
-          status:PaymentStatusType.Pending
-          // status: "Pending",
+          status: PaymentStatusType.Pending,
         },
       });
-  
-      toast.success("Request submitted Successfully.");
-      resetForm({ proof: "" });
-    } catch (error) {
-      const errorMessage = error?.response?.errors?.[0]?.message;
-  
-      // Show this errorMessage to the user
-      if (errorMessage) {
-        toast.error(errorMessage);
-      } else {
-        toast.error("Request was not submitted. Please try again.");
+
+      console.log("response frm details", response);
+      const paymentId = response?.createPayment?.id;
+
+      // Step 2: If GraphQL API is successful, proceed to call the REST API for image upload
+      if (response) {
+        console.log("GraphQL API successful, uploading image...");
+
+        // Call REST API to upload the image (proof)
+        const formData = new FormData();
+        formData.append("image", values.proof);
+        const apiUrl = `https://api-dev.autobse.com/api/v1/fileupload/paymentImg/${paymentId}`;
+
+        const uploadResponse = await fetch(apiUrl, {
+          method: "PUT",
+          body: formData,
+          headers: {
+            "x-apollo-operation-name": "uploadUserProfile", // Include this header
+            // Other headers can go here
+          },
+        });
+
+        console.log("upload response of image", uploadResponse);
+
+        if (uploadResponse.ok) {
+          toast.success("Payment and image uploaded successfully.");
+          resetForm({ proof: "" });
+          // setIsLoading(false)
+        } else {
+          throw new Error("Image upload failed");
+        }
       }
+    } catch (error) {
+      const errorMessage =
+        error?.response?.errors?.[0]?.message || error.message;
+      toast.error(
+        errorMessage || "Request was not submitted. Please try again."
+      );
+    } finally {
+      setIsLoading(false); // Step 5: Set loading to false when form submission is complete
     }
   };
-  
 
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <Formik
       initialValues={{
@@ -158,7 +184,6 @@ export default function PaymentForm() {
                   placeholder="Eg: For Registration"
                   id="description"
                   className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md text-center placeholder:text-center pt-10"
-                  
                   value={props.values.description}
                   onChange={(event) => {
                     props.setFieldValue("description", event.target.value);
@@ -170,25 +195,24 @@ export default function PaymentForm() {
               </div>
             </div>
 
-            {/* <div>
+            <div>
               <label
                 htmlFor="image"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
               >
-                Upload image <span className="text-blue-600">(Payment Receipt)</span>
+                Upload image{" "}
+                <span className="text-blue-600">(Payment Receipt)</span>
               </label>
               <input
                 onChange={async (event) => {
                   try {
                     const file = event.target.files[0];
-                  
 
                     const image = await ResizeImage(file);
-                  
 
                     props.setFieldValue("proof", image);
                   } catch (err) {
-                  
+                    console.log("error", err);
                   }
                 }}
                 name="proof"
@@ -208,7 +232,7 @@ export default function PaymentForm() {
                 <ErrorMessage name="proof" />
               </div>
             </div>
-             */}
+
             <ButtonLoading
               // loading={callPaymentCreate.isLoading ? 1 : 0}
               type="submit"

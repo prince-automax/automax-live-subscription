@@ -21,4 +21,4 @@ export default graphQLClient;
 //   return useMutation(({ query, variables }: any) =>
 //     graphQLClient().request(query, variables)
 //   );
-// };
+// }; 

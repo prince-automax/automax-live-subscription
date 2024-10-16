@@ -2,10 +2,20 @@ import { useEffect, useState, useMemo } from "react";
 import Datatable from "../ui/Datatable";
 import Loader from "../ui/Loader";
 import moment from "moment";
-import {CalendarIcon,DocumentDownloadIcon,PrinterIcon,
+import {
+  CalendarIcon,
+  DocumentDownloadIcon,
+  PrinterIcon,
 } from "@heroicons/react/outline";
 import AlertModal from "../ui/AlertModal";
-import {LiveEventsQuery,useLiveEventsQuery,GetUserQueryVariables,useGetUserQuery,} from "@utils/graphql";
+import {
+  useLiveEventsQuery,
+  LiveEventsQueryVariables,
+  LiveEventsQuery,
+  useGetUserQuery,
+  GetUserQueryVariables,
+  GetUserQuery,
+} from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import Router from "next/router";
 import Link from "next/link";
@@ -30,21 +40,26 @@ export default function EventsTable({
     }
   }, []);
 
+  console.log("access token", accessToken);
+
   const variables = {
     skip: 0,
     take: 10,
-    where: {
-      eventCategory: {
-        equals: eventCategory,
-      },
-    },
+    // where: {
+    //   eventCategory: {
+    //     equals: eventCategory,
+    //   },
+    // },
   };
+
   const { data, isLoading, refetch, isFetching } =
     useLiveEventsQuery<LiveEventsQuery>(
       graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-      // variables,
-      // { enabled: accessToken != "", refetchOnWindowFocus: false }
+      variables,
+      // {},
+      { enabled: accessToken != "", refetchOnWindowFocus: false }
     );
+
 
   console.log("Live event table", data);
 
@@ -52,8 +67,10 @@ export default function EventsTable({
     refetch();
   }, [data]);
 
+
+
   const { data: userData, isLoading: loading } =
-    useGetUserQuery<GetUserQueryVariables>(
+    useGetUserQuery<GetUserQuery>(
       graphQLClient({ Authorization: `Bearer ${accessToken}` }),
       { where: { id } },
       {
@@ -61,7 +78,11 @@ export default function EventsTable({
       }
     );
 
-const payment = userData ? userData["user"]?.payments : "";
+  const payment = userData ? userData["user"]?.payments : "";
+
+  console.log(' User payments',userData);
+  console.log(' User payments stTUA',registered);
+  
 
   const PaymentStatus = () => {
     toast(
@@ -100,7 +121,7 @@ const payment = userData ? userData["user"]?.payments : "";
     if (payment) {
       payment?.map((item) => {
         if (item.paymentFor === "registrations") {
-          if (item.status === "success") {
+          if (item.status === "approved") {
             setRegistered(true);
           } else {
             setRegisteredStatus(item.status);
@@ -137,7 +158,7 @@ const payment = userData ? userData["user"]?.payments : "";
     },
     {
       Header: "Category",
-      accessor: "eventType",
+      accessor: "vehicleCategory",
       Cell: ({ cell: { value } }) => RenderEventTypes(value),
     },
     {
@@ -187,14 +208,13 @@ const payment = userData ? userData["user"]?.payments : "";
   ];
 
   return (
-   
     <>
       <div className="relative bg-white">
-        {data?.events?.length > 0 ? (
+        {data?.liveEvents?.length > 0 ? (
           <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
             {showHeadings && (
               <div className="pt-8 pb-8">
-                {data?.events?.length == 0 ? (
+                {data?.liveEvents?.length == 0 ? (
                   <p className="mt-px text-3xl font-extrabold text-gray-900 tracking-tight sm:text-3xl animate-pulse">
                     No Live Events ...
                   </p>
@@ -214,7 +234,7 @@ const payment = userData ? userData["user"]?.payments : "";
                 
                 <>
                   <div className="sm:hidden">
-                    {data?.events?.map((event, eventIdx) => {
+                    {data?.liveEvents?.map((event, eventIdx) => {
                       return (
                         <MobielViewCard
                           key={eventIdx}
@@ -231,12 +251,12 @@ const payment = userData ? userData["user"]?.payments : "";
                   <div className="hidden sm:block">
                     <Datatable
                       hideSearch={hideSearch}
-                      tableData={data?.events}
+                      tableData={data?.liveEvents}
                       tableColumns={columns}
                     />
                   </div>
                 </>
-                {/* )} */}
+                
               </>
             )}
           </div>
@@ -286,16 +306,27 @@ function View(value, eventCategory) {
 }
 
 function RenderEventTypes(eventTypes) {
-  if (eventTypes && eventTypes.length > 0) {
+  console.log('eventTypes',eventTypes);
+  
+  // if (eventTypes && eventTypes.length > 0) {
+  //   return (
+  //     <div>
+  //       {eventTypes.map((type, index) => {
+  //         return (
+  //           <div key={`d${index}`}>
+  //             <span>{type.name}</span>
+  //           </div>
+  //         );
+  //       })}
+  //     </div>
+  //   );
+  // } else {
+  //   return <div />;
+  // }
+  if (eventTypes) {
     return (
       <div>
-        {eventTypes.map((type, index) => {
-          return (
-            <div key={`d${index}`}>
-              <span>{type.name}</span>
-            </div>
-          );
-        })}
+        {eventTypes?.name}
       </div>
     );
   } else {

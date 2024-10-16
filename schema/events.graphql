@@ -66,7 +66,7 @@
 #      vehicles {
 #     id
 #     bidTimeExpire
-#   } 
+#   }
 #   }
 # }
 
@@ -209,8 +209,8 @@
 #       totalBids
 #       quoteIncreament
 #       watchedBy {
-#     id  
-    
+#     id
+
 # }
 #     }
 #     bidLock
@@ -278,7 +278,6 @@
 #   }
 # }
 
-
 # query LiveEventscount {
 #   liveEvents {
 #   eventCategory
@@ -287,13 +286,99 @@
 
 # query UpcomingEventsCounts {
 #   upcomingEvents {
-#   id  
+#   id
 #   }
 # }
-query LiveEvents {
-  events {
+
+# query LiveEvents {
+#   events {
+#     bidLock
+#     createdAt
+#     createdById
+#     downloadableFile_filename
+#     endDate
+#     eventCategory
+#     eventNo
+#     extraTime
+#     extraTimeTrigerIn
+#     # firstVehicleEndDate
+#     gapInBetweenVehicles
+#     id
+#     location {
+#       name
+#       state
+#       country
+#       id
+#     }
+#     noOfBids
+#     seller {
+#       name
+#       mobile
+#       id
+#       contactPerson
+#     }
+#     startDate
+#     status
+#     termsAndConditions
+#     updatedAt
+#     vehicleCategory {
+#       name
+#       id
+#       updatedAt
+#     }
+#     vehicleLiveTimeIn
+#     vehicles {
+#       color
+#     }
+#   }
+# }
+
+query LiveEvents($orderBy: [VehicleOrderByInput!], $take: Int, $skip: Int) {
+  liveEvents {
     bidLock
     createdAt
+    createdById
+    vehiclesCount
+    downloadableFile_filename
+    endDate
+    eventCategory
+    eventNo
+    extraTime
+    extraTimeTrigerIn
+    firstVehicleEndDate
+    gapInBetweenVehicles
+    id
+    location {
+      name
+      id
+      state
+    }
+    noOfBids
+    pauseDate
+    pausedTotalTime
+    seller {
+      name
+      mobile
+    }
+    startDate
+    status
+    termsAndConditions
+    updatedAt
+    vehicleCategory {
+      name
+    }
+    vehicleLiveTimeIn
+    vehicles(orderBy: $orderBy, take: $take, skip: $skip) {
+      YOM
+    }
+  }
+}
+
+query UpcomingEvents($take: Int, $skip: Int) {
+  upcomingEvents(take: $take, skip: $skip) {
+    bidLock
+    createdAt
+    vehiclesCount
     createdById
     downloadableFile_filename
     endDate
@@ -301,19 +386,153 @@ query LiveEvents {
     eventNo
     extraTime
     extraTimeTrigerIn
-    # firstVehicleEndDate
+    firstVehicleEndDate
     gapInBetweenVehicles
     id
-    locationId
+    location {
+      name
+      state
+    }
     noOfBids
     pauseDate
     pausedTotalTime
-    sellerId
+    seller {
+      mobile
+      name
+    }
     startDate
     status
     termsAndConditions
     updatedAt
-    vehicleCategoryId
+    vehicleCategory {
+      name
+    }
     vehicleLiveTimeIn
   }
+}
+
+query GetEvents(
+  $where: EventWhereUniqueInput!
+  $orderBy: [VehicleOrderByInput!]
+  $take: Int
+  $skip: Int
+) {
+  event(where: $where) {
+    bidLock
+    createdAt
+    vehiclesCount
+    createdById
+    downloadableFile_filename
+    endDate
+    eventCategory
+    eventNo
+    extraTime
+    extraTimeTrigerIn
+    firstVehicleEndDate
+    gapInBetweenVehicles
+    id
+    location {
+      name
+      state
+      id
+    }
+    noOfBids
+    pauseDate
+    pausedTotalTime
+    seller {
+      mobile
+      name
+      nationalHead
+      id
+      contactPerson
+    }
+    startDate
+    status
+    termsAndConditions
+    vehicleCategory {
+      name
+    }
+    vehicleLiveTimeIn
+    vehicles(orderBy: $orderBy, take: $take, skip: $skip) {
+      YOM
+        userVehicleBids {
+        amount
+        userId
+        id
+        name
+        bidVehicleId
+        
+      }
+      additionalRemarks
+      approxParkingCharges
+      area
+      auctionManager
+      autobseContact
+      autobse_contact_person
+      bidAmountUpdate
+      bidStartTime
+      bidTimeExpire
+      buyerFees
+      category
+      chassisNo
+      city
+      clientContactNo
+      clientContactPerson
+      climateControl
+      color
+      createdAt
+      createdById
+      currentBidAmount
+      dateOfRegistration
+      doorCount
+      engineNo
+      fitness
+      fuel
+      gearBox
+      hypothication
+      id
+      image
+      inspectionLink
+      insurance
+      insuranceStatus
+      insuranceValidTill
+      kmReading
+      loanAgreementNo
+      lotNumber
+      make
+      mileage
+      model
+      ownership
+      parkingCharges
+      parkingRate
+      paymentTerms
+      permit
+      powerSteering
+      quoteIncreament
+      rcStatus
+      registeredOwnerName
+      registrationNumber
+      repoDt
+      reservePrice
+      rtoFine
+      shape
+      startPrice
+      startBidAmount
+      state
+      updatedAt
+      varient
+      vehicleCondition
+      vehicleIndexNo
+      vehicleRemarks
+      veicleLocation
+      yardLocation
+        userVehicleBidsCount
+    totalBids
+    myBidRank
+    }
+  }
+}
+
+query TimeQuery {
+  time
 }

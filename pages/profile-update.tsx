@@ -1,6 +1,5 @@
 import * as Yup from "yup";
 import Image from "next/image";
-
 import { Formik, Form, ErrorMessage, Field } from "formik";
 import FormField from "../components/ui/FormField";
 import ButtonLoading from "../components/ui/ButtonLoading";
@@ -88,18 +87,17 @@ function ProfileUpdate() {
     }
   }, [selectedState]);
 
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
       const id = localStorage.getItem("id");
-         // Retrieve the value from localStorage
-    const loggedInStatus = JSON.parse(localStorage.getItem('isVerified'));
+      // Retrieve the value from localStorage
+      const loggedInStatus = JSON.parse(localStorage.getItem("isVerified"));
 
-    // If a value exists in localStorage, update the state
-    if (loggedInStatus !== null) {
-      setShowDocumentForm(loggedInStatus);
-    }
+      // If a value exists in localStorage, update the state
+      if (loggedInStatus !== null) {
+        setShowDocumentForm(loggedInStatus);
+      }
 
       setUserId(id);
       setAccessToken(token);
@@ -196,12 +194,12 @@ function ProfileUpdate() {
           city: values.city,
           state: values.state,
           country: "India",
- 
-          idProofType: values.idProofType || "Aadhar", 
+
+          idProofType: values.idProofType || "Aadhar",
           password: values.password,
           pancardNo: values.pancardNo,
           idProofNo: values.idProofNo,
-       
+
           role: UserRoleType?.Dealer,
           status: UserStatusType?.Active,
         },
@@ -210,14 +208,14 @@ function ProfileUpdate() {
 
       console.log("result", result);
       // Save
-localStorage.setItem('isVerified', JSON.stringify(true));
+      localStorage.setItem("isVerified", JSON.stringify(true));
 
-// Retrieve
-const isLoggedIn = JSON.parse(localStorage.getItem('isLoggedIn'));
+      // Retrieve
+      const isLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
 
-console.log(isLoggedIn); // Output: false
+      console.log(isLoggedIn); // Output: false
 
-      setShowDocumentForm(true)
+      setShowDocumentForm(true);
       // Handle successful response
       // localStorage.setItem("isVerified", true);
       // localStorage.setItem("name", `${values.firstName}`);
@@ -343,19 +341,18 @@ console.log(isLoggedIn); // Output: false
         body: formData,
         headers: {
           "x-apollo-operation-name": "uploadUserProfile", // Include this header
-          // Other headers can go here
+          // Other headers can go  here
         },
       });
 
       console.log("result", response);
-     
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-       if (data.success) {
+      if (data.success) {
         // Handle successful response
         localStorage.setItem("status", "active");
         localStorage.setItem("name", `${data?.res.firstName}`);

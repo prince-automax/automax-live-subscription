@@ -32,12 +32,12 @@ export default function PaymentsTable() {
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     {
       where: { id: userId },
-    },
+    }
     // {
     //   sortOrder: "Desc"
-        
+
     //       ,
-      
+
     // //   skip: 0,
     // //   take: 5,
     // },
@@ -112,6 +112,15 @@ export default function PaymentsTable() {
                                 "MMMM Do, YYYY ddd h:mm a"
                               )
                             : ""}
+                        </div>
+                        <div className="mt-2">
+                          {/* <Image
+                            src={item?.image ? item?.image : ""}
+                            alt="payment Image"
+                            width={250}
+                            height={128}
+                            className="mt-2 object-cover rounded-lg"
+                          /> */}
                         </div>
                         {/* <div className="mt-2 flex items-center text-sm text-gray-500">
                           <CheckCircleIcon
