@@ -4,6 +4,7 @@ import {
   PlusIcon,
   MinusIcon,
 } from "@heroicons/react/outline";
+
 import {
   // CreateBidMutationVariables,
   // GetEventQuery,
@@ -23,9 +24,15 @@ import {
   useCreateBidMutation,
   CreateBidMutationVariables,
   useTimeQueryQuery,
-  TimeQueryQueryVariables
+  TimeQueryQueryVariables,
+  
+  
 } from "@utils/graphql";
-import graphQLClient from "@utils/useGQLQuery";
+import { useSubscription, gql } from '@apollo/client';
+import useStore from "../../utils/store";
+
+import { useVehicleUpdateSubscription,VehicleUpdateSubscriptionVariables} from "@utils/apollo"
+import  graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
@@ -75,6 +82,11 @@ function Events() {
   // useEffect(()=>{
   //   TermsAndCondtionsModal()
   // },[])
+  const token = useStore((state) => state.token); // Access the token from the store
+
+  // console.log('token from store',token);
+  
+
 
   const handleClick = () => {
     setShowCode(!showCode);
@@ -82,7 +94,7 @@ function Events() {
   useEffect(() => {
     const timer = setInterval(() => {
       setTick((tic) => tic + 1);
-    }, 1000);
+    }, 60000);
     return () => clearInterval(timer);
   }, []);
 
@@ -92,7 +104,17 @@ function Events() {
     { refetchInterval: 60000 }
   );
 
-console.log('timedata',timeData);
+// console.log('timedata',timeData);
+
+const result = useVehicleUpdateSubscription()
+// const { data:result, loading } = useVehicleUpdateSubscription();
+
+
+// console.log('sub',result?.data);
+
+useEffect(()=>{
+  refetch()
+},[result?.data])
 
 
   useEffect(() => {
@@ -106,7 +128,6 @@ console.log('timedata',timeData);
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
       const id = localStorage.getItem("id");
-
       setAccessToken(token);
       setUserId(id);
       setUsrid(id);
@@ -116,7 +137,7 @@ console.log('timedata',timeData);
   // useGetEventsQuery,
   // GetEventsQuery
 
-  const { data, isLoading } = useGetEventsQuery<GetEventsQuery>(
+  const { data, isLoading,refetch } = useGetEventsQuery<GetEventsQuery>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     {
       where: { id: id as string },
@@ -129,9 +150,20 @@ console.log('timedata',timeData);
       skip: 0,
       // userVehicleBidsOrderBy2: [{ amount: OrderDirection.Desc }],
     },
-    { cacheTime: 5, refetchInterval: interval, enabled: accessToken !== "" }
+    { 
+      
+       enabled: accessToken !== "" }
   );
 
+  console.log('data',data);
+  
+
+  // useEffect(()=>{
+  //   refetch()
+  //   console.log('item001');
+    
+  //     },[result])
+  
   // console.log("data of live events", data);
 
   // const {
@@ -339,7 +371,7 @@ console.log('timedata',timeData);
               <>
                 {/*MOBILE DESIGN*/}
                 <div
-                  key={`d${index}`}
+                  key={`d${item?.id}`}
                   className={`sm:hidden sm:max-md:flex-col font-sans border  rounded  mt-4 ${
                     moment(item?.bidTimeExpire).diff(moment(), "s") <= 120 &&
                     moment(item?.bidTimeExpire).diff(moment(), "s") > 0
@@ -1101,7 +1133,7 @@ console.log('timedata',timeData);
 export default withPrivateRoute(Events);
 
 const EnterBid = ({ row, call, event }) => {
-  console.log("event", event);
+  // console.log("event", event);
 
   const [bidAmount, setBidAmount] = useState("");
   // console.log("hh", row?.userVehicleBids[0]?.amount + +row?.quoteIncreament);

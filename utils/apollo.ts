@@ -1,16 +1,11 @@
-import { GraphQLClient } from 'graphql-request';
-import { RequestInit } from 'graphql-request/src/types.dom';
-import { useMutation, useQuery, UseMutationOptions, UseQueryOptions } from 'react-query';
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-
-function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variables?: TVariables, headers?: RequestInit['headers']) {
-  //@ts-ignore
-  return async (): Promise<TData> => client.request<TData, TVariables>(query, variables, headers);
-}
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -1446,7 +1441,7 @@ export type GetVehicleQueryVariables = Exact<{
 export type GetVehicleQuery = { __typename?: 'Query', vehicle: { __typename?: 'Vehicle', YOM?: number | null, additionalRemarks?: string | null, approxParkingCharges?: string | null, area?: string | null, auctionManager?: string | null, autobseContact?: string | null, autobse_contact_person?: string | null, bidAmountUpdate?: number | null, bidStartTime: any, bidStatus: string, bidTimeExpire: any, buyerFees?: string | null, category?: string | null, chassisNo?: string | null, city?: string | null, clientContactNo?: string | null, clientContactPerson?: string | null, climateControl?: string | null, color?: string | null, createdAt?: any | null, createdById?: string | null, currentBidAmount?: number | null, dateOfRegistration?: string | null, doorCount?: number | null, engineNo?: string | null, fitness?: string | null, fuel?: string | null, gearBox?: string | null, hypothication?: string | null, id: string, image?: string | null, inspectionLink?: string | null, insurance?: string | null, insuranceStatus?: string | null, insuranceValidTill?: string | null, kmReading?: number | null, loanAgreementNo: string, lotNumber?: number | null, make?: string | null, model?: string | null, mileage?: number | null, ownership?: number | null, parkingCharges?: string | null, parkingRate?: string | null, paymentTerms?: string | null, permit?: string | null, powerSteering?: string | null, quoteIncreament?: number | null, rcStatus?: string | null, registeredOwnerName?: string | null, registrationNumber: string, repoDt?: string | null, reservePrice?: number | null, rtoFine?: string | null, shape?: string | null, startBidAmount?: number | null, userVehicleBidsCount?: number | null, totalBids?: number | null, myBidRank?: number | null, startPrice?: number | null, state?: string | null, tax?: string | null, taxValidityDate?: string | null, type?: string | null, updatedAt?: any | null, varient?: string | null, vehicleCondition?: string | null, vehicleIndexNo: number, vehicleRemarks?: string | null, veicleLocation?: string | null, yardLocation?: string | null, event?: { __typename?: 'Event', startDate: any, noOfBids: number, bidLock?: string | null } | null } };
 
 
-export const LoginUsingPasswordDocument = `
+export const LoginUsingPasswordDocument = gql`
     mutation LoginUsingPassword($loginInput: LoginUserInput!) {
   login(loginInput: $loginInput) {
     access_token
@@ -1462,40 +1457,66 @@ export const LoginUsingPasswordDocument = `
   }
 }
     `;
-export const useLoginUsingPasswordMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<LoginUsingPasswordMutation, TError, LoginUsingPasswordMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) =>
-    useMutation<LoginUsingPasswordMutation, TError, LoginUsingPasswordMutationVariables, TContext>(
-      ['LoginUsingPassword'],
-      (variables?: LoginUsingPasswordMutationVariables) => fetcher<LoginUsingPasswordMutation, LoginUsingPasswordMutationVariables>(client, LoginUsingPasswordDocument, variables, headers)(),
-      options
-    );
-export const CreateUserDocument = `
+export type LoginUsingPasswordMutationFn = Apollo.MutationFunction<LoginUsingPasswordMutation, LoginUsingPasswordMutationVariables>;
+
+/**
+ * __useLoginUsingPasswordMutation__
+ *
+ * To run a mutation, you first call `useLoginUsingPasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginUsingPasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginUsingPasswordMutation, { data, loading, error }] = useLoginUsingPasswordMutation({
+ *   variables: {
+ *      loginInput: // value for 'loginInput'
+ *   },
+ * });
+ */
+export function useLoginUsingPasswordMutation(baseOptions?: Apollo.MutationHookOptions<LoginUsingPasswordMutation, LoginUsingPasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginUsingPasswordMutation, LoginUsingPasswordMutationVariables>(LoginUsingPasswordDocument, options);
+      }
+export type LoginUsingPasswordMutationHookResult = ReturnType<typeof useLoginUsingPasswordMutation>;
+export type LoginUsingPasswordMutationResult = Apollo.MutationResult<LoginUsingPasswordMutation>;
+export type LoginUsingPasswordMutationOptions = Apollo.BaseMutationOptions<LoginUsingPasswordMutation, LoginUsingPasswordMutationVariables>;
+export const CreateUserDocument = gql`
     mutation CreateUser($data: CreateUserInput!) {
   createUser(data: $data) {
     id
   }
 }
     `;
-export const useCreateUserMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<CreateUserMutation, TError, CreateUserMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) =>
-    useMutation<CreateUserMutation, TError, CreateUserMutationVariables, TContext>(
-      ['CreateUser'],
-      (variables?: CreateUserMutationVariables) => fetcher<CreateUserMutation, CreateUserMutationVariables>(client, CreateUserDocument, variables, headers)(),
-      options
-    );
-export const SendOtpDocument = `
+export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
+
+/**
+ * __useCreateUserMutation__
+ *
+ * To run a mutation, you first call `useCreateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUserMutation, { data, loading, error }] = useCreateUserMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, options);
+      }
+export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
+export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
+export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const SendOtpDocument = gql`
     mutation SendOtp($sendOtpDto: SendOtpDto!) {
   sendOtp(sendOtpDto: $sendOtpDto) {
     status
@@ -1503,20 +1524,33 @@ export const SendOtpDocument = `
   }
 }
     `;
-export const useSendOtpMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<SendOtpMutation, TError, SendOtpMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) =>
-    useMutation<SendOtpMutation, TError, SendOtpMutationVariables, TContext>(
-      ['SendOtp'],
-      (variables?: SendOtpMutationVariables) => fetcher<SendOtpMutation, SendOtpMutationVariables>(client, SendOtpDocument, variables, headers)(),
-      options
-    );
-export const VerifyOtpDocument = `
+export type SendOtpMutationFn = Apollo.MutationFunction<SendOtpMutation, SendOtpMutationVariables>;
+
+/**
+ * __useSendOtpMutation__
+ *
+ * To run a mutation, you first call `useSendOtpMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendOtpMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendOtpMutation, { data, loading, error }] = useSendOtpMutation({
+ *   variables: {
+ *      sendOtpDto: // value for 'sendOtpDto'
+ *   },
+ * });
+ */
+export function useSendOtpMutation(baseOptions?: Apollo.MutationHookOptions<SendOtpMutation, SendOtpMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendOtpMutation, SendOtpMutationVariables>(SendOtpDocument, options);
+      }
+export type SendOtpMutationHookResult = ReturnType<typeof useSendOtpMutation>;
+export type SendOtpMutationResult = Apollo.MutationResult<SendOtpMutation>;
+export type SendOtpMutationOptions = Apollo.BaseMutationOptions<SendOtpMutation, SendOtpMutationVariables>;
+export const VerifyOtpDocument = gql`
     mutation verifyOtp($verfiyOtpDto: VerfiyOtpDto!) {
   verifyOtp(verfiyOtpDto: $verfiyOtpDto) {
     user {
@@ -1532,20 +1566,33 @@ export const VerifyOtpDocument = `
   }
 }
     `;
-export const useVerifyOtpMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<VerifyOtpMutation, TError, VerifyOtpMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) =>
-    useMutation<VerifyOtpMutation, TError, VerifyOtpMutationVariables, TContext>(
-      ['verifyOtp'],
-      (variables?: VerifyOtpMutationVariables) => fetcher<VerifyOtpMutation, VerifyOtpMutationVariables>(client, VerifyOtpDocument, variables, headers)(),
-      options
-    );
-export const CreateBidDocument = `
+export type VerifyOtpMutationFn = Apollo.MutationFunction<VerifyOtpMutation, VerifyOtpMutationVariables>;
+
+/**
+ * __useVerifyOtpMutation__
+ *
+ * To run a mutation, you first call `useVerifyOtpMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useVerifyOtpMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [verifyOtpMutation, { data, loading, error }] = useVerifyOtpMutation({
+ *   variables: {
+ *      verfiyOtpDto: // value for 'verfiyOtpDto'
+ *   },
+ * });
+ */
+export function useVerifyOtpMutation(baseOptions?: Apollo.MutationHookOptions<VerifyOtpMutation, VerifyOtpMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<VerifyOtpMutation, VerifyOtpMutationVariables>(VerifyOtpDocument, options);
+      }
+export type VerifyOtpMutationHookResult = ReturnType<typeof useVerifyOtpMutation>;
+export type VerifyOtpMutationResult = Apollo.MutationResult<VerifyOtpMutation>;
+export type VerifyOtpMutationOptions = Apollo.BaseMutationOptions<VerifyOtpMutation, VerifyOtpMutationVariables>;
+export const CreateBidDocument = gql`
     mutation CreateBid($bidVehicleId: String!, $createBidInput: CreateBidInput!) {
   createBid(bidVehicleId: $bidVehicleId, createBidInput: $createBidInput) {
     amount
@@ -1556,20 +1603,34 @@ export const CreateBidDocument = `
   }
 }
     `;
-export const useCreateBidMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<CreateBidMutation, TError, CreateBidMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) =>
-    useMutation<CreateBidMutation, TError, CreateBidMutationVariables, TContext>(
-      ['CreateBid'],
-      (variables?: CreateBidMutationVariables) => fetcher<CreateBidMutation, CreateBidMutationVariables>(client, CreateBidDocument, variables, headers)(),
-      options
-    );
-export const CreateEnquiryDocument = `
+export type CreateBidMutationFn = Apollo.MutationFunction<CreateBidMutation, CreateBidMutationVariables>;
+
+/**
+ * __useCreateBidMutation__
+ *
+ * To run a mutation, you first call `useCreateBidMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBidMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBidMutation, { data, loading, error }] = useCreateBidMutation({
+ *   variables: {
+ *      bidVehicleId: // value for 'bidVehicleId'
+ *      createBidInput: // value for 'createBidInput'
+ *   },
+ * });
+ */
+export function useCreateBidMutation(baseOptions?: Apollo.MutationHookOptions<CreateBidMutation, CreateBidMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBidMutation, CreateBidMutationVariables>(CreateBidDocument, options);
+      }
+export type CreateBidMutationHookResult = ReturnType<typeof useCreateBidMutation>;
+export type CreateBidMutationResult = Apollo.MutationResult<CreateBidMutation>;
+export type CreateBidMutationOptions = Apollo.BaseMutationOptions<CreateBidMutation, CreateBidMutationVariables>;
+export const CreateEnquiryDocument = gql`
     mutation CreateEnquiry($createEnquiryInput: CreateEnquiryInput!) {
   createEnquiry(createEnquiryInput: $createEnquiryInput) {
     firstName
@@ -1581,20 +1642,33 @@ export const CreateEnquiryDocument = `
   }
 }
     `;
-export const useCreateEnquiryMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<CreateEnquiryMutation, TError, CreateEnquiryMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) =>
-    useMutation<CreateEnquiryMutation, TError, CreateEnquiryMutationVariables, TContext>(
-      ['CreateEnquiry'],
-      (variables?: CreateEnquiryMutationVariables) => fetcher<CreateEnquiryMutation, CreateEnquiryMutationVariables>(client, CreateEnquiryDocument, variables, headers)(),
-      options
-    );
-export const LiveEventsDocument = `
+export type CreateEnquiryMutationFn = Apollo.MutationFunction<CreateEnquiryMutation, CreateEnquiryMutationVariables>;
+
+/**
+ * __useCreateEnquiryMutation__
+ *
+ * To run a mutation, you first call `useCreateEnquiryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateEnquiryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createEnquiryMutation, { data, loading, error }] = useCreateEnquiryMutation({
+ *   variables: {
+ *      createEnquiryInput: // value for 'createEnquiryInput'
+ *   },
+ * });
+ */
+export function useCreateEnquiryMutation(baseOptions?: Apollo.MutationHookOptions<CreateEnquiryMutation, CreateEnquiryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateEnquiryMutation, CreateEnquiryMutationVariables>(CreateEnquiryDocument, options);
+      }
+export type CreateEnquiryMutationHookResult = ReturnType<typeof useCreateEnquiryMutation>;
+export type CreateEnquiryMutationResult = Apollo.MutationResult<CreateEnquiryMutation>;
+export type CreateEnquiryMutationOptions = Apollo.BaseMutationOptions<CreateEnquiryMutation, CreateEnquiryMutationVariables>;
+export const LiveEventsDocument = gql`
     query LiveEvents($orderBy: [VehicleOrderByInput!], $take: Int, $skip: Int) {
   liveEvents {
     bidLock
@@ -1636,21 +1710,42 @@ export const LiveEventsDocument = `
   }
 }
     `;
-export const useLiveEventsQuery = <
-      TData = LiveEventsQuery,
-      TError = unknown
-    >(
-      client: GraphQLClient,
-      variables?: LiveEventsQueryVariables,
-      options?: UseQueryOptions<LiveEventsQuery, TError, TData>,
-      headers?: RequestInit['headers']
-    ) =>
-    useQuery<LiveEventsQuery, TError, TData>(
-      variables === undefined ? ['LiveEvents'] : ['LiveEvents', variables],
-      fetcher<LiveEventsQuery, LiveEventsQueryVariables>(client, LiveEventsDocument, variables, headers),
-      options
-    );
-export const UpcomingEventsDocument = `
+
+/**
+ * __useLiveEventsQuery__
+ *
+ * To run a query within a React component, call `useLiveEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLiveEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLiveEventsQuery({
+ *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useLiveEventsQuery(baseOptions?: Apollo.QueryHookOptions<LiveEventsQuery, LiveEventsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LiveEventsQuery, LiveEventsQueryVariables>(LiveEventsDocument, options);
+      }
+export function useLiveEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LiveEventsQuery, LiveEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LiveEventsQuery, LiveEventsQueryVariables>(LiveEventsDocument, options);
+        }
+export function useLiveEventsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<LiveEventsQuery, LiveEventsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<LiveEventsQuery, LiveEventsQueryVariables>(LiveEventsDocument, options);
+        }
+export type LiveEventsQueryHookResult = ReturnType<typeof useLiveEventsQuery>;
+export type LiveEventsLazyQueryHookResult = ReturnType<typeof useLiveEventsLazyQuery>;
+export type LiveEventsSuspenseQueryHookResult = ReturnType<typeof useLiveEventsSuspenseQuery>;
+export type LiveEventsQueryResult = Apollo.QueryResult<LiveEventsQuery, LiveEventsQueryVariables>;
+export const UpcomingEventsDocument = gql`
     query UpcomingEvents($take: Int, $skip: Int) {
   upcomingEvents(take: $take, skip: $skip) {
     bidLock
@@ -1688,21 +1783,41 @@ export const UpcomingEventsDocument = `
   }
 }
     `;
-export const useUpcomingEventsQuery = <
-      TData = UpcomingEventsQuery,
-      TError = unknown
-    >(
-      client: GraphQLClient,
-      variables?: UpcomingEventsQueryVariables,
-      options?: UseQueryOptions<UpcomingEventsQuery, TError, TData>,
-      headers?: RequestInit['headers']
-    ) =>
-    useQuery<UpcomingEventsQuery, TError, TData>(
-      variables === undefined ? ['UpcomingEvents'] : ['UpcomingEvents', variables],
-      fetcher<UpcomingEventsQuery, UpcomingEventsQueryVariables>(client, UpcomingEventsDocument, variables, headers),
-      options
-    );
-export const GetEventsDocument = `
+
+/**
+ * __useUpcomingEventsQuery__
+ *
+ * To run a query within a React component, call `useUpcomingEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUpcomingEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUpcomingEventsQuery({
+ *   variables: {
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useUpcomingEventsQuery(baseOptions?: Apollo.QueryHookOptions<UpcomingEventsQuery, UpcomingEventsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UpcomingEventsQuery, UpcomingEventsQueryVariables>(UpcomingEventsDocument, options);
+      }
+export function useUpcomingEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UpcomingEventsQuery, UpcomingEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UpcomingEventsQuery, UpcomingEventsQueryVariables>(UpcomingEventsDocument, options);
+        }
+export function useUpcomingEventsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<UpcomingEventsQuery, UpcomingEventsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<UpcomingEventsQuery, UpcomingEventsQueryVariables>(UpcomingEventsDocument, options);
+        }
+export type UpcomingEventsQueryHookResult = ReturnType<typeof useUpcomingEventsQuery>;
+export type UpcomingEventsLazyQueryHookResult = ReturnType<typeof useUpcomingEventsLazyQuery>;
+export type UpcomingEventsSuspenseQueryHookResult = ReturnType<typeof useUpcomingEventsSuspenseQuery>;
+export type UpcomingEventsQueryResult = Apollo.QueryResult<UpcomingEventsQuery, UpcomingEventsQueryVariables>;
+export const GetEventsDocument = gql`
     query GetEvents($where: EventWhereUniqueInput!, $orderBy: [VehicleOrderByInput!], $take: Int, $skip: Int) {
   event(where: $where) {
     bidLock
@@ -1819,40 +1934,80 @@ export const GetEventsDocument = `
   }
 }
     `;
-export const useGetEventsQuery = <
-      TData = GetEventsQuery,
-      TError = unknown
-    >(
-      client: GraphQLClient,
-      variables: GetEventsQueryVariables,
-      options?: UseQueryOptions<GetEventsQuery, TError, TData>,
-      headers?: RequestInit['headers']
-    ) =>
-    useQuery<GetEventsQuery, TError, TData>(
-      ['GetEvents', variables],
-      fetcher<GetEventsQuery, GetEventsQueryVariables>(client, GetEventsDocument, variables, headers),
-      options
-    );
-export const TimeQueryDocument = `
+
+/**
+ * __useGetEventsQuery__
+ *
+ * To run a query within a React component, call `useGetEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetEventsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useGetEventsQuery(baseOptions: Apollo.QueryHookOptions<GetEventsQuery, GetEventsQueryVariables> & ({ variables: GetEventsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetEventsQuery, GetEventsQueryVariables>(GetEventsDocument, options);
+      }
+export function useGetEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetEventsQuery, GetEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetEventsQuery, GetEventsQueryVariables>(GetEventsDocument, options);
+        }
+export function useGetEventsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetEventsQuery, GetEventsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetEventsQuery, GetEventsQueryVariables>(GetEventsDocument, options);
+        }
+export type GetEventsQueryHookResult = ReturnType<typeof useGetEventsQuery>;
+export type GetEventsLazyQueryHookResult = ReturnType<typeof useGetEventsLazyQuery>;
+export type GetEventsSuspenseQueryHookResult = ReturnType<typeof useGetEventsSuspenseQuery>;
+export type GetEventsQueryResult = Apollo.QueryResult<GetEventsQuery, GetEventsQueryVariables>;
+export const TimeQueryDocument = gql`
     query TimeQuery {
   time
 }
     `;
-export const useTimeQueryQuery = <
-      TData = TimeQueryQuery,
-      TError = unknown
-    >(
-      client: GraphQLClient,
-      variables?: TimeQueryQueryVariables,
-      options?: UseQueryOptions<TimeQueryQuery, TError, TData>,
-      headers?: RequestInit['headers']
-    ) =>
-    useQuery<TimeQueryQuery, TError, TData>(
-      variables === undefined ? ['TimeQuery'] : ['TimeQuery', variables],
-      fetcher<TimeQueryQuery, TimeQueryQueryVariables>(client, TimeQueryDocument, variables, headers),
-      options
-    );
-export const CreatePaymentDocument = `
+
+/**
+ * __useTimeQueryQuery__
+ *
+ * To run a query within a React component, call `useTimeQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTimeQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTimeQueryQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTimeQueryQuery(baseOptions?: Apollo.QueryHookOptions<TimeQueryQuery, TimeQueryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TimeQueryQuery, TimeQueryQueryVariables>(TimeQueryDocument, options);
+      }
+export function useTimeQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TimeQueryQuery, TimeQueryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TimeQueryQuery, TimeQueryQueryVariables>(TimeQueryDocument, options);
+        }
+export function useTimeQuerySuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<TimeQueryQuery, TimeQueryQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<TimeQueryQuery, TimeQueryQueryVariables>(TimeQueryDocument, options);
+        }
+export type TimeQueryQueryHookResult = ReturnType<typeof useTimeQueryQuery>;
+export type TimeQueryLazyQueryHookResult = ReturnType<typeof useTimeQueryLazyQuery>;
+export type TimeQuerySuspenseQueryHookResult = ReturnType<typeof useTimeQuerySuspenseQuery>;
+export type TimeQueryQueryResult = Apollo.QueryResult<TimeQueryQuery, TimeQueryQueryVariables>;
+export const CreatePaymentDocument = gql`
     mutation CreatePayment($createPaymentInput: CreatePaymentInput!) {
   createPayment(createPaymentInput: $createPaymentInput) {
     id
@@ -1861,20 +2016,33 @@ export const CreatePaymentDocument = `
   }
 }
     `;
-export const useCreatePaymentMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<CreatePaymentMutation, TError, CreatePaymentMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) =>
-    useMutation<CreatePaymentMutation, TError, CreatePaymentMutationVariables, TContext>(
-      ['CreatePayment'],
-      (variables?: CreatePaymentMutationVariables) => fetcher<CreatePaymentMutation, CreatePaymentMutationVariables>(client, CreatePaymentDocument, variables, headers)(),
-      options
-    );
-export const FindUserPaymentsDocument = `
+export type CreatePaymentMutationFn = Apollo.MutationFunction<CreatePaymentMutation, CreatePaymentMutationVariables>;
+
+/**
+ * __useCreatePaymentMutation__
+ *
+ * To run a mutation, you first call `useCreatePaymentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePaymentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPaymentMutation, { data, loading, error }] = useCreatePaymentMutation({
+ *   variables: {
+ *      createPaymentInput: // value for 'createPaymentInput'
+ *   },
+ * });
+ */
+export function useCreatePaymentMutation(baseOptions?: Apollo.MutationHookOptions<CreatePaymentMutation, CreatePaymentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePaymentMutation, CreatePaymentMutationVariables>(CreatePaymentDocument, options);
+      }
+export type CreatePaymentMutationHookResult = ReturnType<typeof useCreatePaymentMutation>;
+export type CreatePaymentMutationResult = Apollo.MutationResult<CreatePaymentMutation>;
+export type CreatePaymentMutationOptions = Apollo.BaseMutationOptions<CreatePaymentMutation, CreatePaymentMutationVariables>;
+export const FindUserPaymentsDocument = gql`
     query findUserPayments($where: UserWhereUniqueInput!) {
   user(where: $where) {
     id
@@ -1895,28 +2063,69 @@ export const FindUserPaymentsDocument = `
   }
 }
     `;
-export const useFindUserPaymentsQuery = <
-      TData = FindUserPaymentsQuery,
-      TError = unknown
-    >(
-      client: GraphQLClient,
-      variables: FindUserPaymentsQueryVariables,
-      options?: UseQueryOptions<FindUserPaymentsQuery, TError, TData>,
-      headers?: RequestInit['headers']
-    ) =>
-    useQuery<FindUserPaymentsQuery, TError, TData>(
-      ['findUserPayments', variables],
-      fetcher<FindUserPaymentsQuery, FindUserPaymentsQueryVariables>(client, FindUserPaymentsDocument, variables, headers),
-      options
-    );
-export const VehicleUpdateDocument = `
+
+/**
+ * __useFindUserPaymentsQuery__
+ *
+ * To run a query within a React component, call `useFindUserPaymentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindUserPaymentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindUserPaymentsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useFindUserPaymentsQuery(baseOptions: Apollo.QueryHookOptions<FindUserPaymentsQuery, FindUserPaymentsQueryVariables> & ({ variables: FindUserPaymentsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindUserPaymentsQuery, FindUserPaymentsQueryVariables>(FindUserPaymentsDocument, options);
+      }
+export function useFindUserPaymentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindUserPaymentsQuery, FindUserPaymentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindUserPaymentsQuery, FindUserPaymentsQueryVariables>(FindUserPaymentsDocument, options);
+        }
+export function useFindUserPaymentsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FindUserPaymentsQuery, FindUserPaymentsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FindUserPaymentsQuery, FindUserPaymentsQueryVariables>(FindUserPaymentsDocument, options);
+        }
+export type FindUserPaymentsQueryHookResult = ReturnType<typeof useFindUserPaymentsQuery>;
+export type FindUserPaymentsLazyQueryHookResult = ReturnType<typeof useFindUserPaymentsLazyQuery>;
+export type FindUserPaymentsSuspenseQueryHookResult = ReturnType<typeof useFindUserPaymentsSuspenseQuery>;
+export type FindUserPaymentsQueryResult = Apollo.QueryResult<FindUserPaymentsQuery, FindUserPaymentsQueryVariables>;
+export const VehicleUpdateDocument = gql`
     subscription VehicleUpdate {
   subscriptionVehicleUpdates {
     id
   }
 }
     `;
-export const UpdateUserDocument = `
+
+/**
+ * __useVehicleUpdateSubscription__
+ *
+ * To run a query within a React component, call `useVehicleUpdateSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useVehicleUpdateSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useVehicleUpdateSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useVehicleUpdateSubscription(baseOptions?: Apollo.SubscriptionHookOptions<VehicleUpdateSubscription, VehicleUpdateSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<VehicleUpdateSubscription, VehicleUpdateSubscriptionVariables>(VehicleUpdateDocument, options);
+      }
+export type VehicleUpdateSubscriptionHookResult = ReturnType<typeof useVehicleUpdateSubscription>;
+export type VehicleUpdateSubscriptionResult = Apollo.SubscriptionResult<VehicleUpdateSubscription>;
+export const UpdateUserDocument = gql`
     mutation UpdateUser($data: UpdateUserInput!, $where: UserWhereUniqueInput!) {
   updateUser(data: $data, where: $where) {
     id
@@ -1947,20 +2156,34 @@ export const UpdateUserDocument = `
   }
 }
     `;
-export const useUpdateUserMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<UpdateUserMutation, TError, UpdateUserMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) =>
-    useMutation<UpdateUserMutation, TError, UpdateUserMutationVariables, TContext>(
-      ['UpdateUser'],
-      (variables?: UpdateUserMutationVariables) => fetcher<UpdateUserMutation, UpdateUserMutationVariables>(client, UpdateUserDocument, variables, headers)(),
-      options
-    );
-export const GetUserDocument = `
+export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+      }
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const GetUserDocument = gql`
     query getUser($where: UserWhereUniqueInput!) {
   user(where: $where) {
     id
@@ -1989,21 +2212,40 @@ export const GetUserDocument = `
   }
 }
     `;
-export const useGetUserQuery = <
-      TData = GetUserQuery,
-      TError = unknown
-    >(
-      client: GraphQLClient,
-      variables: GetUserQueryVariables,
-      options?: UseQueryOptions<GetUserQuery, TError, TData>,
-      headers?: RequestInit['headers']
-    ) =>
-    useQuery<GetUserQuery, TError, TData>(
-      ['getUser', variables],
-      fetcher<GetUserQuery, GetUserQueryVariables>(client, GetUserDocument, variables, headers),
-      options
-    );
-export const GetVehicleDocument = `
+
+/**
+ * __useGetUserQuery__
+ *
+ * To run a query within a React component, call `useGetUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetUserQuery(baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables> & ({ variables: GetUserQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+      }
+export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+        }
+export function useGetUserSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+        }
+export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
+export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
+export type GetUserSuspenseQueryHookResult = ReturnType<typeof useGetUserSuspenseQuery>;
+export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
+export const GetVehicleDocument = gql`
     query GetVehicle($where: VehicleWhereUniqueInput!) {
   vehicle(where: $where) {
     YOM
@@ -2085,17 +2327,36 @@ export const GetVehicleDocument = `
   }
 }
     `;
-export const useGetVehicleQuery = <
-      TData = GetVehicleQuery,
-      TError = unknown
-    >(
-      client: GraphQLClient,
-      variables: GetVehicleQueryVariables,
-      options?: UseQueryOptions<GetVehicleQuery, TError, TData>,
-      headers?: RequestInit['headers']
-    ) =>
-    useQuery<GetVehicleQuery, TError, TData>(
-      ['GetVehicle', variables],
-      fetcher<GetVehicleQuery, GetVehicleQueryVariables>(client, GetVehicleDocument, variables, headers),
-      options
-    );
+
+/**
+ * __useGetVehicleQuery__
+ *
+ * To run a query within a React component, call `useGetVehicleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVehicleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVehicleQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetVehicleQuery(baseOptions: Apollo.QueryHookOptions<GetVehicleQuery, GetVehicleQueryVariables> & ({ variables: GetVehicleQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetVehicleQuery, GetVehicleQueryVariables>(GetVehicleDocument, options);
+      }
+export function useGetVehicleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetVehicleQuery, GetVehicleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetVehicleQuery, GetVehicleQueryVariables>(GetVehicleDocument, options);
+        }
+export function useGetVehicleSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetVehicleQuery, GetVehicleQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetVehicleQuery, GetVehicleQueryVariables>(GetVehicleDocument, options);
+        }
+export type GetVehicleQueryHookResult = ReturnType<typeof useGetVehicleQuery>;
+export type GetVehicleLazyQueryHookResult = ReturnType<typeof useGetVehicleLazyQuery>;
+export type GetVehicleSuspenseQueryHookResult = ReturnType<typeof useGetVehicleSuspenseQuery>;
+export type GetVehicleQueryResult = Apollo.QueryResult<GetVehicleQuery, GetVehicleQueryVariables>;

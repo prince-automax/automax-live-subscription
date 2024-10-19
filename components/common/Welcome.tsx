@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
-  // useQueryQuery,
-  // QueryQueryVariables,
+  useTimeQueryQuery,
+  TimeQueryQueryVariables,
   GetUserQueryVariables,
   useGetUserQuery,
   GetUserQuery
