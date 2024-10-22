@@ -16,8 +16,8 @@ import {
     useSendOtpMutation,
     useVerifyOtpMutation,
     VerifyOtpMutationVariables,
-    useResetPasswordMutation,
-    ResetPasswordMutationVariables,
+    // useResetPasswordMutation,
+    // ResetPasswordMutationVariables,
 } from "@utils/graphql";
 
 export default function ResetPassword() {
@@ -44,106 +44,106 @@ export default function ResetPassword() {
         graphQLClient()
     );
 
-    const callResetPasswordMutation =
-        useResetPasswordMutation<ResetPasswordMutationVariables>(
-            graphQLClient({ Authorization: `Bearer ${token}` })
-        );
+    // const callResetPasswordMutation =
+    //     useResetPasswordMutation<ResetPasswordMutationVariables>(
+    //         graphQLClient({ Authorization: `Bearer ${token}` })
+    //     );
 
-    useEffect(() => {
-        if (success) {
-            toast.success(success.text ? success.text : "Success");
-            setTimeout(() => {
-                setSuccess(null);
-            }, 2000);
-        }
-        if (error) {
-            toast.error(
-                error.text ? error.text : "Something went wrong. Please contact support"
-            );
-            setTimeout(() => {
-                setError(null);
-            }, 2000);
-        }
-    }, [success, error]);
+    // useEffect(() => {
+    //     if (success) {
+    //         toast.success(success.text ? success.text : "Success");
+    //         setTimeout(() => {
+    //             setSuccess(null);
+    //         }, 2000);
+    //     }
+    //     if (error) {
+    //         toast.error(
+    //             error.text ? error.text : "Something went wrong. Please contact support"
+    //         );
+    //         setTimeout(() => {
+    //             setError(null);
+    //         }, 2000);
+    //     }
+    // }, [success, error]);
 
-    async function CallOTP() {
-        let isValid = true;
-        if (!IsValidValue(mobile) || !IsValidMobile(mobile)) {
-            setError({ text: "Please enter a valid Mobile Number" });
-            isValid = false;
-        }
-        if (isValid) {
-            const result = await callOTPMutation.mutateAsync({ mobile });
+    // async function CallOTP() {
+    //     let isValid = true;
+    //     if (!IsValidValue(mobile) || !IsValidMobile(mobile)) {
+    //         setError({ text: "Please enter a valid Mobile Number" });
+    //         isValid = false;
+    //     }
+    //     if (isValid) {
+    //         const result = await callOTPMutation.mutateAsync({ mobile });
 
-            if (result.sendUserMagicAuthLink) {
-                setMobileMode(false);
-                setVerificationMode(true);
-                setSuccess({
-                    text: "Please enter the OTP received on your registered mobile number.",
-                });
-            } else {
-                setError({
-                    text: "Mobile number not registered. Please register first.",
-                });
-            }
-        }
-    }
+    //         if (result.sendUserMagicAuthLink) {
+    //             setMobileMode(false);
+    //             setVerificationMode(true);
+    //             setSuccess({
+    //                 text: "Please enter the OTP received on your registered mobile number.",
+    //             });
+    //         } else {
+    //             setError({
+    //                 text: "Mobile number not registered. Please register first.",
+    //             });
+    //         }
+    //     }
+    // }
 
-    async function CallOTPVerify() {
-        let isValid = true;
-        if (!IsValidValue(otp)) {
-            setError({ text: "Please enter a valid OTP." });
-            isValid = false;
-        }
-        if (isValid) {
-            const result = await callVerifyOTP.mutateAsync({ mobile, token: otp });
-            if (result.redeemUserMagicAuthToken) {
-                setToken(result.redeemUserMagicAuthToken["token"]);
-                setVerificationMode(false);
-                setUpdatePasswordMode(true);
-                setSuccess({
-                    text: "You have been successfully logged in.",
-                });
-            } else {
-                setError({
-                    text: "OTP verification failed. Please contact the support team.",
-                });
-            }
-        }
-    }
+    // async function CallOTPVerify() {
+    //     let isValid = true;
+    //     if (!IsValidValue(otp)) {
+    //         setError({ text: "Please enter a valid OTP." });
+    //         isValid = false;
+    //     }
+    //     if (isValid) {
+    //         const result = await callVerifyOTP.mutateAsync({ mobile, token: otp });
+    //         if (result.redeemUserMagicAuthToken) {
+    //             setToken(result.redeemUserMagicAuthToken["token"]);
+    //             setVerificationMode(false);
+    //             setUpdatePasswordMode(true);
+    //             setSuccess({
+    //                 text: "You have been successfully logged in.",
+    //             });
+    //         } else {
+    //             setError({
+    //                 text: "OTP verification failed. Please contact the support team.",
+    //             });
+    //         }
+    //     }
+    // }
 
-    async function CallUpdatePassword() {
-        let isValid = true;
+    // async function CallUpdatePassword() {
+    //     let isValid = true;
 
-        if (!IsValidPassword(password)) {
-            setError({ text: "Please enter a valid password." });
-            isValid = false;
-        }
+    //     if (!IsValidPassword(password)) {
+    //         setError({ text: "Please enter a valid password." });
+    //         isValid = false;
+    //     }
 
-        if (!IsSameValue(password, confirmPassword)) {
-            setError({ text: "Password and confirm password do not match." });
-            isValid = false;
-        }
+    //     if (!IsSameValue(password, confirmPassword)) {
+    //         setError({ text: "Password and confirm password do not match." });
+    //         isValid = false;
+    //     }
 
-        if (isValid) {
-            const result = await callResetPasswordMutation.mutateAsync({
-                data: {
-                    password,
-                },
-                where: { mobile: mobile },
-            });
-            if (result.updateUser) {
-                setSuccess({
-                    text: "You password has been reset successfully.",
-                });
-                router.push(`/login`);
-            } else {
-                setError({
-                    text: "Something went wrong. Please try again or contact the support team.",
-                });
-            }
-        }
-    }
+    //     if (isValid) {
+    //         const result = await callResetPasswordMutation.mutateAsync({
+    //             data: {
+    //                 password,
+    //             },
+    //             where: { mobile: mobile },
+    //         });
+    //         if (result.updateUser) {
+    //             setSuccess({
+    //                 text: "You password has been reset successfully.",
+    //             });
+    //             router.push(`/login`);
+    //         } else {
+    //             setError({
+    //                 text: "Something went wrong. Please try again or contact the support team.",
+    //             });
+    //         }
+    //     }
+    // }
 
     const HandleCancel = () => {
         setMobileMode(true);
@@ -182,7 +182,7 @@ export default function ResetPassword() {
                             btnclass="w-full"
                             type="submit"
                             color="indigo"
-                            onClick={CallOTP}
+                            // onClick={CallOTP}
                         >
                             Send OTP
                         </Button>
@@ -238,7 +238,7 @@ export default function ResetPassword() {
                                 btnclass="w-full"
                                 type="submit"
                                 color="indigo"
-                                onClick={CallOTPVerify}
+                                // onClick={CallOTPVerify}
                             >
                                 Submit
                             </Button>
@@ -253,7 +253,7 @@ export default function ResetPassword() {
 
                             <button
                                 type="button"
-                                onClick={CallOTP}
+                                // onClick={CallOTP}
                                 className="w-full flex items-center justify-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 hover:text-indigo-800 focus:outline-none"
                             >
                                 Click here to resend OTP
@@ -334,7 +334,7 @@ export default function ResetPassword() {
                                 btnclass="w-full"
                                 type="submit"
                                 color="indigo"
-                                onClick={CallUpdatePassword}
+                                // onClick={CallUpdatePassword}
                             >
                                 Update Password
                             </Button>

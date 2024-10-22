@@ -4,18 +4,18 @@ import withPrivateRoute from "../utils/withPrivateRoute";
 import Datatable from "../components/ui/Datatable";
 import Loader from "../components/ui/Loader";
 
-import {
-  useActiveBidsQuery,
-  ActiveBidsQueryVariables,
-  OrderDirection,
-  ActiveBidsQuery,
-  UpdateVehicleMutationVariables,
-  useUpdateVehicleMutation,
-  useMyQuotesQuery,      
-  MyQuotesQuery,
-  useQueryQuery,
-  QueryQueryVariables,
-} from "@utils/graphql";
+// import {
+//   useActiveBidsQuery,
+//   ActiveBidsQueryVariables,
+//   OrderDirection,
+//   ActiveBidsQuery,
+//   UpdateVehicleMutationVariables,
+//   useUpdateVehicleMutation,
+//   useMyQuotesQuery,      
+//   MyQuotesQuery,
+//   useQueryQuery,
+//   QueryQueryVariables,
+// } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
 
@@ -43,66 +43,66 @@ function MyQuotes() {
     }
   }, []);
 
-  const { data: timeData } = useQueryQuery<QueryQueryVariables>(
-    graphQLClient(),
-    {},
-    { refetchInterval: 60000 }
-  );
+//   const { data: timeData } = useQueryQuery<QueryQueryVariables>(
+//     graphQLClient(),
+//     {},
+//     { refetchInterval: 60000 }
+//   );
 
-  useEffect(() => {
-    if (timeData && timeData.time) {
-      setTick(0);
-      setserverTime(timeData.time);
-    }
-  }, [timeData]);
+//   useEffect(() => {
+//     if (timeData && timeData.time) {
+//       setTick(0);
+//       setserverTime(timeData.time);
+//     }
+//   }, [timeData]);
 
-  const { data, isLoading } = useMyQuotesQuery<MyQuotesQuery>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    {
-      where: {
-        userVehicleBids: {
-          some: {
-            user: {
-              id: {
-                equals: userId,
-              },
-            },
-          },
-        },
-        bidTimeExpire: {
-          lt: serverTime,
-        },
-      },
-      take: 1,
-      orderBy: [
-        {
-          createdAt: OrderDirection.Desc,
-        },
-      ],
-      vehiclesOrderBy2: [
-        {
-          updatedAt: OrderDirection.Desc,
-        },
-      ],
-    },
-    {
-      cacheTime: 0,
-      refetchInterval: apiInterval,
-      enabled: accessToken != "" && userId != "",
-    }
-  );
+//   const { data, isLoading } = useMyQuotesQuery<MyQuotesQuery>(
+//     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+//     {
+//       where: {
+//         userVehicleBids: {
+//           some: {
+//             user: {
+//               id: {
+//                 equals: userId,
+//               },
+//             },
+//           },
+//         },
+//         bidTimeExpire: {
+//           lt: serverTime,
+//         },
+//       },
+//       take: 1,
+//       orderBy: [
+//         {
+//           createdAt: OrderDirection.Desc,
+//         },
+//       ],
+//       vehiclesOrderBy2: [
+//         {
+//           updatedAt: OrderDirection.Desc,
+//         },
+//       ],
+//     },
+//     {
+//       cacheTime: 0,
+//       refetchInterval: apiInterval,
+//       enabled: accessToken != "" && userId != "",
+//     }
+//   );
 
-  const callUpdateVehicle =
-    useUpdateVehicleMutation<UpdateVehicleMutationVariables>(
-      graphQLClient({ Authorization: `Bearer ${accessToken}` })
-    );
+//   const callUpdateVehicle =
+//     useUpdateVehicleMutation<UpdateVehicleMutationVariables>(
+//       graphQLClient({ Authorization: `Bearer ${accessToken}` })
+//     );
 
-  useEffect(() => {
-    if (data?.vehicles) {
-      // setAPIInterval(0);
-      // setEnabled(false);
-    }
-  }, [data]);
+//   useEffect(() => {
+//     if (data?.vehicles) {
+//       // setAPIInterval(0);
+//       // setEnabled(false);
+//     }
+//   }, [data]);
 
   const columns = useMemo(
     () => [
@@ -134,25 +134,27 @@ function MyQuotes() {
   );
 
   return (
-    <DashboardTemplate heading="My Quotes">
-      <div>
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <>
-            {data?.vehicles.length > 0 ? (
-              <Datatable
-                tableData={data?.vehicles}
-                tableColumns={columns}
-                hideSearch
-              />
-            ) : (
-              <div>No Quotes found</div>
-            )}
-          </>
-        )}
-      </div>
-    </DashboardTemplate>
+    <>
+    </>
+    // <DashboardTemplate heading="My Quotes">
+    //   <div>
+    //     {isLoading ? (
+    //       <Loader />
+    //     ) : (
+    //       <>
+    //         {data?.vehicles.length > 0 ? (
+    //           <Datatable
+    //             tableData={data?.vehicles}
+    //             tableColumns={columns}
+    //             hideSearch
+    //           />
+    //         ) : (
+    //           <div>No Quotes found</div>
+    //         )}
+    //       </>
+    //     )}
+    //   </div>
+    // </DashboardTemplate>
   );
   // function AuctionId(){
   //     return (
@@ -292,30 +294,30 @@ function MyQuotes() {
     );
   }
 
-  function CallUpdatePrice(vehicleId, amount, setUpdatePrice) {
-    //
-    const confirmed = confirm(
-      `Are you sure to update the bid to\nRs. ${amount}`
-    );
-    if (confirmed) {
-      callUpdateVehicle
-        .mutateAsync({
-          data: {
-            bidAmountUpdate: parseInt(amount),
-          },
-          where: {
-            id: vehicleId,
-          },
-        })
-        .then(() => {
-          alert("Your bid has been updated");
-        })
-        .catch((error) => {
-          // alert(error.message);
-        });
-    }
-    setUpdatePrice(false);
-  }
+//   function CallUpdatePrice(vehicleId, amount, setUpdatePrice) {
+//     //
+//     const confirmed = confirm(
+//       `Are you sure to update the bid to\nRs. ${amount}`
+//     );
+//     if (confirmed) {
+//       callUpdateVehicle
+//         .mutateAsync({
+//           data: {
+//             bidAmountUpdate: parseInt(amount),
+//           },
+//           where: {
+//             id: vehicleId,
+//           },
+//         })
+//         .then(() => {
+//           alert("Your bid has been updated");
+//         })
+//         .catch((error) => {
+//           // alert(error.message);
+//         });
+//     }
+//     setUpdatePrice(false);
+//   }
 
   function WinDetails({ row }) {
     const [amount, setAmount] = useState("");
@@ -375,7 +377,7 @@ function MyQuotes() {
                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
                 </div>
-                <button
+                {/* <button
                   type="button"
                   onClick={() => {
                     CallUpdatePrice(row?.id, amount, setUpdatePrice);
@@ -383,7 +385,7 @@ function MyQuotes() {
                   className="mt-2 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none"
                 >
                   Update
-                </button>
+                </button> */}
                 <button
                   type="button"
                   onClick={() => setUpdatePrice(false)}

@@ -9,35 +9,42 @@ import {
   LightningBoltIcon,
 } from "@heroicons/react/outline";
 import {
-  OrderDirection,
-  PaymentsQueryVariables,
-  usePaymentsQuery,
+  useFindUserPaymentsQuery,
+  FindUserPaymentsQueryVariables,
+  FindUserPaymentsQuery,
 } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
 
 export default function PaymentsTable() {
   const [accessToken, setAccessToken] = useState("");
+  const [userId, setUserId] = useState("");
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("id");
+      setUserId(userId);
       setAccessToken(token);
     }
   }, []);
 
-  const { data, isLoading } = usePaymentsQuery<PaymentsQueryVariables>(
+  const { data, isLoading } = useFindUserPaymentsQuery<FindUserPaymentsQuery>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     {
-      orderBy: [
-        {
-          createdAt: OrderDirection.Desc,
-        },
-      ],
-      skip: 0,
-      take: 5,
-    },
-    { refetchInterval: 10000, enabled: accessToken != "" }
+      where: { id: userId },
+    }
+    // {
+    //   sortOrder: "Desc"
+
+    //       ,
+
+    // //   skip: 0,
+    // //   take: 5,
+    // },
+    // { refetchInterval: 10000, enabled: accessToken != "" }
   );
+
+  console.log("userPayments", data?.user?.payments);
 
   const renderPaymentFor = (paymentFor) => {
     switch (paymentFor) {
@@ -60,13 +67,13 @@ export default function PaymentsTable() {
         <div className="font-semibold">Recent Requests</div>
         <div className="space-y-6 mt-8">
           {data &&
-            data["payments"] &&
-            data["payments"].map((item, index) => (
+            data?.user &&
+            data?.user?.["payments"].map((item, index) => (
               <div
                 key={`d${index}`}
                 className="sm:flex font-sans border border-gray-200 rounded bg-gray-100"
               >
-                {item?.image?.url && (
+                {/* {item?.image?.url && (
                   <div className="flex-none w-40 relative p-6">
                     <Image
                       alt=""
@@ -76,7 +83,7 @@ export default function PaymentsTable() {
                       className="absolute inset-0 w-full h-full object-cover rounded-lg"
                     />
                   </div>
-                )}
+                )} */}
                 <div className="flex-auto p-6">
                   <div className="sm:flex flex-wrap">
                     <div className="flex-auto">
@@ -105,6 +112,15 @@ export default function PaymentsTable() {
                                 "MMMM Do, YYYY ddd h:mm a"
                               )
                             : ""}
+                        </div>
+                        <div className="mt-2">
+                          {/* <Image
+                            src={item?.image ? item?.image : ""}
+                            alt="payment Image"
+                            width={250}
+                            height={128}
+                            className="mt-2 object-cover rounded-lg"
+                          /> */}
                         </div>
                         {/* <div className="mt-2 flex items-center text-sm text-gray-500">
                           <CheckCircleIcon

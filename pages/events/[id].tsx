@@ -4,29 +4,41 @@ import {
   PlusIcon,
   MinusIcon,
 } from "@heroicons/react/outline";
+
 import {
-  CreateBidMutationVariables,
-  GetEventQuery,
-  LiveWatchListItemQueryVariables,                                                                                                                                                                                             
-  OrderDirection,                                                                                                                                                                                                                                                                                              
-  QueryQueryVariables,
-  useAddToWatchListMutation,
+  // CreateBidMutationVariables,
+  // GetEventQuery,
+  // LiveWatchListItemQueryVariables,
+  // OrderDirection,
+  // QueryQueryVariables,
+  // useAddToWatchListMutation,
+  // useCreateBidMutation,
+  // useGetEventQuery,
+  // useLiveWatchListItemQuery,
+  // useQueryQuery,
+  // useUserWorkBookQuery,
+  // UserWorkBookQueryVariables,
+  // useFindAuctionsQuery,
+  useGetEventsQuery,
+  GetEventsQuery,
   useCreateBidMutation,
-  useGetEventQuery,                                                            
-  useLiveWatchListItemQuery,
-  useQueryQuery,
-  useUserWorkBookQuery,                           
-  UserWorkBookQueryVariables,
-  useFindAuctionsQuery,
+  CreateBidMutationVariables,
+  useTimeQueryQuery,
+  TimeQueryQueryVariables,
+  
+  
 } from "@utils/graphql";
-import graphQLClient from "@utils/useGQLQuery";
-import moment from "moment";                                                                              
+import useStore from "../../utils/store";
+
+import { useVehicleUpdateSubscription,VehicleUpdateSubscriptionVariables} from "@utils/apollo"
+import  graphQLClient from "@utils/useGQLQuery";
+import moment from "moment";
 import Image from "next/image";
-import Link from "next/link";  
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import DashboardTemplate from "../../components/templates/DashboardTemplate";
-import Loader from "../../components/ui/Loader";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+import Loader from "../../components/ui/Loader";
 import withPrivateRoute from "../../utils/withPrivateRoute";
 import { useQueryClient } from "react-query";
 import { SecondsToDhms } from "@utils/common";
@@ -39,12 +51,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import TermsAndCondtionsModal from  "@components/modals/TermsAndConditionModal"
 import {
   faThumbsUp,
-  faThumbsDown, 
-  faUserSlash, 
+  faThumbsDown,
+  faUserSlash,
   faCircleInfo,
   faAngleRight,
   faSquarePlus,
-  faSquareMinus
+  faSquareMinus,
 } from "@fortawesome/free-solid-svg-icons";
 
 function Events() {
@@ -69,6 +81,11 @@ function Events() {
   // useEffect(()=>{
   //   TermsAndCondtionsModal()
   // },[])
+  const token = useStore((state) => state.token); // Access the token from the store
+
+  // console.log('token from store',token);
+  
+
 
   const handleClick = () => {
     setShowCode(!showCode);
@@ -79,8 +96,8 @@ function Events() {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
-
-  const { data: timeData } = useQueryQuery<QueryQueryVariables>(
+ 
+  const { data: timeData } = useTimeQueryQuery<TimeQueryQueryVariables>(
     graphQLClient(),
     {},
     { refetchInterval: 60000 }
@@ -93,44 +110,74 @@ function Events() {
     }
   }, [timeData]);
 
+
+// console.log('timedata',timeData);
+
+const result = useVehicleUpdateSubscription()
+// const { data:result, loading } = useVehicleUpdateSubscription();
+
+
+// console.log('sub',result?.data);
+
+
+
+
+  useEffect(() => {
+    if (timeData && timeData.time) {
+      setTick(0);
+      setserverTime(timeData.time);
+    }
+  }, [timeData]);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
       const id = localStorage.getItem("id");
-
       setAccessToken(token);
       setUserId(id);
       setUsrid(id);
     }
   }, []);
 
-  const { data, isLoading } = useGetEventQuery<GetEventQuery>(
+  // useGetEventsQuery,
+  // GetEventsQuery
+
+  const { data, isLoading,refetch } = useGetEventsQuery<GetEventsQuery>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     {
       where: { id: id as string },
-      orderBy: [
-        {
-          bidTimeExpire: OrderDirection.Asc,
-        },
-      ],
-      take: 1,
+      // orderBy: [
+      //   {
+      //     bidTimeExpire: OrderDirection.Asc,
+      //   },
+      // ],
+      take: 10,
       skip: 0,
-      userVehicleBidsOrderBy2: [{ amount: OrderDirection.Desc }],
+      // userVehicleBidsOrderBy2: [{ amount: OrderDirection.Desc }],
     },
-    { cacheTime: 5, refetchInterval: interval, enabled: accessToken !== "" }
+    { 
+      
+       enabled: accessToken !== "" }
   );
 
-  const {
-    data: workbook,
-    isLoading: workbookLoading,
-    refetch,
-  } = useUserWorkBookQuery<UserWorkBookQueryVariables>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` })
-  );
+  console.log('data',data);
+  
 
-  useEffect(() => {
-    refetch();
-  }, [workbook]);
+  useEffect(()=>{
+    refetch()
+  },[result?.data])
+
+  // const {
+  //   data: workbook,
+  //   isLoading: workbookLoading,
+  //   refetch,
+  // } = useUserWorkBookQuery<UserWorkBookQueryVariables>(
+  //   graphQLClient({ Authorization: `Bearer ${accessToken}` })
+  // );
+
+  // useEffect(() => {
+  //   refetch();
+  // }, [workbook]);
 
   const callCreateBid = useCreateBidMutation<CreateBidMutationVariables>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` })
@@ -185,10 +232,109 @@ function Events() {
     return true;
   }
 
+  // async function CallBid(amount, vehicleId) {
+    
+  //   const confirmed = await Swal.fire({
+  //     text: "Are you sure to bid for Rs. " + amount + "?",
+  //     title: "BID CONFIMATION",
+  //     icon: "question",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "Yes, bid for it!",
+  //     customClass: {
+  //       popup: "animated bounceInDown",
+  //       container: "custom-swal-container",
+  //     },
+  //   });
+
+  //   if (confirmed.isConfirmed) {
+  //     try {
+  //       const result = await callCreateBid.mutateAsync({
+  //         // data: {
+  //         //   amount: parseInt(amount),
+  //         //   bidVehicle: {
+  //         //     connect: {
+  //         //       id: vehicleId,
+  //         //     },
+  //         //   },
+  //         // },
+  //         // bidVehicleId:"123",
+  //         // createBidInput{
+  //         //   amount:"123",
+  //         //   name:"prince"
+  //         // }
+  //         bidVehicleId: vehicleId,
+  //         createBidInput: {
+  //           amount: amount, // ensure that amount is a number, not a string
+  //         },
+  //       });
+  //       console.log("bidresult ", result);
+  //       Swal.fire("Success!", "Your bid has been submitted.", "success");
+  //     } catch (e) {
+  //       // console.log("EEE: ", e);
+  //     }
+  //   }
+  // }
+
+  // const watchListMutation = useAddToWatchListMutation(
+  //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+  //   {
+  //     onSuccess() {
+  //       queryClient.invalidateQueries("getEvent");
+  //     },
+  //   }
+  // );
+
+  // const addToWatchList = async (vehicleId: string) => {
+  //   await watchListMutation.mutateAsync({
+  //     data: {
+  //       data: {
+  //         watchList: {
+  //           connect: [
+  //             {
+  //               id: vehicleId,
+  //             },
+  //           ],
+  //         },
+  //       },
+  //       where: {
+  //         id: userId,
+  //       },
+  //     },
+  //   });
+  // };
+
+  // const removeFromWatchList = async (vehicleId: string) => {
+  //   await watchListMutation.mutateAsync({
+  //     data: {
+  //       data: {
+  //         watchList: {
+  //           disconnect: [
+  //             {
+  //               id: vehicleId,
+  //             },
+  //           ],
+  //         },
+  //       },
+  //       where: {
+  //         id: userId,
+  //       },
+  //     },
+  //   });
+  // };
+
+  // let filteredArray = data?.event?.vehicles?.map((item, index) => {
+  //   return item?.watchedBy?.filter(
+  //     (watchlistUser) => watchlistUser?.id === userId
+  //   );
+  // });
+
+  // console.log("isLoading", data?.event?.vehicles);
   async function CallBid(amount, vehicleId) {
     const confirmed = await Swal.fire({
-      text: "Are you sure to bid for Rs. " + amount + "?",
-      title: "BID CONFIMATION",
+      text: `Are you sure to bid for Rs. ${amount}?`,
+      title: "BID CONFIRMATION",
       icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -199,81 +345,41 @@ function Events() {
         container: "custom-swal-container",
       },
     });
-
+  
     if (confirmed.isConfirmed) {
       try {
-        const cc = await callCreateBid.mutateAsync({
-          data: {
-            amount: parseInt(amount),
-            bidVehicle: {
-              connect: {
-                id: vehicleId,
-              },
-            },
+        const result = await callCreateBid.mutateAsync({
+          bidVehicleId: vehicleId,
+          createBidInput: {
+            amount: Number(amount), // Ensure amount is a number
           },
         });
-        // console.log("cc: ", cc);
+        console.log("Bid", result);
         Swal.fire("Success!", "Your bid has been submitted.", "success");
       } catch (e) {
-        // console.log("EEE: ", e);
+        // Handle different types of errors
+        let errorMessage = "An error occurred. Please try again.";
+  
+        if (e.response) {
+          // Check for specific error messages
+          const errorMessages = e.response.errors || [];
+          if (errorMessages.length > 0) {
+            errorMessage = errorMessages.map(err => err.message).join(", ");
+          }
+        } else if (e.message) {
+          // Fallback for general errors
+          errorMessage = e.message;
+        }
+  
+        // Display the error message to the user
+        Swal.fire("Error!", errorMessage, "error");
       }
     }
   }
-
-  const watchListMutation = useAddToWatchListMutation(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries("getEvent");
-      },
-    }
-  );
-
-  const addToWatchList = async (vehicleId: string) => {
-    await watchListMutation.mutateAsync({
-      data: {
-        data: {
-          watchList: {
-            connect: [
-              {
-                id: vehicleId,
-              },
-            ],
-          },
-        },
-        where: {
-          id: userId,
-        },
-      },
-    });
-  };
-
-  const removeFromWatchList = async (vehicleId: string) => {
-    await watchListMutation.mutateAsync({
-      data: {
-        data: {
-          watchList: {
-            disconnect: [
-              {
-                id: vehicleId,
-              },
-            ],
-          },
-        },
-        where: {
-          id: userId,
-        },
-      },
-    });
-  };
-
-  let filteredArray = data?.event?.vehicles?.map((item, index) => {
-    return item?.watchedBy?.filter(
-      (watchlistUser) => watchlistUser?.id === userId
-    );
-  });
-
+  
   return (
+    // <>
+    // </>
     <DashboardTemplate
       heading={
         "Event ID#" +
@@ -297,40 +403,36 @@ function Events() {
             const expiryTime = moment(item.bidTimeExpire);
             const currentTime = moment(serverTime).add(tick, "seconds");
             const diff = expiryTime.diff(currentTime, "seconds");
-            if ((diff > 0 && type == "l") || type == "c") {
-              {
-                const find = (
-                  workbook?.workSheets as any[] | undefined
-                )?.filter(
-                  (wb) => wb.registrationNumber === item.registrationNumber
-                );
+            // console.log("difference", diff);
 
-                return (
-                  <>
-                    {/*MOBILE DESIGN*/}
-                    <div
-                      key={`d${index}`}
-                      className={`sm:hidden sm:max-md:flex-col font-sans border  rounded  mt-4 ${
-                        moment(item?.bidTimeExpire).diff(moment(), "s") <=
-                          120 &&
-                        moment(item?.bidTimeExpire).diff(moment(), "s") > 0
-                          ? "blink"
-                          : ""
-                      } ${
-                        index % 2 == 0
-                          ? "border-[#A7C2FF80] bg-[#EEF1FB] "
-                          : "border-[#A7C2FF80] bg-[#EEF1FB]"
-                      }  `}
-                    >
+            // if ((diff > 0 && type == "l") || type == "c") {
+            // {
+            // const find = (
+            //   workbook?.workSheets as any[] | undefined
+            // )?.filter(
+            //   (wb) => wb.registrationNumber === item.registrationNumber
+            // );
 
-
-
-                      {/* workbook, title, image, vehic info, add to watch, more details , inspection report */}
-                      <div
-                        className="flex-auto p-3 space-y-5  "
-                      >
-                        {/* workbook matched button */}
-                        <div className="m-2">
+            return (
+              <>
+                {/*MOBILE DESIGN*/}
+                <div
+                  key={`d${item?.id}`}
+                  className={`sm:hidden sm:max-md:flex-col font-sans border  rounded  mt-4 ${
+                    moment(item?.bidTimeExpire).diff(moment(), "s") <= 120 &&
+                    moment(item?.bidTimeExpire).diff(moment(), "s") > 0
+                      ? "blink"
+                      : ""
+                  } ${
+                    index % 2 == 0
+                      ? "border-[#A7C2FF80] bg-[#EEF1FB] "
+                      : "border-[#A7C2FF80] bg-[#EEF1FB]"
+                  }  `}
+                >
+                  {/* workbook, title, image, vehic info, add to watch, more details , inspection report */}
+                  <div className="flex-auto p-3 space-y-5  ">
+                    {/* workbook matched button */}
+                    {/* <div className="m-2">
                           {find?.length > 0 && (
                             <Link href={`/workbook/${find[0].id}`}>
                               <a
@@ -343,20 +445,19 @@ function Events() {
                               </a>
                             </Link>
                           )}
+                        </div> */}
+                    {/* title of vehicle and seller name */}
+                    <div className="sm:flex flex-wrap">
+                      <div className="flex-auto">
+                        <h1 className="   text-base  font-roboto font-bold  text-blue-800 uppercase">
+                          {item?.YOM} {item?.model} -{item.registrationNumber}
+                        </h1>
+                        <div className="text-sm font-medium text-black">
+                          {data?.event?.seller?.name}
                         </div>
-                        {/* title of vehicle and seller name */}
-                        <div className="sm:flex flex-wrap">
-                          <div className="flex-auto">
-                            <h1 className="   text-base  font-roboto font-bold  text-blue-800 uppercase">
-                              {item?.yearOfManufacture} {item?.model} -
-                              {item.registrationNumber}
-                            </h1>
-                            <div className="text-sm font-medium text-black">
-                              {data?.event?.seller?.name}
-                            </div>
-                          </div>
-                        </div>
-                        {item?.frontImage && (
+                      </div>
+                    </div>
+                    {/* {item?.frontImage && (
                           <div
                             className="flex-none w-70 h-56  sm:max-md:h-56 sm:max-md:w-full md:h-auto sm:w-60 relative p-6 hover:cursor-pointer"
                             onClick={() => {
@@ -373,187 +474,144 @@ function Events() {
                               className="absolute inset-0 w-full h-full object-cover rounded"
                             />
                           </div>
-                        )}
-                      </div>
+                        )} */}
+                  </div>
 
+                  <div className="flex-auto    ">
+                    {/* vehicle information starts here */}
 
-
-
-
-
-
-
-
-
-
-
-                      <div
-                        className="flex-auto    "
-                      >
-                        {/* vehicle information starts here */}
-
-                        <div className=" mt-4 pb-3 border-b-2 border-zinc-200">
-                          <dl className="grid grid-cols-3 gap-x-2 gap-y-4 sm:gap-x-4 sm:gap-y-3  ">
-                            <div className=" flex flex-col items-center justify-between sm:block">
-                              <dt className="text-sm font-bold sm:font-medium text-gray-500">
-                                Odometer
-                              </dt>
-                              <dd className="text-sm font-medium sm:font-normal text-gray-900">
-                                {item?.kmReading ?? "N/A"} km
-                              </dd>
-                            </div>
-                            {/* <div className=" sm:col-span-1 flex items-center justify-between sm:block">
+                    <div className=" mt-4 pb-3 border-b-2 border-zinc-200">
+                      <dl className="grid grid-cols-3 gap-x-2 gap-y-4 sm:gap-x-4 sm:gap-y-3  ">
+                        <div className=" flex flex-col items-center justify-between sm:block">
+                          <dt className="text-sm font-bold sm:font-medium text-gray-500">
+                            Odometer
+                          </dt>
+                          <dd className="text-sm font-medium sm:font-normal text-gray-900">
+                            {item?.kmReading ?? "N/A"} km
+                          </dd>
+                        </div>
+                        <div className=" sm:col-span-1 flex items-center justify-between sm:block">
                             <dt className="text-sm font-bold sm:font-medium text-gray-500">
                               Ownership
                             </dt>
                             <dd className="text-sm font-medium sm:font-normal file: text-gray-900">
                               {item?.ownership}
                             </dd>
-                          </div> */}
-                            <div className=" flex flex-col items-center justify-between sm:block">
-                              <dt className="text-sm font-bold sm:font-medium text-gray-500">
-                                RC Book
-                              </dt>
-                              <dd className="text-sm font-medium sm:font-normal text-gray-900">
-                                {item?.rcStatus}
-                              </dd>
-                            </div>
-                            <div className=" flex flex-col items-center justify-between sm:block">
-                              <dt className="text-sm font-bold sm:font-medium text-gray-500">
-                                Repo date
-                              </dt>
-                              <dd className="text-sm text-gray-900">
-                                {item?.repoDt
-                                  ? new Date(item?.repoDt).toLocaleDateString()
-                                  : "N/A"}
-                              </dd>
-                            </div>
-                            <div className=" flex flex-col items-center justify-between sm:block">
-                              <dt className="text-sm font-bold sm:font-medium text-gray-500">
-                                Total Bids
-                              </dt>
-                              <dd className="text-sm font-medium sm:font-normal text-gray-900">
+                          </div>
+                        <div className=" flex flex-col items-center justify-between sm:block">
+                          <dt className="text-sm font-bold sm:font-medium text-gray-500">
+                            RC Book
+                          </dt>
+                          <dd className="text-sm font-medium sm:font-normal text-gray-900">
+                            {item?.rcStatus}
+                          </dd>
+                        </div>
+                        <div className=" flex flex-col items-center justify-between sm:block">
+                          <dt className="text-sm font-bold sm:font-medium text-gray-500">
+                            Repo date
+                          </dt>
+                          <dd className="text-sm text-gray-900">
+                            {item?.repoDt
+                              ? new Date(item?.repoDt).toLocaleDateString()
+                              : "N/A"}
+                          </dd>
+                        </div>
+                        <div className=" flex flex-col items-center justify-between sm:block">
+                          <dt className="text-sm font-bold sm:font-medium text-gray-500">
+                            Total Bids
+                          </dt>
+                          <dd className="text-sm font-medium sm:font-normal text-gray-900">
                                 {item?.totalBids}
                               </dd>
-                            </div>
-                            <div className=" flex flex-col items-center justify-between sm:block">
-                              <dt className="text-sm font-bold sm:font-medium text-gray-500">
-                                Bids Remaining
-                              </dt>
-                              <dd className="text-sm font-medium sm:font-normal text-gray-900">
+                        </div>
+                        <div className=" flex flex-col items-center justify-between sm:block">
+                          <dt className="text-sm font-bold sm:font-medium text-gray-500">
+                            Bids Remaining
+                          </dt>
+                          <dd className="text-sm font-medium sm:font-normal text-gray-900">
                                 {data?.event?.noOfBids -
                                   item?.userVehicleBidsCount}
                               </dd>
-                            </div>
-                            <div className=" flex flex-col items-center justify-between sm:block">
-                              <dt className="text-sm font-bold sm:font-medium text-gray-500">
-                                Rank
-                              </dt>
-                              <dd className="text-base font-medium sm:font-normal text-gray-900">
+                        </div>
+                        <div className=" flex flex-col items-center justify-between sm:block">
+                          <dt className="text-sm font-bold sm:font-medium text-gray-500">
+                            Rank
+                          </dt>
+                          <dd className="text-base font-medium sm:font-normal text-gray-900">
                                 {item?.myBidRank ? item.myBidRank : "N/A"}
                               </dd>
-                            </div>
+                        </div>
 
-                            <div className=" col-span-3 sm:col-span-1 flex max-sm:flex-col items-center justify-between sm:block  ">
-                              {data.event.bidLock === "locked" ? (
-                                <>
-                                  <dt className="text-sm font-bold sm:font-medium text-gray-500">
-                                    Current Quote
-                                  </dt>
-                                  <dd className="text-base font-medium sm:font-normal text-gray-900">
-                                    {item?.currentBidAmount ?? "N/A"}
-                                  </dd>
-                                </>
-                              ) : (
-                                <>
-                                  <dt className="text-sm font-bold sm:font-medium text-gray-500">
-                                    Your Latest Quote
-                                  </dt>
-                                  <dd className="text-base font-medium sm:font-normal text-gray-900">
+                        <div className=" col-span-3 sm:col-span-1 flex max-sm:flex-col items-center justify-between sm:block  ">
+                          {data.event.bidLock === "locked" ? (
+                            <>
+                              <dt className="text-sm font-bold sm:font-medium text-gray-500">
+                                Current Quote
+                              </dt>
+                              <dd className="text-base font-medium sm:font-normal text-gray-900">
+                                {item?.currentBidAmount ?? "N/A"}
+                              </dd>
+                            </>
+                          ) : (
+                            <>
+                              <dt className="text-sm font-bold sm:font-medium text-gray-500">
+                                Your Latest Quote
+                              </dt>
+                              <dd className="text-base font-medium sm:font-normal text-gray-900">
                                     {item?.userVehicleBids?.length
                                       ? item?.userVehicleBids[0].amount
                                       : "N/A"}
                                   </dd>
-                                </>
-                              )}
-                            </div>
-                          </dl>
+                            </>
+                          )}
                         </div>
-                        {/* vehicle information ends here */}
+                      </dl>
+                    </div>
+                    {/* vehicle information ends here */}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        {/* add to watchlist, more details, inspection report starts here  */}
-                        <div className="flex sm:hidden space-x-4  pr-1 text-sm font-medium border-t border-slate-200">
-                          <div className="flex-auto flex flex-col  justify-center items-center  space-x-4 space-y-6 ">
-                            <div className="mt-1 flex   space-x-2 space-y-4  justify-around w-full    ">
-                              <>
-                              
-                              </>
-                              <div className="flex flex-col space-y-6 w-64">
-                                {/* INSPECTION REPORT STARTS HERE */}
-                                <div
-                                  className=" flex items-center justify-between text-sm font-roboto font-medium text-blue-800 "
-                                  onClick={() =>
-                                    setShowInspectionReportModal(true)
-                                  }
+                    {/* add to watchlist, more details, inspection report starts here  */}
+                    <div className="flex sm:hidden space-x-4  pr-1 text-sm font-medium border-t border-slate-200">
+                      <div className="flex-auto flex flex-col  justify-center items-center  space-x-4 space-y-6 ">
+                        <div className="mt-1 flex   space-x-2 space-y-4  justify-around w-full    ">
+                          <></>
+                          <div className="flex flex-col space-y-6 w-64">
+                            {/* INSPECTION REPORT STARTS HERE */}
+                            <div
+                              className=" flex items-center justify-between text-sm font-roboto font-medium text-blue-800 "
+                              onClick={() => setShowInspectionReportModal(true)}
+                            >
+                              {/* <Link href={item.inspectionLink}>
+                                <a
+                                  target="_blank"
+                                  className="flex items-center text-sm font-roboto font-medium text-[#2563EB]"
                                 >
-                                  <Link href={item.inspectionLink}>
-                                    <a
-                                      target="_blank"
-                                      className="flex items-center text-sm font-roboto font-medium text-[#2563EB]"
-                                    >
-                                      Inspection Report
-                                    </a>
-                                  </Link>
+                                  Inspection Report
+                                </a>
+                              </Link> */}
 
-                                  <FontAwesomeIcon icon={faCircleInfo} />
-                                </div>
-
-                                {/* INSPECTION REPORT ENDS HERE */}
-
-                                {/* MORE DETAILS STARTS HERE */}
-
-                                <div className=" flex items-center justify-between text-sm text-blue-800 ">
-                                  <Link href={`/vehicle/${item.id}`}>
-                                    <a
-                                      target="_blank"
-                                      className="flex items-center text-sm  text-[#2563EB]"
-                                    >
-                                      More Details
-                                    </a>
-                                  </Link>
-                                  <FontAwesomeIcon icon={faAngleRight} />
-                                </div>
-                                {/* MORE DETAILS ENDS  HERE */}
-                              </div>
+                              <FontAwesomeIcon icon={faCircleInfo} />
                             </div>
-                            {/* Add and Remove from watchlist starts here  */}
-                            <>
+
+                            {/* INSPECTION REPORT ENDS HERE */}
+
+                            {/* MORE DETAILS STARTS HERE */}
+
+                            <div className=" flex items-center justify-between text-sm text-blue-800 ">
+                              <Link href={`/vehicle/${item.id}`}>
+                                <a
+                                  target="_blank"
+                                  className="flex items-center text-sm  text-[#2563EB]"
+                                >
+                                  More Details
+                                </a>
+                              </Link>
+                              <FontAwesomeIcon icon={faAngleRight} />
+                            </div>
+                            {/* MORE DETAILS ENDS  HERE */}
+                          </div>
+                        </div>
+                        {/* Add and Remove from watchlist starts here  */}
+                        {/* <>
                               {IsCompleted(item) && (
                                 <div className="mt-4flex items-center text-sm text-gray-500 p-2">
                                   {item?.watchedBy?.filter(
@@ -588,102 +646,88 @@ function Events() {
                                   )}
                                 </div>
                               )}
-                            </>
-                            {/* Add and Remove from watchlist ends here */}
+                            </> */}
+                        {/* Add and Remove from watchlist ends here */}
+                      </div>
+                    </div>
+                    {/* add to watchlist, more details, inspection report  ends here */}
+
+                    {/* bid box and bid timing starts here */}
+
+                    {/* bid timing showing starts here */}
+
+                    {/* new code  starts here for bid timing*/}
+                    <div className="w-full flex flex-col px-4 space-y-3 mt-4 ">
+                      <p className="sm:max-md:text-base md:text-left">
+                        {" "}
+                        {SecondsLeft(item)}
+                      </p>
+
+                      {/* <div className="w-full space-y-2 mt-4"> */}
+                      <div className="flex justify-between sm:flex-col md:items-start sm:justify-left text-sm  text-gray-700 ">
+                        <p className="text-[#646464] text-sm font-roboto">
+                          Start Date
+                        </p>
+                        <p className="font-semibold font-roboto ">
+                          {data?.event?.startDate
+                            ? moment(data?.event?.startDate).format(
+                                "MMMM Do, YYYY ddd h:mm a"
+                              )
+                            : "NA"}
+                        </p>
+                      </div>
+                      <div className="flex justify-between sm:flex-col md:items-start text-sm  text-gray-700">
+                        <p className="text-[#646464] text-sm font-roboto">
+                          End Date
+                        </p>
+                        <p className="items-start font-semibold font-roboto">
+                          {item?.bidTimeExpire
+                            ? moment(item?.bidTimeExpire).format(
+                                "MMMM Do, YYYY ddd h:mm a"
+                              )
+                            : "NA"}
+                        </p>
+                      </div>
+                      {/* </div> */}
+                    </div>
+                    {/* new code  ends here for bid timing*/}
+
+                    {/* bid timing showing Ends here */}
+
+                    {/* bid box  starts here */}
+                    <div className="  mt-4 bg-[#E5E9F9] rounded-lg">
+                      <div className="px-4 py-2">
+                        <h2 className="text-base  text-gray-900  text-center font-roboto font-bold">
+                          Bid Details
+                        </h2>
+
+                        <div className="space-y-2 mt-2 text-sm">
+                          <div className="flex items-center justify-between">
+                            <span className="font-roboto font-medium text-sm text-[#646464]">
+                              Start Price
+                            </span>
+                            <span className="font-bold text-base">
+                              {" "}
+                              ₹ {item?.startPrice}
+                            </span>
                           </div>
-                        </div>
-                        {/* add to watchlist, more details, inspection report  ends here */}
-
-                        {/* bid box and bid timing starts here */}
-                       
-                            {/* bid timing showing starts here */}
-
-                           
-
-
-
-
-                            {/* new code  starts here for bid timing*/}
-                            <div className="w-full flex flex-col px-4 space-y-3 mt-4 ">
-                              <p className="sm:max-md:text-base md:text-left">
-                                {" "}
-                                {SecondsLeft(item)}
-                              </p>
-
-                              {/* <div className="w-full space-y-2 mt-4"> */}
-                              <div className="flex justify-between sm:flex-col md:items-start sm:justify-left text-sm  text-gray-700 ">
-                                <p className="text-[#646464] text-sm font-roboto">Start Date</p>
-                                <p className="font-semibold font-roboto ">
-                                  {data?.event?.startDate
-                                    ? moment(data?.event?.startDate).format(
-                                        "MMMM Do, YYYY ddd h:mm a"
-                                      )
-                                    : "NA"}
-                                </p>
-                              </div>
-                              <div className="flex justify-between sm:flex-col md:items-start text-sm  text-gray-700">
-                                <p className="text-[#646464] text-sm font-roboto">End Date</p>
-                                <p className="items-start font-semibold font-roboto">
-                                  {item?.bidTimeExpire
-                                    ? moment(item?.bidTimeExpire).format(
-                                        "MMMM Do, YYYY ddd h:mm a"
-                                      )
-                                    : "NA"}
-                                </p>
-                              </div>
-                              {/* </div> */}
-                            </div>
-                            {/* new code  ends here for bid timing*/}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                            {/* bid timing showing Ends here */}
-
-                            {/* bid box  starts here */}
-                            <div className="  mt-4 bg-[#E5E9F9] rounded-lg">
-                              <div className="px-4 py-2">
-                                <h2 className="text-base  text-gray-900  text-center font-roboto font-bold">
-                                  Bid Details
-                                </h2>
-
-                                <div className="space-y-2 mt-2 text-sm">
-                                  <div className="flex items-center justify-between">
-                                  <span className="font-roboto font-medium text-sm text-[#646464]" >Start Price</span>
-                                    <span className="font-bold text-base"> ₹ {item?.startPrice}</span>
-                                  </div>
-                                  <div className="flex items-center justify-between">
-                                  <span  className="font-roboto font-medium text-sm text-[#646464]">Reserve Price</span>
-                                    <span  className="font-bold text-base">₹ {item?.reservePrice}</span>
-                                  </div>
-                                  <div className="flex items-center justify-between">
-                                  <span  className="font-roboto font-medium text-sm text-[#646464]">Quote Increment</span>
-                                    <span  className="font-bold text-base">₹ {item?.quoteIncreament}</span>
-                                  </div>
-                                  <div className="flex  items-center justify-between">
+                          <div className="flex items-center justify-between">
+                            <span className="font-roboto font-medium text-sm text-[#646464]">
+                              Reserve Price
+                            </span>
+                            <span className="font-bold text-base">
+                              ₹ {item?.reservePrice}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="font-roboto font-medium text-sm text-[#646464]">
+                              Quote Increment
+                            </span>
+                            <span className="font-bold text-base">
+                              ₹ {item?.quoteIncreament}
+                            </span>
+                          </div>
+                          <div className="flex  items-center justify-between">
                                     <span  className="font-bold">Current Status</span>
                                     {item.userVehicleBidsCount &&
                                     item.myBidRank ? (
@@ -714,125 +758,43 @@ function Events() {
                                       </p>
                                     )}
                                   </div>
-                                </div>
-                              </div>
-                              <div>
-                                {IsCompleted(item) && (
-                                  <EnterBid
-                                    row={item}
-                                    call={CallBid}
-                                    event={data["event"]}
-                                  />
-                                )}
-                              </div>
-                            </div>
-                            {/* bid box  ends here */}
-                       
-                        {/* bid box and bid timing ends here */}
+                        </div>
                       </div>
-
-                      {/* bid box and bid timing ends here */}
+                      <div>
+                        {IsCompleted(item) && (
+                          <EnterBid
+                            row={item}
+                            call={CallBid}
+                            event={data["event"]}
+                          />
+                        )}
+                      </div>
                     </div>
-
-                    {/* MOBILE DESIGNS  end here */}
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    {/* dESKTOP DESIGN */}
-                    <div
-                      key={`d${index}`}
-                      className={`hidden sm:flex sm:max-md:flex-col font-sans border  rounded  ${
-                        moment(item?.bidTimeExpire).diff(moment(), "s") <=
-                          120 &&
-                        moment(item?.bidTimeExpire).diff(moment(), "s") > 0
-                          ? "blink"
-                          : ""
-                      } ${
-                        index % 2 == 0
-                          ? "border-yellow-300 bg-gray-100 "
-                          : "border-gray-300 bg-slate-50"
-                      }  `}
-                    >
-                      {item?.frontImage && (
+                    {/* bid box  ends here */}
+
+                    {/* bid box and bid timing ends here */}
+                  </div>
+
+                  {/* bid box and bid timing ends here */}
+                </div>
+
+                {/* MOBILE DESIGNS  end here */}
+
+                {/* dESKTOP DESIGN */}
+                <div
+                  key={`d${index}`}
+                  className={`hidden sm:flex sm:max-md:flex-col font-sans border  rounded  ${
+                    moment(item?.bidTimeExpire).diff(moment(), "s") <= 120 &&
+                    moment(item?.bidTimeExpire).diff(moment(), "s") > 0
+                      ? "blink"
+                      : ""
+                  } ${
+                    index % 2 == 0
+                      ? "border-yellow-300 bg-gray-100 "
+                      : "border-gray-300 bg-slate-50"
+                  }  `}
+                >
+                  {/* {item?.frontImage && (
                         <div
                           className="flex-none w-70 h-56  sm:max-md:h-56 sm:max-md:w-full md:h-auto sm:w-60 relative p-6 hover:cursor-pointer"
                           onClick={() => {
@@ -849,9 +811,9 @@ function Events() {
                             className="absolute inset-0 w-full h-full object-cover rounded"
                           />
                         </div>
-                      )}
-                      <div className={`flex-auto p-3 lg:space-y-4 sm:p-6 `}>
-                        <div className="mb-3">
+                      )} */}
+                  <div className={`flex-auto p-3 lg:space-y-4 sm:p-6 `}>
+                    {/* <div className="mb-3">
                           {find?.length > 0 && (
                             <Link href={`/workbook/${find[0].id}`}>
                               <a
@@ -864,132 +826,129 @@ function Events() {
                               </a>
                             </Link>
                           )}
-                        </div>
+                        </div> */}
 
-                        <div className="sm:flex flex-wrap">
-                          <div className="flex-auto">
-                            <h1 className="   text-base sm:text-lg   font-bold sm:font-semibold text-blue-800 uppercase">
-                              {item?.yearOfManufacture} {item?.model} -
-                              {item.registrationNumber}
-                            </h1>
-                            <div className="text-sm font-medium text-black">
-                              {data?.event?.seller?.name}
-                            </div>
-                          </div>
+                    <div className="sm:flex flex-wrap">
+                      <div className="flex-auto">
+                        <h1 className="   text-base sm:text-lg   font-bold sm:font-semibold text-blue-800 uppercase">
+                          {item?.YOM} {item?.model} -{item.registrationNumber}
+                        </h1>
+                        <div className="text-sm font-medium text-black">
+                          {data?.event?.seller?.name}
                         </div>
-                        <div className="">
-                          <button
-                            className=" sm:hidden flex justify-center w-full  text-black font-normal py-1 px-4 rounded"
-                            onClick={handleClick}
-                          >
-                            {showCode ? (
-                              <span className="text-blue-800 font-semibold">
-                                {" "}
-                                Hide Details
-                              </span>
-                            ) : (
-                              <span className="text-blue-800 font-semibold">
-                                {" "}
-                                Show Details
-                              </span>
-                            )}
-                          </button>
-                          <div
-                            className={`${
-                              showCode ? "block mt-2 sm:mt-4" : "hidden"
-                            } sm:block  `}
-                          >
-                            <dl className="grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-3">
-                              <div className="sm:col-span-1 flex items-center justify-between sm:block">
-                                <dt className="text-sm font-bold sm:font-medium text-gray-500">
-                                  Odometer
-                                </dt>
-                                <dd className="text-sm font-medium sm:font-normal text-gray-900">
-                                  {item?.kmReading ?? "N/A"} km
-                                </dd>
-                              </div>
-                              {/* <div className=" sm:col-span-1 flex items-center justify-between sm:block">
+                      </div>
+                    </div>
+                    <div className="">
+                      <button
+                        className=" sm:hidden flex justify-center w-full  text-black font-normal py-1 px-4 rounded"
+                        onClick={handleClick}
+                      >
+                        {showCode ? (
+                          <span className="text-blue-800 font-semibold">
+                            {" "}
+                            Hide Details
+                          </span>
+                        ) : (
+                          <span className="text-blue-800 font-semibold">
+                            {" "}
+                            Show Details
+                          </span>
+                        )}
+                      </button>
+                      <div
+                        className={`${
+                          showCode ? "block mt-2 sm:mt-4" : "hidden"
+                        } sm:block  `}
+                      >
+                        <dl className="grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-3">
+                          <div className="sm:col-span-1 flex items-center justify-between sm:block">
+                            <dt className="text-sm font-bold sm:font-medium text-gray-500">
+                              Odometer
+                            </dt>
+                            <dd className="text-sm font-medium sm:font-normal text-gray-900">
+                              {item?.kmReading ?? "N/A"} km
+                            </dd>
+                          </div>
+                          <div className=" sm:col-span-1 flex items-center justify-between sm:block">
                             <dt className="text-sm font-bold sm:font-medium text-gray-500">
                               Ownership
                             </dt>
                             <dd className="text-sm font-medium sm:font-normal file: text-gray-900">
                               {item?.ownership}
                             </dd>
-                          </div> */}
-                              <div className="sm:col-span-1 flex items-center justify-between sm:block">
-                                <dt className="text-sm font-bold sm:font-medium text-gray-500">
-                                  RC Book
-                                </dt>
-                                <dd className="text-sm font-medium sm:font-normal text-gray-900">
-                                  {item?.rcStatus}
-                                </dd>
-                              </div>
-                              <div className="sm:col-span-1 flex items-center justify-between sm:block">
-                                <dt className="text-sm font-bold sm:font-medium text-gray-500">
-                                  Repo date
-                                </dt>
-                                <dd className="text-sm text-gray-900">
-                                  {item?.repoDt
-                                    ? new Date(
-                                        item?.repoDt
-                                      ).toLocaleDateString()
-                                    : "N/A"}
-                                </dd>
-                              </div>
-                              <div className="sm:col-span-1 flex items-center justify-between sm:block">
-                                <dt className="text-sm font-bold sm:font-medium text-gray-500">
-                                  Total Bids
-                                </dt>
-                                <dd className="text-sm font-medium sm:font-normal text-gray-900">
+                          </div>
+                          <div className="sm:col-span-1 flex items-center justify-between sm:block">
+                            <dt className="text-sm font-bold sm:font-medium text-gray-500">
+                              RC Book
+                            </dt>
+                            <dd className="text-sm font-medium sm:font-normal text-gray-900">
+                              {item?.rcStatus}
+                            </dd>
+                          </div>
+                          <div className="sm:col-span-1 flex items-center justify-between sm:block">
+                            <dt className="text-sm font-bold sm:font-medium text-gray-500">
+                              Repo date
+                            </dt>
+                            <dd className="text-sm text-gray-900">
+                              {item?.repoDt
+                                ? new Date(item?.repoDt).toLocaleDateString()
+                                : "N/A"}
+                            </dd>
+                          </div>
+                          <div className="sm:col-span-1 flex items-center justify-between sm:block">
+                            <dt className="text-sm font-bold sm:font-medium text-gray-500">
+                              Total Bids
+                            </dt>
+                            <dd className="text-sm font-medium sm:font-normal text-gray-900">
                                   {item?.totalBids}
                                 </dd>
-                              </div>
-                              <div className="sm:col-span-1 flex items-center justify-between sm:block">
-                                <dt className="text-sm font-bold sm:font-medium text-gray-500">
-                                  Bids Remaining
-                                </dt>
-                                <dd className="text-sm font-medium sm:font-normal text-gray-900">
+                          </div>
+                          <div className="sm:col-span-1 flex items-center justify-between sm:block">
+                            <dt className="text-sm font-bold sm:font-medium text-gray-500">
+                              Bids Remaining
+                            </dt>
+                            <dd className="text-sm font-medium sm:font-normal text-gray-900">
                                   {data?.event?.noOfBids -
                                     item?.userVehicleBidsCount}
                                 </dd>
-                              </div>
-                              <div className="sm:col-span-1 flex items-center justify-between sm:block">
-                                <dt className="text-sm font-bold sm:font-medium text-gray-500">
-                                  Rank
-                                </dt>
-                                <dd className="text-base font-medium sm:font-normal text-gray-900">
+                          </div>
+                          <div className="sm:col-span-1 flex items-center justify-between sm:block">
+                            <dt className="text-sm font-bold sm:font-medium text-gray-500">
+                              Rank
+                            </dt>
+                            <dd className="text-base font-medium sm:font-normal text-gray-900">
                                   {item?.myBidRank ? item.myBidRank : "N/A"}
                                 </dd>
-                              </div>
-                              {data.event.bidLock === "locked" ? (
-                                <div className="sm:col-span-1 flex items-center justify-between sm:block">
-                                  <dt className="text-sm font-bold sm:font-medium text-gray-500">
-                                    Current Quote
-                                  </dt>
-                                  <dd className="text-base font-medium sm:font-normal text-gray-900">
-                                    {item?.currentBidAmount ?? "N/A"}
-                                  </dd>
-                                </div>
-                              ) : (
-                                <div className="sm:col-span-1 flex items-center justify-between sm:block">
-                                  <dt className="text-sm font-bold sm:font-medium text-gray-500">
-                                    Your Latest Quote
-                                  </dt>
-                                  <dd className="text-base font-medium sm:font-normal text-gray-900">
+                          </div>
+                          {data.event.bidLock === "locked" ? (
+                            <div className="sm:col-span-1 flex items-center justify-between sm:block">
+                              <dt className="text-sm font-bold sm:font-medium text-gray-500">
+                                Current Quote
+                              </dt>
+                              <dd className="text-base font-medium sm:font-normal text-gray-900">
+                                {item?.currentBidAmount ?? "N/A"}
+                              </dd>
+                            </div>
+                          ) : (
+                            <div className="sm:col-span-1 flex items-center justify-between sm:block">
+                              <dt className="text-sm font-bold sm:font-medium text-gray-500">
+                                Your Latest Quote
+                              </dt>
+                              <dd className="text-base font-medium sm:font-normal text-gray-900">
                                     {item?.userVehicleBids?.length
                                       ? item?.userVehicleBids[0].amount
                                       : "N/A"}
                                   </dd>
-                                </div>
-                              )}
-                            </dl>
-                          </div>
-                        </div>
+                            </div>
+                          )}
+                        </dl>
+                      </div>
+                    </div>
 
-                        <div className="flex  space-x-4 mt-6 pt-4 text-sm font-medium border-t  border-slate-300">
-                          <div className="flex-auto flex space-x-4">
-                            <div className="mt-1 flex flex-row sm:flex-wrap sm:mt-0 space-x-2 sm:space-x-6 justify-around w-full  sm:max-md:justify-around sm:max-md:w-full ">
-                              {IsCompleted(item) && (
+                    <div className="flex  space-x-4 mt-6 pt-4 text-sm font-medium border-t  border-slate-300">
+                      <div className="flex-auto flex space-x-4">
+                        <div className="mt-1 flex flex-row sm:flex-wrap sm:mt-0 space-x-2 sm:space-x-6 justify-around w-full  sm:max-md:justify-around sm:max-md:w-full ">
+                          {/* {IsCompleted(item) && (
                                 <div className="mt-2 flex items-center text-sm text-gray-500">
                                   {item?.watchedBy?.filter(
                                     (watchlistUser) =>
@@ -1022,9 +981,9 @@ function Events() {
                                     </button>
                                   )}
                                 </div>
-                              )}
+                              )} */}
 
-                              {/* {IsCompleted(item) && (
+                          {/* {IsCompleted(item) && (
                             <div className="mt-2 flex items-center text-sm text-gray-500">
                               {!(item.watchedByCount > 0) ? (
                                 <button
@@ -1054,102 +1013,100 @@ function Events() {
                             </div>
                           )} */}
 
-                              <div
-                                className="mt-2 flex items-center text-sm text-blue-800 hover:cursor-pointer hover:text-blue-600"
-                                // onClick={() => setShowInspectionReportModal(true)}
-                                onClick={() => {}}
-                              >
-                                {/* <DocumentReportIcon
+                          <div
+                            className="mt-2 flex items-center text-sm text-blue-800 hover:cursor-pointer hover:text-blue-600"
+                            // onClick={() => setShowInspectionReportModal(true)}
+                            onClick={() => {}}
+                          >
+                            {/* <DocumentReportIcon
                               className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
                               aria-hidden="true"
                             />
                             Inspection Report
                              */}
-                                <Link href={item.inspectionLink}>
-                                  <a
-                                    target="_blank"
-                                    className="flex items-center text-xs sm:text-sm  text-blue-800"
-                                  >
-                                    <DocumentReportIcon
-                                      className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
-                                      aria-hidden="true"
-                                    />
-                                    Inspection Report
-                                  </a>
-                                </Link>
-                              </div>
-                              <div className="mt-2">
-                                <Link href={`/vehicle/${item.id}`}>
-                                  <a
-                                    target="_blank"
-                                    className="flex items-center text-xs sm:text-sm  text-blue-800"
-                                  >
-                                    <ClipboardListIcon
-                                      className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
-                                      aria-hidden="true"
-                                    />
-                                    More Details
-                                  </a>
-                                </Link>
-                              </div>
-                            </div>
+                            {/* <Link href={item.inspectionLink}>
+                              <a
+                                target="_blank"
+                                className="flex items-center text-xs sm:text-sm  text-blue-800"
+                              >
+                                <DocumentReportIcon
+                                  className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
+                                  aria-hidden="true"
+                                />
+                                Inspection Report
+                              </a>
+                            </Link> */}
+                          </div>
+                          <div className="mt-2">
+                            <Link href={`/vehicle/${item.id}`}>
+                              <a
+                                target="_blank"
+                                className="flex items-center text-xs sm:text-sm  text-blue-800"
+                              >
+                                <ClipboardListIcon
+                                  className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
+                                  aria-hidden="true"
+                                />
+                                More Details
+                              </a>
+                            </Link>
                           </div>
                         </div>
                       </div>
-                      {/* starts at herer */}
-                      <div className="flex-none w-50   sm:max-md:w-full text-center mx-auto sm:w-60 ">
-                        <div className="flex sm:max-md:flex-row flex-col items-center  justify-center  relative p-4 space-y-2">
-                          <div className="w-full  sm:max-md:w-1/2 sm:max-md:self-start    sm:max-md:text-left space-y-2 mt-1 sm:mt-2 ">
-                            <span className="sm:max-md:text-base md:text-left">
-                              {" "}
-                              {SecondsLeft(item)}
+                    </div>
+                  </div>
+                  {/* starts at herer */}
+                  <div className="flex-none w-50   sm:max-md:w-full text-center mx-auto sm:w-60 ">
+                    <div className="flex sm:max-md:flex-row flex-col items-center  justify-center  relative p-4 space-y-2">
+                      <div className="w-full  sm:max-md:w-1/2 sm:max-md:self-start    sm:max-md:text-left space-y-2 mt-1 sm:mt-2 ">
+                        <span className="sm:max-md:text-base md:text-left">
+                          {" "}
+                          {SecondsLeft(item)}
+                        </span>
+                        <div className="hidden sm:block">
+                          <div className=" flex flex-col md:items-start justify-left text-xs sm:max-md:text-sm text-gray-700">
+                            <span className="font-semibold">Start Date</span>
+                            <span>
+                              {data.event.startDate
+                                ? moment(data.event.startDate).format(
+                                    "MMMM Do, YYYY ddd h:mm a"
+                                  )
+                                : "NA"}
                             </span>
-                            <div className="hidden sm:block">
-                              <div className=" flex flex-col md:items-start justify-left text-xs sm:max-md:text-sm text-gray-700">
-                                <span className="font-semibold">
-                                  Start Date
-                                </span>
-                                <span>
-                                  {data.event.startDate
-                                    ? moment(data.event.startDate).format(
-                                        "MMMM Do, YYYY ddd h:mm a"
-                                      )
-                                    : "NA"}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="flex flex-col md:items-start text-xs sm:max-md:text-sm text-gray-700">
-                              <span className="font-semibold">End Date</span>
-                              <span>
-                                {item?.bidTimeExpire
-                                  ? moment(item?.bidTimeExpire).format(
-                                      "MMMM Do, YYYY ddd h:mm a"
-                                    )
-                                  : "NA"}
-                              </span>
-                            </div>
                           </div>
+                        </div>
+                        <div className="flex flex-col md:items-start text-xs sm:max-md:text-sm text-gray-700">
+                          <span className="font-semibold">End Date</span>
+                          <span>
+                            {item?.bidTimeExpire
+                              ? moment(item?.bidTimeExpire).format(
+                                  "MMMM Do, YYYY ddd h:mm a"
+                                )
+                              : "NA"}
+                          </span>
+                        </div>
+                      </div>
 
-                          <div className=" w-64 sm:max-md:w-1/2 md:w-full bg-gray-200 rounded-lg">
-                            <div className="px-4 py-2">
-                              <h2 className="text-sm font-semibold text-gray-900">
-                                Bid Details
-                              </h2>
+                      <div className=" w-64 sm:max-md:w-1/2 md:w-full bg-gray-200 rounded-lg">
+                        <div className="px-4 py-2">
+                          <h2 className="text-sm font-semibold text-gray-900">
+                            Bid Details
+                          </h2>
 
-                              <div className="space-y-2 mt-2">
-                                <div className="flex items-center justify-between text-xs text-gray-700">
-                                  <span>Start Price</span>
-                                  <span>{item?.startPrice}</span>
-                                </div>
-                                <div className="flex items-center justify-between text-xs text-gray-700">
-                                  <span>Reserve Price</span>
-                                  <span>{item?.reservePrice}</span>
-                                </div>
-                                <div className="flex items-center justify-between text-xs text-gray-700">
-                                  <span>Quote Increment</span>
-                                  <span>{item?.quoteIncreament}</span>
-                                </div>
-                                <div className="flex  items-center justify-between text-xs text-gray-700">
+                          <div className="space-y-2 mt-2">
+                            <div className="flex items-center justify-between text-xs text-gray-700">
+                              <span>Start Price</span>
+                              <span>{item?.startPrice}</span>
+                            </div>
+                            <div className="flex items-center justify-between text-xs text-gray-700">
+                              <span>Reserve Price</span>
+                              <span>{item?.reservePrice}</span>
+                            </div>
+                            <div className="flex items-center justify-between text-xs text-gray-700">
+                              <span>Quote Increment</span>
+                              <span>{item?.quoteIncreament}</span>
+                            </div>
+                            <div className="flex  items-center justify-between text-xs text-gray-700">
                                   <span>Current Status</span>
                                   {item.userVehicleBidsCount &&
                                   item.myBidRank ? (
@@ -1180,28 +1137,27 @@ function Events() {
                                     </p>
                                   )}
                                 </div>
-                              </div>
-                            </div>
-                            <div>
-                              {IsCompleted(item) && (
-                                <EnterBid
-                                  row={item}
-                                  call={CallBid}
-                                  event={data["event"]}
-                                />
-                              )}
-                            </div>
                           </div>
                         </div>
+                        <div>
+                          {IsCompleted(item) && (
+                          <EnterBid
+                            row={item}
+                            call={CallBid}
+                            event={data["event"]}
+                          />
+           ) }
+                        </div>
                       </div>
-                      {/* end here */}
                     </div>
-                  </>
-                );
-              }
-            } else {
-              return null;
-            }
+                  </div>
+                  {/* end here */}
+                </div>
+              </>
+            );
+            // } else {
+            //   return "something wnet";
+            // }
           })}
         </div>
       )}
@@ -1220,48 +1176,38 @@ function Events() {
   );
 }
 
-export default withPrivateRoute(Events); 
+export default withPrivateRoute(Events);
 
 const EnterBid = ({ row, call, event }) => {
+  // console.log("event", event);
+
   const [bidAmount, setBidAmount] = useState("");
-  console.log('hh',row?.userVehicleBids[0]?.amount+(+row?.quoteIncreament));
-  
+  // console.log("hh", row?.userVehicleBids[0]?.amount + +row?.quoteIncreament);
+
   // const enrolled = row?.userVehicleBidsCount > 0;
 
-
-  
   useEffect(() => {
     if (event?.bidLock === "locked") {
       if (row.currentBidAmount) {
-        setBidAmount(row.currentBidAmount+(+row?.quoteIncreament));
-      }
-      else if(row.startPrice){
+        setBidAmount(row.currentBidAmount + +row?.quoteIncreament);
+      } else if (row.startPrice) {
         setBidAmount(row.startPrice);
+      } else if (!row?.startPrice) {
+        setBidAmount(row?.quoteIncreament);
       }
-      else if(!row?.startPrice){
-        setBidAmount(row?.quoteIncreament)
-      }
-  
     } else {
       if (row.currentBidAmount) {
         let amt = row?.userVehicleBids?.length
-          ? row?.userVehicleBids[0]?.amount+(+row?.quoteIncreament)
+          ? row?.userVehicleBids[0]?.amount + +row?.quoteIncreament
           : row.startPrice;
-        setBidAmount(amt.toString());
-      }
-         else if(row.startPrice){
+        setBidAmount(amt?.toString());
+      } else if (row.startPrice) {
         setBidAmount(row.startPrice);
+      } else if (!row?.startPrice) {
+        setBidAmount(row?.quoteIncreament);
       }
-      else if(!row?.startPrice){
-        setBidAmount(row?.quoteIncreament)
-      }
- 
     }
-  }, [event?.bidLock,row]);
-
- 
-
-
+  }, [event?.bidLock, row]);
 
   return (
     <div>
@@ -1308,6 +1254,9 @@ const EnterBid = ({ row, call, event }) => {
               position: "top",
             });
           } else if (parseInt(bidAmount) % row.quoteIncreament !== 0) {
+            let value=parseInt(bidAmount) % row.quoteIncreament 
+            console.log("963",value);
+            
             Swal.fire({
               title:
                 "Bid amount should be greater than minimum quote increment.",

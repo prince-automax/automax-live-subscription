@@ -1,5 +1,17 @@
-mutation CreateContactUs($data: ContactUsCreateInput!) {
-  createContactUs(data: $data){
-id
-}
+# mutation CreateContactUs($data: ContactUsCreateInput!) {
+#   createContactUs(data: $data){
+# id
+# }
+# }
+
+
+mutation CreateEnquiry($createEnquiryInput: CreateEnquiryInput!) {
+  createEnquiry(createEnquiryInput: $createEnquiryInput) {
+    firstName
+    lastName
+    message
+    mobile
+    state
+    status
+  }
 }

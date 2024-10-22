@@ -3,69 +3,69 @@ export const cities = [
     city: "Kolhapur",
     state: "Maharashtra",
   },
-  {
-    city: "Port Blair",
-    state: "Andaman & Nicobar Islands",
-  },
+  // {
+  //   city: "Port Blair",
+  //   state: "Andaman & Nicobar Islands",
+  // },
   {
     city: "Adilabad",
     state: "Telangana",
   },
   {
     city: "Adoni",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Amadalavalasa",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Amalapuram",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Anakapalle",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Anantapur",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Badepalle",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Banganapalle",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Bapatla",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Bellampalle",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Bethamcherla",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Bhadrachalam",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Bhainsa",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Bhimunipatnam",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Bhimavaram",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Bhongir",
@@ -73,7 +73,7 @@ export const cities = [
   },
   {
     city: "Bobbili",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Bodhan",
@@ -81,19 +81,19 @@ export const cities = [
   },
   {
     city: "Chilakaluripet",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Chirala",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Chittoor",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Cuddapah",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Devarakonda",
@@ -101,11 +101,11 @@ export const cities = [
   },
   {
     city: "Dharmavaram",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Eluru",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Farooqnagar",
@@ -117,31 +117,31 @@ export const cities = [
   },
   {
     city: "Gooty",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Gudivada",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Gudur",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Guntakal",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Guntur",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Hanuman Junction",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Hindupur",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Hyderabad",
@@ -149,11 +149,11 @@ export const cities = [
   },
   {
     city: "Ichchapuram",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Jaggaiahpet",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Jagtial",
@@ -161,7 +161,7 @@ export const cities = [
   },
   {
     city: "Jammalamadugu",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Jangaon",
@@ -169,11 +169,11 @@ export const cities = [
   },
   {
     city: "Kadapa",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Kadiri",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Kagaznagar",
@@ -181,11 +181,11 @@ export const cities = [
   },
   {
     city: "Kakinada",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Kalyandurg",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Kamareddy",
@@ -193,7 +193,7 @@ export const cities = [
   },
   {
     city: "Kandukur",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Karimnagar",
@@ -201,7 +201,7 @@ export const cities = [
   },
   {
     city: "Kavali",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Khammam",
@@ -217,15 +217,15 @@ export const cities = [
   },
   {
     city: "Kothapeta",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Kovvur",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Kurnool",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Kyathampalle",
@@ -233,15 +233,15 @@ export const cities = [
   },
   {
     city: "Macherla",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Machilipatnam",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Madanapalle",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Mahabubnagar",
@@ -257,7 +257,7 @@ export const cities = [
   },
   {
     city: "Mandapeta",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Manuguru",
@@ -265,7 +265,7 @@ export const cities = [
   },
   {
     city: "Markapur",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Medak",
@@ -277,11 +277,11 @@ export const cities = [
   },
   {
     city: "Mogalthur",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Nagari",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Nagarkurnool",
@@ -289,15 +289,15 @@ export const cities = [
   },
   {
     city: "Nandyal",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Narasapur",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Narasaraopet",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
 
   {
@@ -306,15 +306,15 @@ export const cities = [
   },
   {
     city: "Narsipatnam",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Nellore",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Nidadavole",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Nirmal",
@@ -326,19 +326,19 @@ export const cities = [
   },
   {
     city: "Nuzvid",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Ongole",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Palacole",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Palasa-Kasibugga",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Palwancha",
@@ -346,51 +346,51 @@ export const cities = [
   },
   {
     city: "Parvathipuram",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Pedana",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Peddapuram",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Pithapuram",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Pondur",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Ponnur",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Proddatur",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Punganur",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Puttur",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Rajahmundry",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Rajam",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Ramachandrapuram",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Ramagundam",
@@ -398,19 +398,19 @@ export const cities = [
   },
   {
     city: "Rayachoti",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Rayadurg",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Renigunta",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Repalle",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Sadasivpet",
@@ -418,11 +418,11 @@ export const cities = [
   },
   {
     city: "Salur",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Samalkot",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Sangareddy",
@@ -430,7 +430,7 @@ export const cities = [
   },
   {
     city: "Sattenapalle",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Siddipet",
@@ -438,7 +438,7 @@ export const cities = [
   },
   {
     city: "Singapur",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Sircilla",
@@ -446,12 +446,12 @@ export const cities = [
   },
   {
     city: "Srikakulam",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
 
   {
     city: "Srikalahasti",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Suryapet",
@@ -459,11 +459,11 @@ export const cities = [
   },
   {
     city: "Tadepalligudem",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Tadipatri",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Tandur",
@@ -471,27 +471,27 @@ export const cities = [
   },
   {
     city: "Tanuku",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Tenali",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Tirupati",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Tuni",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Uravakonda",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Venkatagiri",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Vikarabad",
@@ -499,19 +499,19 @@ export const cities = [
   },
   {
     city: "Vijayawada",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Vinukonda",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Visakhapatnam",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Vizianagaram",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Wanaparthy",
@@ -527,11 +527,11 @@ export const cities = [
   },
   {
     city: "Yemmiganur",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Yerraguntla",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Zaheerabad",
@@ -539,27 +539,27 @@ export const cities = [
   },
   {
     city: "Rajampet",
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
   },
   {
     city: "Along",
-    state: "Arunachal Pradesh",
+    state: "Arunachal_Pradesh",
   },
   {
     city: "Bomdila",
-    state: "Arunachal Pradesh",
+    state: "Arunachal_Pradesh",
   },
   {
     city: "Itanagar",
-    state: "Arunachal Pradesh",
+    state: "Arunachal_Pradesh",
   },
   {
     city: "Naharlagun",
-    state: "Arunachal Pradesh",
+    state: "Arunachal_Pradesh",
   },
   {
     city: "Pasighat",
-    state: "Arunachal Pradesh",
+    state: "Arunachal_Pradesh",
   },
   {
     city: "Abhayapuri",
@@ -1285,11 +1285,11 @@ export const cities = [
   },
   {
     city: "Asola",
-    state: "Delhi (NCT)",
+    state: "Delhi",
   },
   {
     city: "Delhi",
-    state: "Delhi (NCT)",
+    state: "Delhi",
   },
   {
     city: "Aldona",
@@ -1907,95 +1907,95 @@ export const cities = [
   },
   {
     city: "Arki",
-    state: "Himachal Pradesh",
+    state: "Himachal_Pradesh",
   },
   {
     city: "Baddi",
-    state: "Himachal Pradesh",
+    state: "Himachal_Pradesh",
   },
   {
     city: "Bilaspur",
-    state: "Himachal Pradesh",
+    state: "Himachal_Pradesh",
   },
   {
     city: "Chamba",
-    state: "Himachal Pradesh",
+    state: "Himachal_Pradesh",
   },
   {
     city: "Dalhousie",
-    state: "Himachal Pradesh",
+    state: "Himachal_Pradesh",
   },
   {
     city: "Dharamsala",
-    state: "Himachal Pradesh",
+    state: "Himachal_Pradesh",
   },
   {
     city: "Hamirpur",
-    state: "Himachal Pradesh",
+    state: "Himachal_Pradesh",
   },
   {
     city: "Mandi",
-    state: "Himachal Pradesh",
+    state: "Himachal_Pradesh",
   },
   {
     city: "Nahan",
-    state: "Himachal Pradesh",
+    state: "Himachal_Pradesh",
   },
   {
     city: "Shimla",
-    state: "Himachal Pradesh",
+    state: "Himachal_Pradesh",
   },
   {
     city: "Solan",
-    state: "Himachal Pradesh",
+    state: "Himachal_Pradesh",
   },
   {
     city: "Sundarnagar",
-    state: "Himachal Pradesh",
+    state: "Himachal_Pradesh",
   },
   {
     city: "Jammu",
-    state: "Jammu and Kashmir",
+    state: "Jammu_and_Kashmir",
   },
   {
     city: "Achabbal",
-    state: "Jammu and Kashmir",
+    state: "Jammu_and_Kashmir",
   },
   {
     city: "Akhnoor",
-    state: "Jammu and Kashmir",
+    state: "Jammu_and_Kashmir",
   },
   {
     city: "Anantnag",
-    state: "Jammu and Kashmir",
+    state: "Jammu_and_Kashmir",
   },
   {
     city: "Arnia",
-    state: "Jammu and Kashmir",
+    state: "Jammu_and_Kashmir",
   },
   {
     city: "Awantipora",
-    state: "Jammu and Kashmir",
+    state: "Jammu_and_Kashmir",
   },
   {
     city: "Bandipore",
-    state: "Jammu and Kashmir",
+    state: "Jammu_and_Kashmir",
   },
   {
     city: "Baramula",
-    state: "Jammu and Kashmir",
+    state: "Jammu_and_Kashmir",
   },
   {
     city: "Kathua",
-    state: "Jammu and Kashmir",
+    state: "Jammu_and_Kashmir",
   },
   {
     city: "Leh",
-    state: "Jammu and Kashmir",
+    state: "Jammu_and_Kashmir",
   },
   {
     city: "Punch",
-    state: "Jammu and Kashmir",
+    state: "Jammu_and_Kashmir",
   },
 
   {
@@ -2758,360 +2758,360 @@ export const cities = [
   },
   {
     city: "Ashok Nagar",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Balaghat",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Betul",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Bhopal",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Burhanpur",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Chhatarpur",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Dabra",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Datia",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Dewas",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Dhar",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Fatehabad",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Gwalior",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Indore",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Itarsi",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Jabalpur",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Katni",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Kotma",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Lahar",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Lundi",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Maharajpur",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Mahidpur",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Maihar",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Malajkhand",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Manasa",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Manawar",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Mandideep",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Mandla",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Mandsaur",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Mauganj",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Mhow Cantonment",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Mhowgaon",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Morena",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Multai",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Murwara",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Nagda",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
 
   {
     city: "Nainpur",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Narsinghgarh",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Neemuch",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Nepanagar",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Niwari",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Nowgong",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Nowrozabad",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Pachore",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Pali",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Panagar",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Pandhurna",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Panna",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Pasan",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Pipariya",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Pithampur",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Porsa",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Prithvipur",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Raghogarh-Vijaypur",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Rahatgarh",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Raisen",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Rajgarh",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Ratlam",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Rau",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Rehli",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Rewa",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Sabalgarh",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Sagar",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Sanawad",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Sarangpur",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Sarni",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Satna",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Sausar",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Sehore",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Sendhwa",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Seoni",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Seoni-Malwa",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Shahdol",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Shajapur",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Shamgarh",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Sheopur",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Shivpuri",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Shujalpur",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Sidhi",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Sihora",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Singrauli",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Sironj",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Sohagpur",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Tarana",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Tikamgarh",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Ujhani",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Ujjain",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Umaria",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Vidisha",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Wara Seoni",
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
   },
   {
     city: "Ahmednagar",
@@ -4545,491 +4545,491 @@ export const cities = [
  
   {
     city: "Arakkonam",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Arcot",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Aruppukkottai",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Bhavani",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Chengalpattu",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Chinna Salem",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Coimbatore",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Coonoor",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Cuddalore",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Dharmapuri",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Dindigul",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Erode",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Gudalur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Kanchipuram",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Karaikudi",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Karungal",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Karur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Kolankodu",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Lalgudi",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Madurai",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Nagapattinam",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Nagercoil",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Namagiripettai",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Namakkal",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Nandivaram-Guduvancheri",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Nanjikottai",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Natham",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Nellikuppam",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Neyveli",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "O Valley",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Oddanchatram",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "P.N.Patti",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Pacode",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Padmanabhapuram",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Palani",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Palladam",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Pallapatti",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Pallikonda",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Panagudi",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Panruti",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Paramakudi",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Parangipettai",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Pattukkottai",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Perambalur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Peravurani",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Periyakulam",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Periyasemur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Pernampattu",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Pollachi",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Polur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Ponneri",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Pudukkottai",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Pudupattinam",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Puliyankudi",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Punjaipugalur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Rajapalayam",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Ramanathapuram",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Rameswaram",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Rasipuram",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Salem",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Sankarankoil",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Sankari",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Sathyamangalam",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Sattur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Shenkottai",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Sholavandan",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Sholingur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Sirkali",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Sivaganga",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Sivagiri",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Sivakasi",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Srivilliputhur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Surandai",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Suriyampalayam",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Tenkasi",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Thammampatti",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Thanjavur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Tharamangalam",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Tharangambadi",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Theni Allinagaram",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Thirumangalam",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Thirunindravur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Thiruparappu",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Thirupuvanam",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Thiruthuraipoondi",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Thiruvallur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Thiruvarur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Thoothukudi",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Thuraiyur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Tindivanam",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Tiruchendur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Tiruchengode",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Tiruchirappalli",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Tirukalukundram",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Tirukkoyilur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Tirunelveli",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Tirupathur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Tiruppur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Tiruttani",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Tiruvannamalai",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Tiruvethipuram",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Tittakudi",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Udhagamandalam",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Udumalaipettai",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Unnamalaikadai",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Usilampatti",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Uthamapalayam",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Uthiramerur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Vadakkuvalliyur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Vadalur",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Vadipatti",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Valparai",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Vandavasi",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Vaniyambadi",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Vedaranyam",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Vellakoil",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Vellore",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Vikramasingapuram",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Viluppuram",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Virudhachalam",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Virudhunagar",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Viswanatham",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
   {
     city: "Agartala",
@@ -5069,327 +5069,327 @@ export const cities = [
   },
   {
     city: "Achhnera",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Adari",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Agra",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Aligarh",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Allahabad",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Amroha",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Azamgarh",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Bahraich",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Ballia",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Balrampur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Banda",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Bareilly",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Chandausi",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Dadri",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Deoria",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Etawah",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Fatehabad",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Fatehpur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Greater Noida",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Hamirpur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Hardoi",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Jajmau",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Jaunpur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Jhansi",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Kalpi",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Kanpur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Kota",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Laharpur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Lakhimpur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Lal Gopalganj Nindaura",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Lalganj",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Lalitpur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Lar",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Loni",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Lucknow",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Mathura",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Meerut",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Modinagar",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Muradnagar",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Nagina",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Najibabad",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Nakur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Nanpara",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Naraura",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Naugawan Sadat",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Nautanwa",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Nawabganj",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Nehtaur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "NOIDA",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Noorpur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Obra",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Orai",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Padrauna",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Palia Kalan",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Parasi",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Phulpur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Pihani",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Pilibhit",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Pilkhuwa",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Powayan",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Pukhrayan",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Puranpur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Purquazi",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Purwa",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Rae Bareli",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Rampur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Rampur Maniharan",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Rasra",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Rath",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Renukoot",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Reoti",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Robertsganj",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Rudauli",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Rudrapur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Sadabad",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Safipur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Saharanpur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Sahaspur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Sahaswan",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Sahawar",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Sahjanwa",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Saidpur",
@@ -5397,31 +5397,31 @@ export const cities = [
   },
   {
     city: "Sambhal",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Samdhan",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Samthar",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Sandi",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Sandila",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Sardhana",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Seohara",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Shahabad",
@@ -5433,15 +5433,15 @@ export const cities = [
   },
   {
     city: "Shahganj",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Shahjahanpur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Shamli",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Shamsabad",
@@ -5453,7 +5453,7 @@ export const cities = [
   },
   {
     city: "Sherkot",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Shikarpur",
@@ -5461,115 +5461,115 @@ export const cities = [
   },
   {
     city: "Shikohabad",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Shishgarh",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Siana",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Sikanderpur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Sikandra Rao",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Sikandrabad",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Sirsaganj",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Sirsi",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Sitapur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Soron",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Suar",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Sultanpur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Sumerpur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Tanda",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Tetri Bazar",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Thakurdwara",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Thana Bhawan",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Tilhar",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Tirwaganj",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Tulsipur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Tundla",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Unnao",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Utraula",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Varanasi",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Vrindavan",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Warhapur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Zaidpur",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Zamania",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Almora",
@@ -5661,7 +5661,7 @@ export const cities = [
   },
   {
     city: "Muzaffarnagar",
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
   },
   {
     city: "Adra",
@@ -5669,195 +5669,195 @@ export const cities = [
   },
   {
     city: "Alipurduar",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Arambagh",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Asansol",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Baharampur",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Bally",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Balurghat",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Bankura",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Barakar",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Barasat",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Bardhaman",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Bidhannagar",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Chinsurah",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Contai",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Cooch Behar",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Darjeeling",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Durgapur",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Haldia",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Howrah",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Islampur",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Jhargram",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Kharagpur",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Kolkata",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Mainaguri",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Mal",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Mathabhanga",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Medinipur",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Memari",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Monoharpur",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Murshidabad",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Nabadwip",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Naihati",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Panchla",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Pandua",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Paschim Bardhaman",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Purulia",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Raghunathpur",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Raiganj",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Rampurhat",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Ranaghat",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Sainthia",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Santipur",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Siliguri",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Sonamukhi",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Srirampore",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Suri",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Taki",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Tamluk",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Tarakeswar",
-    state: "West Bengal",
+    state: "West_Bengal",
   },
   {
     city: "Chikmagalur",
@@ -5877,6 +5877,6 @@ export const cities = [
   },
   {
     city: "Chennai",
-    state: "Tamil Nadu",
+    state: "TamilNadu",
   },
 ];

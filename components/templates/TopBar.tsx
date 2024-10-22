@@ -1,5 +1,6 @@
 import React from "react";
 import { GetUserQuery, useGetUserQuery } from "@utils/graphql";
+
 import { useEffect, useState } from "react";
 import graphQLClient from "@utils/useGQLQuery";
 import withPrivateRoute from "../../utils/withPrivateRoute";
@@ -16,6 +17,11 @@ function TopBar() {
       setAccessToken(token);
     }
   }, []);
+
+  // console.log("id from local storeage",id);
+  // console.log("access token  from local storeage",accessToken);
+  
+
   const { data } = useGetUserQuery<GetUserQuery>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     { where: { id } },
@@ -24,10 +30,17 @@ function TopBar() {
     }
   );
 
+  // console.log("data from api call", data);
+  
+
+
   useEffect(() => {
     const username = localStorage.getItem("username");
     setUserName(username);
   }, [data]);
+
+  // console.log("#999",username);
+  
 
   return (
     <div className="bg-primary text-white font-light">
@@ -37,7 +50,7 @@ function TopBar() {
         <div className="flex flex-col justify-end ">
           <div className="text-right text-sm">
             <span className="font-normal "> Vehicle Buying Limit : </span>
-            {data?.user?.currentVehicleBuyingLimit?.vehicleBuyingLimit ?? "Nil"}
+            {data?.user?.vehicleBuyingLimit ?? "Nil"}
           </div>
           <div className="text-right text-sm ">
             <span className=" text-sm sm:text-base">

@@ -1,0 +1,12 @@
+# codegen.apollo.yml
+schema: "https://api-dev.autobse.com/graphql" # or your GraphQL API endpoint
+documents: "schema/*.graphql"  # Fixes formatting issue
+generates:
+  ./utils/apollo.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      withHooks: true
+      withSubscription: true

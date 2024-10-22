@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  useQueryQuery,
-  QueryQueryVariables,
-  GetEventQuery,
-  useGetEventQuery,
-  OrderDirection,
-} from "@utils/graphql";
+// import {
+//   useQueryQuery,
+//   QueryQueryVariables,
+//   GetEventQuery,
+//   useGetEventQuery,
+//   OrderDirection,
+// } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
 import router from "next/router";
@@ -35,28 +35,28 @@ export default function TermsText(props) {
     return () => clearInterval(timer);
   }, []);
 
-  const { data, isLoading } = useGetEventQuery<GetEventQuery>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    {
-      where: { id: id as string },
-      orderBy: [
-        {
-          createdAt: OrderDirection.Asc,
-        },
-      ],
-      take: 1,
-      skip: 0,
-      userVehicleBidsOrderBy2: [{ amount: OrderDirection.Desc }],
-    },
-    { cacheTime: 5, refetchInterval: 60000, enabled: accessToken !== "" }
-  );
+  // const { data, isLoading } = useGetEventQuery<GetEventQuery>(
+  //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+  //   {
+  //     where: { id: id as string },
+  //     orderBy: [
+  //       {
+  //         createdAt: OrderDirection.Asc,
+  //       },
+  //     ],
+  //     take: 1,
+  //     skip: 0,
+  //     userVehicleBidsOrderBy2: [{ amount: OrderDirection.Desc }],
+  //   },
+  //   { cacheTime: 5, refetchInterval: 60000, enabled: accessToken !== "" }
+  // );
 
-  useEffect(() => {
-    // if (data && data.time) {
-    //     setTick(0);
-    //     setserverTime(data.time);
-    // }
-  }, [data]);
+  // useEffect(() => {
+  //   // if (data && data.time) {
+  //   //     setTick(0);
+  //   //     setserverTime(data.time);
+  //   // }
+  // }, [data]);
 
   return (
     <div className="  flex flex-col ml-2">

@@ -1,0 +1,11 @@
+# subscription LiveEvent($liveEventId: ID!) {
+#   liveEvent(id: $liveEventId) {
+#     eventNo
+#   }
+# }
+
+subscription VehicleUpdate {
+  subscriptionVehicleUpdates {
+  id  
+  }
+}

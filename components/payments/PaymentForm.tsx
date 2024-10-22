@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import { Formik, Form, ErrorMessage, Field } from "formik";
 import {
   CreatePaymentMutationVariables,
+  PaymentStatusType,
   useCreatePaymentMutation,
 } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
@@ -10,8 +11,10 @@ import ButtonLoading from "@components/ui/ButtonLoading";
 import toast from "react-hot-toast";
 import FormField from "@components/ui/FormField";
 import { ResizeImage } from "../image-Resizing/imagePayment";
+import Loader from "@components/ui/Loader";
 
 export default function PaymentForm() {
+  const [isLoading, setIsLoading] = useState(false);
   const SUPPORTED_FORMATS = [
     "image/jpg",
     "image/jpeg",
@@ -30,14 +33,6 @@ export default function PaymentForm() {
     {
       label: "Open Bid Payment",
       value: "openBids",
-    },
-    {
-      label: "Refund",
-      value: "refund",
-    },
-    {
-      label: "Other",
-      value: "other",
     },
   ];
 
@@ -58,43 +53,75 @@ export default function PaymentForm() {
   const validationSchema = Yup.object({
     amount: Yup.string().required("Amount is required"),
     paymentFor: Yup.string().required("Payment for is required"),
-    proof: Yup.mixed()
-      .required("Proof is required")
-      .test(
-        "fileFormat",
-        "Unsupported Format. Please upload a file with one of the following formats: " +
-          SUPPORTED_FORMATS.join(", "),
-        (value) => value && SUPPORTED_FORMATS.includes(value.type)
-      ),
+
     description: Yup.string().required("Description is required"),
   });
 
   const onSubmit = async (values, resetForm) => {
-    await callPaymentCreate
-      .mutateAsync({
-        data: {
+    setIsLoading(true);
+    console.log("Submitting payment details:", values);
+
+    try {
+      // Step 1: Call GraphQL API to create payment
+      const response = await callPaymentCreate.mutateAsync({
+        createPaymentInput: {
           amount: parseInt(values.amount),
           paymentFor: values.paymentFor,
-          image: {
-            upload: values.proof,
-          },
           description: values.description,
+          status: PaymentStatusType.Pending,
         },
-      })
-      .then(() => {
-        toast.success("Request submitted Successfully.");
-        resetForm({ proof: "" });
-      })
-      .catch((ex) => {
-        toast.error("Request was not submitted. Please try again.");
       });
+
+      console.log("response frm details", response);
+      const paymentId = response?.createPayment?.id;
+
+      // Step 2: If GraphQL API is successful, proceed to call the REST API for image upload
+      if (response) {
+        console.log("GraphQL API successful, uploading image...");
+
+        // Call REST API to upload the image (proof)
+        const formData = new FormData();
+        formData.append("image", values.proof);
+        const apiUrl = `https://api-dev.autobse.com/api/v1/fileupload/paymentImg/${paymentId}`;
+
+        const uploadResponse = await fetch(apiUrl, {
+          method: "PUT",
+          body: formData,
+          headers: {
+            "x-apollo-operation-name": "uploadUserProfile", // Include this header
+            // Other headers can go here
+          },
+        });
+
+        console.log("upload response of image", uploadResponse);
+
+        if (uploadResponse.ok) {
+          toast.success("Payment and image uploaded successfully.");
+          resetForm({ proof: "" });
+          // setIsLoading(false)
+        } else {
+          throw new Error("Image upload failed");
+        }
+      }
+    } catch (error) {
+      const errorMessage =
+        error?.response?.errors?.[0]?.message || error.message;
+      toast.error(
+        errorMessage || "Request was not submitted. Please try again."
+      );
+    } finally {
+      setIsLoading(false); // Step 5: Set loading to false when form submission is complete
+    }
   };
 
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <Formik
       initialValues={{
         amount: "",
-        paymentFor: "registrations",
+        paymentFor: "Registrations",
         image: null,
         description: "",
       }}
@@ -133,11 +160,10 @@ export default function PaymentForm() {
                 field="select"
                 name="paymentFor"
                 label="Payment For"
-               
                 required
                 width="w-full"
                 options={paymentOptions}
-                onChange={ e => {
+                onChange={(e) => {
                   const { value } = e.target;
                   props.setFieldValue("paymentFor", value);
                 }}
@@ -155,9 +181,9 @@ export default function PaymentForm() {
                 <textarea
                   rows={4}
                   name="description"
+                  placeholder="Eg: For Registration"
                   id="description"
-                  className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                  defaultValue={""}
+                  className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md text-center placeholder:text-center pt-10"
                   value={props.values.description}
                   onChange={(event) => {
                     props.setFieldValue("description", event.target.value);
@@ -174,20 +200,19 @@ export default function PaymentForm() {
                 htmlFor="image"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
               >
-                Upload image <span className="text-blue-600">(Payment Receipt)</span>
+                Upload image{" "}
+                <span className="text-blue-600">(Payment Receipt)</span>
               </label>
               <input
                 onChange={async (event) => {
                   try {
                     const file = event.target.files[0];
-                  
 
                     const image = await ResizeImage(file);
-                  
 
                     props.setFieldValue("proof", image);
                   } catch (err) {
-                  
+                    console.log("error", err);
                   }
                 }}
                 name="proof"
@@ -207,8 +232,9 @@ export default function PaymentForm() {
                 <ErrorMessage name="proof" />
               </div>
             </div>
+
             <ButtonLoading
-              loading={callPaymentCreate.isLoading ? 1 : 0}
+              // loading={callPaymentCreate.isLoading ? 1 : 0}
               type="submit"
               color="indigo"
             >

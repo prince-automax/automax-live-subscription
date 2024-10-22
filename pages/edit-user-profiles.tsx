@@ -1,15 +1,17 @@
 import * as Yup from "yup";
-import { Formik, Form, Field,ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import FormField from "../components/ui/FormField";
 import ButtonLoading from "../components/ui/ButtonLoading";
+import placeholder from "@assets/noImage.jpeg";
 import {
   useGetUserQuery,
   GetUserQueryVariables,
   useUpdateUserMutation,
   UpdateUserMutationVariables,
   UserStatusType,
-  useUsersQuery,
-  useDuplicateDataCheckQuery,
+  GetUserQuery,
+  //   useUsersQuery,
+  //   useDuplicateDataCheckQuery,
 } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import withPrivateRoute from "../utils/withPrivateRoute";
@@ -25,6 +27,7 @@ import { ResizeImage } from "../components/image-Resizing/imageProfile";
 import DashboardTemplate from "../components/templates/DashboardTemplate";
 // import {welcomeMessage} from "../components/alerts/welcomeMessage"
 import Swal from "sweetalert2";
+import Image from "next/image";
 
 const userIdProofTypes = [
   { label: "Aadhar Number", value: "aadhar" },
@@ -61,39 +64,39 @@ function welcomeMessage(props) {
 
 function ProfileUpdate() {
   const id = localStorage.getItem("id");
-  
 
   // const token = localStorage.getItem("token");
   const [emailCheckData, setEmailCheckData] = useState("");
   const [panCheckData, setPanCheckData] = useState("");
   const [emailEnabled, setEmailEnabled] = useState(false);
   const [panEnabled, setPanEnabled] = useState(false);
-
+  const [imagePreviews, setImagePreviews] = useState({
+    pancard_image: null,
+    aadharcard_front_image: null,
+    aadharcard_back_image: null,
+    driving_license_front_image: null,
+    driving_license_back_image: null,
+  });
   const [accessToken, setAccessToken] = useState("");
   const [selectedState, setSelectedState] = useState("Kerala");
   const [filteredCities, setFilteredCities] = useState([]);
 
   useEffect(() => {
-   
-  
-    if(selectedState != null && selectedState != "")
-    {
-      
+    if (selectedState != null && selectedState != "") {
       // filter cities and fill in cities object
 
-      const filteredC = cities.filter(c => c.state  ===  selectedState)
+      const filteredC = cities.filter((c) => c.state === selectedState);
 
-    
-      setFilteredCities(filteredC.map((city, index) => {
-        return {
-          label: city.city,
-          value: `${city.city}-${city.state}`,
-        };
-      }));
-
+      setFilteredCities(
+        filteredC.map((city, index) => {
+          return {
+            label: city.city,
+            value: `${city.city}-${city.state}`,
+          };
+        })
+      );
     }
-  }, [selectedState])
-  
+  }, [selectedState]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -103,78 +106,85 @@ function ProfileUpdate() {
   }, []);
 
   const { data: data, isLoading: isLoadingGetUser } =
-    useGetUserQuery<GetUserQueryVariables>(
+    useGetUserQuery<GetUserQuery>(
       graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-      { where: { id } },  
+      { where: { id } },
       {
         enabled: accessToken !== "",
       }
     );
 
-  
-    
+  //  useEffect(() => {
+  //   if (data) {
+  //     setImagePreviews({
+  //       pancard_image: data.user?.pancard_image || null,
+  //       aadharcard_front_image: data?.user?.aadharcard_front_image || null,
+  //       aadharcard_back_image: data?.user?.aadharcard_back_image || null,
+  //       driving_license_front_image: data?.user?.driving_license_front_image || null,
+  //       driving_license_back_image: data?.user?.driving_license_back_image || null,
+  //     });
+  //   }
+  // }, [data]);
 
-    const pancard = data ? data["user"]?.pancard.url : "";
-  
-    
-    
-    
+  console.log("datas", data);
 
-  const { data: duplicateEmailCheckData } = useDuplicateDataCheckQuery(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    {
-      where: {
-        email: {
-          equals: emailCheckData,
-        },
-        id: {
-          not: {
-            equals: id,
-          },
-        },
-      },
-    },
-    {
-      enabled: emailEnabled && accessToken != "",
-    }
-  );
+  // const pancard = data ? data["user"]?.pancard?.url : "";
 
-  const { data: duplicatePanCheckData } = useDuplicateDataCheckQuery(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    {
-      where: {
-        pancardNo: {
-          equals: panCheckData,
-        },
-        id: {
-          not: {
-            equals: id,
-          },
-        },
-      },
-    },
-    {
-      enabled: panEnabled && accessToken != "",
-    }
-  );
+  //   const { data: duplicateEmailCheckData } = useDuplicateDataCheckQuery(
+  //     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+  //     {
+  //       where: {
+  //         email: {
+  //           equals: emailCheckData,
+  //         },
+  //         id: {
+  //           not: {
+  //             equals: id,
+  //           },
+  //         },
+  //       },
+  //     },
+  //     {
+  //       enabled: emailEnabled && accessToken != "",
+  //     }
+  //   );
 
-  useEffect(() => {
-    if (duplicateEmailCheckData?.sudoUsersCount > 0 && emailEnabled) {
-      alert(
-        "The Email you have entered has already been connected with another account."
-      );
-      setEmailEnabled(false);
-    }
-  }, [duplicateEmailCheckData, emailEnabled]);
+  //   const { data: duplicatePanCheckData } = useDuplicateDataCheckQuery(
+  //     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+  //     {
+  //       where: {
+  //         pancardNo: {
+  //           equals: panCheckData,
+  //         },
+  //         id: {
+  //           not: {
+  //             equals: id,
+  //           },
+  //         },
+  //       },
+  //     },
+  //     {
+  //       enabled: panEnabled && accessToken != "",
+  //     }
+  //   );
 
-  useEffect(() => {
-    if (duplicatePanCheckData?.sudoUsersCount > 0 && panEnabled) {
-      alert(
-        "The Pan you have entered has already been connected with another account."
-      );
-      setPanEnabled(false);
-    }
-  }, [duplicatePanCheckData, panEnabled]);
+  //   useEffect(() => {
+  //     if (duplicateEmailCheckData?.sudoUsersCount > 0 && emailEnabled) {
+  //       alert(
+  //         "The Email you have entered has already been connected with another account."
+  //       );
+  //       setEmailEnabled(false);
+  //     }
+  //   }, [duplicateEmailCheckData, emailEnabled]);
+
+  //   useEffect(() => {
+  //     if (duplicatePanCheckData?.sudoUsersCount > 0 && panEnabled) {
+  //       alert(
+  //         "The Pan you have entered has already been connected with another account."
+  //       );
+  //       setPanEnabled(false);
+  //     }
+  //   }, [duplicatePanCheckData, panEnabled]);
 
   const callUpdateUserMutation =
     useUpdateUserMutation<UpdateUserMutationVariables>(
@@ -184,8 +194,6 @@ function ProfileUpdate() {
   if (isLoadingGetUser) {
     return <Loader />;
   }
-
-
 
   const validationSchema = Yup.object({
     id: Yup.string().required(),
@@ -200,43 +208,38 @@ function ProfileUpdate() {
     // passwordConfirmation: Yup.string()
     //   .required("Confirm password is required")
     //   .oneOf([Yup.ref("password"), null], "Passwords must match"),
-    idProofType: Yup.string()
+    idProofType: Yup.string(),
     // .required("Id proof type is required"),
-    ,
-    idProofNo: Yup.string()
+    idProofNo: Yup.string(),
     // .required("Id proof number is required"),
-    ,
     pancardNo: Yup.string(),
-      // .required("Pan Card number is required")
-      // .max(10, "Invalid Pan Card number")
-      // .min(10, "Invalid Pan Card number"),
-    pancard: Yup.mixed()
-      // .required("Pancard is required")
-      // .test(
-      //   "fileFormat",
-      //   "Unsupported Format. Please upload a file with one of the following formats: " +
-      //     SUPPORTED_FORMATS.join(", "),
-      //   (value) => value && SUPPORTED_FORMATS.includes(value.type)
-      // ),
-      ,
-    idProof: Yup.mixed()
-      // .required("ID proof is required")
-      // .test(
-      //   "fileFormat",
-      //   "Unsupported Format. Please upload a file with one of the following formats: " +
-      //     SUPPORTED_FORMATS.join(", "),
-      //   (value) => value && SUPPORTED_FORMATS.includes(value.type)
-      // ),
-      ,
-    idProofBack: Yup.mixed()
-      // .required("ID proof is required")
-      // .test(
-      //   "fileFormat",
-      //   "Unsupported Format. Please upload a file with one of the following formats: " +
-      //     SUPPORTED_FORMATS.join(", "),
-      //   (value) => value && SUPPORTED_FORMATS.includes(value.type)
-      // ),
-      ,
+    // .required("Pan Card number is required")
+    // .max(10, "Invalid Pan Card number")
+    // .min(10, "Invalid Pan Card number"),
+    pancard: Yup.mixed(),
+    // .required("Pancard is required")
+    // .test(
+    //   "fileFormat",
+    //   "Unsupported Format. Please upload a file with one of the following formats: " +
+    //     SUPPORTED_FORMATS.join(", "),
+    //   (value) => value && SUPPORTED_FORMATS.includes(value.type)
+    // ),
+    idProof: Yup.mixed(),
+    // .required("ID proof is required")
+    // .test(
+    //   "fileFormat",
+    //   "Unsupported Format. Please upload a file with one of the following formats: " +
+    //     SUPPORTED_FORMATS.join(", "),
+    //   (value) => value && SUPPORTED_FORMATS.includes(value.type)
+    // ),
+    idProofBack: Yup.mixed(),
+    // .required("ID proof is required")
+    // .test(
+    //   "fileFormat",
+    //   "Unsupported Format. Please upload a file with one of the following formats: " +
+    //     SUPPORTED_FORMATS.join(", "),
+    //   (value) => value && SUPPORTED_FORMATS.includes(value.type)
+    // ),
     mobile: Yup.string().required("Mobile number is required"),
     city: Yup.string().required("City is required"),
     state: Yup.string().required("State is required"),
@@ -244,8 +247,6 @@ function ProfileUpdate() {
   });
 
   const onSubmit = async (values) => {
-   
-
     const result = await callUpdateUserMutation.mutateAsync({
       data: {
         firstName: values.firstName,
@@ -254,19 +255,9 @@ function ProfileUpdate() {
         city: values.city,
         state: values.state,
         country: values.country,
-        // password: values.password,
+      
         pancardNo: values.pancardNo,
-        // pancard: {
-        //   upload: values.pancard,
-        // },
-        // idProofType: values.idProofType,
-        // idProofNo: values.idProofNo,
-        // idProof: {
-        //   upload: values.idProof ,
-        // },
-        // idProofBack: {
-        //   upload: values.idProofBack,
-        // },
+     
         status: UserStatusType.Active,
       },
       where: { id: values.id },
@@ -275,7 +266,7 @@ function ProfileUpdate() {
     localStorage.setItem("name", `${values.firstName}`);
     // localStorage.setItem("username", `${values.firstName}`);
     let name = values.firstName;
-  
+
     // welcomeMessage(name)
     Router.push("/dashboard");
     toast.success(`Welcome ${name}`);
@@ -307,61 +298,112 @@ function ProfileUpdate() {
     }
   };
 
+  const documetSchema = Yup.object({
+   
+  });
+
+  const handleSubmit = async (values) => {
+    console.log("values", values);
+
+    const formData = new FormData();
+
+    // Append non-file fields
+    formData.append("documentType", values.documentType);
+
+    // Append file fields if they exist
+    if (values.pancard_image) {
+      formData.append("pancard_image", values.pancard_image);
+    }
+    if (values.aadharcard_front_image) {
+      formData.append("aadharcard_front_image", values.aadharcard_front_image);
+    }
+    if (values.aadharcard_back_image) {
+      formData.append("aadharcard_back_image", values.aadharcard_back_image);
+    }
+    if (values.driving_license_front_image) {
+      formData.append(
+        "driving_license_front_image",
+        values.driving_license_front_image
+      );
+    }
+    if (values.driving_license_back_image) {
+      formData.append(
+        "driving_license_back_image",
+        values.driving_license_back_image
+      );
+    }
+
+    const apiUrl = `https://api-dev.autobse.com/api/v1/fileupload/userprofile/${id}`;
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: "PUT",
+        body: formData,
+        headers: {
+          "x-apollo-operation-name": "uploadUserProfile", // Include this header
+          // Other headers can go here
+        },
+      });
+
+      console.log("result", response);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (data.success) {
+        // Handle successful response
+        localStorage.setItem("status", "active");
+        localStorage.setItem("name", `${data?.res.firstName}`);
+        let name = data?.res.firstName;
+        Router.push("/dashboard");
+        toast.success(`Welcome ${name}`);
+      }
+      console.log("Success:", data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   return (
     <DashboardTemplate>
-    <div className="max-w-full mx-auto my-16 px-4">
-      {data && (
-        <div className="space-y-8">
-          <div className="py-8 bg-gray-100 rounded px-4 sm:px-6 flex items-center justify-between">
-            <h2 className="text-xl leading-6 font-medium text-gray-900">
-              Please update your profile
-            </h2>
-            <UserCircleIcon className="w-8 h-8 text-gray-400" />
-          </div>
+      <div className="max-w-full mx-auto my-16 px-4">
+        {data && (
+          <div className="space-y-8">
+            <div className="py-8 bg-gray-100 rounded px-4 sm:px-6 flex items-center justify-between">
+              <h2 className="text-xl leading-6 font-medium text-gray-900">
+                Please update your profile
+              </h2>
+              <UserCircleIcon className="w-8 h-8 text-gray-400" />
+            </div>
 
-          <Formik
-            initialValues={{
-              id: data["user"]["id"],
-              firstName: data["user"]["firstName"],
-              lastName: data["user"]["lastName"],
-              email: data["user"]["email"],
-              city: data["user"]["city"]
-                ? data["user"]["city"]
-                : "Kochi-Kerala",
-              state: data["user"]["state"] ? data["user"]["state"] : "Kerala",
-              country: data["user"]["country"]
-                ? data["user"]["country"]
-                : "India",
-              password: "",
-              passwordConfirmation: "",
-              mobile: data["user"]["mobile"],
-              idProofType: "aadhar",
-              idProofNo: data["user"]["idProofNo"],
-              pancardNo: data["user"]["pancardNo"],
-              pancard: null,
-              idProof: null,
-              idProofBack: null,
-            }}
-            validationSchema={validationSchema}
-            onSubmit={(values) => {
-              if (duplicateEmailCheckData?.sudoUsersCount > 0) {
-                alert(
-                  "The Email you have entered has already been connected with another account."
-                );
-                setEmailEnabled(false);
-              } else if (duplicatePanCheckData?.sudoUsersCount > 0) {
-                alert(
-                  "The Pan you have entered has already been connected with another account."
-                );
-                setPanEnabled(false);
-              } else {
-                onSubmit(values);
-              }
-            }}
-          >
-            {(props) => (
-       
-              (
+            <Formik
+              initialValues={{
+                id: data["user"]["id"],
+                firstName: data["user"]["firstName"],
+                lastName: data["user"]["lastName"],
+                email: data["user"]["email"],
+                city: data["user"]["city"]
+                  ? data["user"]["city"]
+                  : "Kochi-Kerala",
+                state: data["user"]["state"] ? data["user"]["state"] : "Kerala",
+                country: data["user"]["country"]
+                  ? data["user"]["country"]
+                  : "India",
+                password: "",
+                passwordConfirmation: "",
+                mobile: data["user"]["mobile"],
+                idProofType: "aadhar",
+                idProofNo: data["user"]["idProofNo"],
+                pancardNo: data["user"]["pancardNo"],
+                pancard: null,
+                idProof: null,
+                idProofBack: null,
+              }}
+              validationSchema={validationSchema}
+              onSubmit={onSubmit}
+            >
+              {(props) => (
                 <Form>
                   <div className="space-y-3 mt-4 pb-4">
                     <div className="mt-6 grid grid-cols-6 gap-6">
@@ -370,7 +412,7 @@ function ProfileUpdate() {
                           Basic Details
                         </h3>
                         <p className="max-w-2xl text-sm text-gray-500">
-                          Please update your basic details.
+                          Please update your basic details here.
                         </p>
                       </div>
 
@@ -424,15 +466,7 @@ function ProfileUpdate() {
                         />
                       </div>
                       <div className="col-span-6 sm:col-span-3">
-                        {/* <FormField
-                          field="select"
-                          required
-                          name="country"
-                          label="Country"
-                          width="w-full"
-                          placeholder="Country"
-                          options={renderingCountries}
-                        /> */}
+                        
                         <FormField
                           field="select"
                           required
@@ -442,7 +476,7 @@ function ProfileUpdate() {
                           placeholder="Country"
                           options={renderingCountries}
                           defaultValue="India"
-                          onChange={async e => {
+                          onChange={async (e) => {
                             const { value } = e.target;
                             props.setFieldValue("country", value);
                           }}
@@ -457,7 +491,7 @@ function ProfileUpdate() {
                           width="w-full"
                           placeholder="State"
                           options={renderingStates}
-                          onChange={async e => {
+                          onChange={async (e) => {
                             const { value } = e.target;
                             props.setFieldValue("state", value);
                             setSelectedState(value);
@@ -474,228 +508,340 @@ function ProfileUpdate() {
                           width="w-full"
                           placeholder="City"
                           options={filteredCities}
-                          onChange={async e => {
+                          onChange={async (e) => {
                             const { value } = e.target;
                             props.setFieldValue("city", value);
                           }}
                         />
                       </div>
-
-                      {/* <div className="space-y-1 col-span-6 border-t border-gray-200 pt-8">
-                        <h3 className="text-lg leading-6 font-medium text-gray-900">
-                          Your Id Proof
-                        </h3>
-                        <p className="max-w-2xl text-sm text-gray-500">
-                          Please enter your Id Proof details.
-                        </p>
-                      </div>
-
-                      <div className="col-span-6 sm:col-span-3">
-                        <FormField
-                          field="select"
-                          name="idProofType"
-                          label="ID Proof Type"
-                          options={userIdProofTypes}
-                          required
-                          width="w-full"
-                        />
-                      </div> */}
-{/* 
-                      <div className="col-span-6 sm:col-span-3">
-                        <FormField
-                          field="input"
-                          name="idProofNo"
-                          label={`${getIdProofLabel(
-                            props?.values?.idProofType
-                          )} Number `}
-                          placeholder={getIdProofPlaceholder(
-                            props?.values?.idProofType
-                          )}
-                          required
-                          width="w-full"
-                        />
-                      </div> */}
-
-                      {/* <div className="col-span-6 sm:col-span-3">
-                        <FormField
-                          field="input"
-                          name="pancardNo"
-                          label="PAN Card Number"
-                          placeholder="Enter your PAN Card Number"
-                          required
-                          maxLength="10"
-                          width="w-full"
-                          onBlur={(e) => {
-                            setPanCheckData(e.target.value);
-                            setPanEnabled(e.target.value != "");
-                          }}
-                        />
-                      </div> */}
-
-                      <div className="col-span-6 sm:col-span-3"></div>
-
-                      {/* <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="idProof"
-                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                        >
-                          Upload {getIdProofLabel(props?.values?.idProofType)}{" "}
-                          Document Front Side
-                        </label>
-                        <input
-                          onChange={async (event) => {
-                            try {
-                              const file = event.target.files[0];
-                              const image = await ResizeImage(file);
-                              props.setFieldValue("idProof", image);
-                            } catch (err) {
-                              console.log(err);
-                            }
-                          }}
-                          id="idProof"
-                          type="file"
-                          name="idProof"
-                          className="text-sm text-grey-500
-                                                file:mr-5 file:py-2 file:px-6
-                                                file:rounded-md file:border-0
-                                                file:text-sm file:font-medium
-                                                file:bg-blue-50 file:text-blue-700
-                                                hover:file:cursor-pointer hover:file:bg-amber-50
-                                                hover:file:text-amber-700
-                                                block w-full border border-gray-300 rounded-md
-                                                "
-                        />
-                        <div className="mt-2 text-xs text-red-600">
-                          <ErrorMessage name="idProof" />
-                        </div>
-                      </div> */}
-
-                      {/* <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="idProofBack"
-                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                        >
-                          Upload {getIdProofLabel(props?.values?.idProofType)}{" "}
-                          Document Back Side
-                        </label>
-                        <input
-                          onChange={async (event) => {
-                            try {
-                              const file = event.target.files[0];
-                              const image = await ResizeImage(file);
-                              props.setFieldValue("idProofBack", image);
-                            } catch (err) {
-                              console.log(err);
-                            }
-                          }}
-                          id="idProofBack"
-                          type="file"
-                          name="idProofBack"
-                          className="text-sm text-grey-500
-                                                file:mr-5 file:py-2 file:px-6
-                                                file:rounded-md file:border-0
-                                                file:text-sm file:font-medium
-                                                file:bg-blue-50 file:text-blue-700
-                                                hover:file:cursor-pointer hover:file:bg-amber-50
-                                                hover:file:text-amber-700
-                                                block w-full border border-gray-300 rounded-md
-                                                "
-                        />
-                        <div className="mt-2 text-xs text-red-600">
-                          <ErrorMessage name="idProofBack" />
-                        </div>
-                      </div> */}
-                      {/* <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="pancard"
-                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                        >
-                          Upload Pan Card
-                        </label>
-                        <input
-                        // defaultValue={data ? data["user"]?.pancard.url : ""}
-                          onChange={async (event) => {
-                            try {
-                              const file = event.target.files[0];
-                              const image = await ResizeImage(file);
-                              props.setFieldValue("pancard", image);
-                            } catch (err) {
-                              console.log(err);
-                            }
-                          }
-                        }
-                          name="pancard"
-                          id="pancard"
-                          type="file"
-                          className="text-sm text-grey-500
-                                                file:mr-5 file:py-2 file:px-6
-                                                file:rounded-md file:border-0
-                                                file:text-sm file:font-medium
-                                                file:bg-blue-50 file:text-blue-700
-                                                hover:file:cursor-pointer hover:file:bg-amber-50
-                                                hover:file:text-amber-700
-                                                block w-full border border-gray-300 rounded-md
-                                                "
-                        />
-                        <div className="mt-2 text-xs text-red-600">
-                          <ErrorMessage name="pancard" />
-                        </div>
-                      </div> */}
-{/* 
-                      <div className="space-y-1 col-span-6 border-t border-gray-200 pt-8">
-                        <h3 className="text-lg leading-6 font-medium text-gray-900">
-                          Set Your Password
-                        </h3>
-                        <p className="max-w-2xl text-sm text-gray-500">
-                          Required to login to your account.
-                        </p>
-                      </div>  */}
-
-                       {/* <div className="col-span-6 sm:col-span-3">
-                        <FormField
-                          field="input"
-                          required
-                          id="password"
-                          label="Password"
-                          name="password"
-                          type="password"
-                          width="w-full"
-                          placeholder="********"
-                          showTogglePasswordButton
-                        />
-                      </div>
-
-                      <div className="col-span-6 sm:col-span-3">
-                        <FormField
-                          field="input"
-                          id="passwordConfirmation"
-                          label="Confirm Password"
-                          name="passwordConfirmation"
-                          type="password"
-                          placeholder="********"
-                          width="w-full"
-                          showTogglePasswordButton
-                        />
-                      </div> */}
                     </div>
 
-                    <div className="my-8 flex justify-between">
+                    <div className="my-8 flex justify-center">
                       <ButtonLoading
-                        loading={callUpdateUserMutation.isLoading ? 1 : 0}
+                        // loading={callUpdateUserMutation.isLoading ? 1 : 0}
                         type="submit"
                         color="indigo"
                       >
-                        Submit{" "}
+                        Update Details
                       </ButtonLoading>
                     </div>
                   </div>
                 </Form>
-              )
-            )}
-          </Formik>
-        </div>
-      )}
-    </div>
+              )}
+            </Formik>
+
+          
+
+            <Formik
+              initialValues={{
+                documentType: "",
+                pancard_image: null,
+                aadharcard_front_image: null,
+                aadharcard_back_image: null,
+                driving_license_front_image: null,
+                driving_license_back_image: null,
+              }}
+              onSubmit={handleSubmit}
+              validationSchema={documetSchema}
+            >
+              {({ values, setFieldValue }) => (
+                <Form className="mx-auto ">
+                  <div className="space-y-3 mt-4 pb-4">
+                    <div className="mt-6 ">
+                      <div className="space-y-1 mb-4">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900">
+                          Documents Details
+                        </h3>
+                        <p className="max-w-2xl text-sm text-gray-500 mb-4">
+                          Please update your document details here.
+                        </p>
+                      </div>
+                      <div className="grid grid-cols-1 gap-y-6 md:grid-cols-3 md:gap-x-8 place-items-center">
+                        {/* Pan Card Field */}
+                        <div className="col-span-1">
+                          <div className="mt-2">
+                            <Image
+                              src={
+                                imagePreviews.pancard_image ||
+                                (data?.user?.pancard_image &&
+                                !values.pancard_image
+                                  ? data.user.pancard_image
+                                  : placeholder)
+                              }
+                              alt="Pan Card Preview"
+                              width={250}
+                              height={128}
+                              className="mt-2 object-cover rounded-lg"
+                            />
+                          </div>
+                          <label
+                            htmlFor="pancard_image"
+                            className="block text-lg font-medium text-gray-700 mb-2"
+                          >
+                            Pan Card
+                          </label>
+                          <Field name="pancard_image">
+                            {({ field }) => (
+                              <input
+                                type="file"
+                                id="pancard_image"
+                                className="w-64 border border-gray-300 rounded-lg shadow-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                onChange={async (e) => {
+                                  const file = e.target.files[0];
+                                  const image = await ResizeImage(file);
+
+                                  setFieldValue("pancard_image", image);
+                                  setImagePreviews((prev) => ({
+                                    ...prev,
+                                    pancard_image: file
+                                      ? URL.createObjectURL(file)
+                                      : null,
+                                  }));
+                                }}
+                              />
+                            )}
+                          </Field>
+
+                          <ErrorMessage
+                            name="pancard_image"
+                            component="div"
+                            className="text-red-500 text-sm mt-1"
+                          />
+                        </div>
+
+                        {/* Aadhar Form Fields */}
+                        <div className="col-span-1">
+                          <div className="mt-2">
+                            <Image
+                              src={
+                                imagePreviews.aadharcard_front_image ||
+                                (data?.user?.aadharcard_front_image &&
+                                !values.aadharcard_front_image
+                                  ? data.user.aadharcard_front_image
+                                  : placeholder)
+                              }
+                              alt="Aadhar Front Preview"
+                              width={250}
+                              height={128}
+                              className="mt-2 object-cover rounded-lg"
+                            />
+                          </div>
+                          <label
+                            htmlFor="aadharcard_front_image"
+                            className="block text-lg font-medium text-gray-700 mb-2"
+                          >
+                            Aadhar Front
+                          </label>
+                          <Field name="aadharcard_front_image">
+                            {({ field }) => (
+                              <input
+                                type="file"
+                                id="aadharcard_front_image"
+                                className="w-64 border border-gray-300 rounded-lg shadow-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                onChange={async (e) => {
+                                  const file = e.target.files[0];
+                                  const image = await ResizeImage(file);
+
+                                  setFieldValue(
+                                    "aadharcard_front_image",
+                                    image
+                                  );
+                                  setImagePreviews((prev) => ({
+                                    ...prev,
+                                    aadharcard_front_image: file
+                                      ? URL.createObjectURL(file)
+                                      : null,
+                                  }));
+                                }}
+                              />
+                            )}
+                          </Field>
+
+                          <ErrorMessage
+                            name="aadharcard_front_image"
+                            component="div"
+                            className="text-red-500 text-sm mt-1"
+                          />
+                        </div>
+
+                        <div className="col-span-1">
+                          <div className="mt-2">
+                            <Image
+                              src={
+                                imagePreviews.aadharcard_back_image ||
+                                (data?.user?.aadharcard_back_image &&
+                                !values.aadharcard_back_image
+                                  ? data.user.aadharcard_back_image
+                                  : placeholder)
+                              }
+                              alt="Aadhar Back Preview"
+                              width={250}
+                              height={128}
+                              className="mt-2 object-cover rounded-lg"
+                            />
+                          </div>
+                          <label
+                            htmlFor="aadharcard_back_image"
+                            className="block text-lg font-medium text-gray-700 mb-2"
+                          >
+                            Aadhar Back
+                          </label>
+                          <Field name="aadharcard_back_image">
+                            {({ field }) => (
+                              <input
+                                type="file"
+                                id="aadharcard_back_image"
+                                className="w-64 border border-gray-300 rounded-lg shadow-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                onChange={async (e) => {
+                                  const file = e.target.files[0];
+                                  const image = await ResizeImage(file);
+
+                                  setFieldValue("aadharcard_back_image", image);
+                                  setImagePreviews((prev) => ({
+                                    ...prev,
+                                    aadharcard_back_image: file
+                                      ? URL.createObjectURL(file)
+                                      : null,
+                                  }));
+                                }}
+                              />
+                            )}
+                          </Field>
+
+                          <ErrorMessage
+                            name="aadharcard_back_image"
+                            component="div"
+                            className="text-red-500 text-sm mt-1"
+                          />
+                        </div>
+
+                        {/* Driving License Form Fields */}
+                        <div className="col-span-1">
+                          <div className="mt-2">
+                            <Image
+                              src={
+                                imagePreviews.driving_license_front_image ||
+                                (data?.user?.driving_license_front_image &&
+                                !values.driving_license_front_image
+                                  ? data.user.driving_license_front_image
+                                  : placeholder)
+                              }
+                              alt="Driving License Front Preview"
+                              width={250}
+                              height={128}
+                              className="mt-2 object-cover rounded-lg"
+                            />
+                          </div>
+                          <label
+                            htmlFor="driving_license_front_image"
+                            className="block text-lg font-medium text-gray-700 mb-2"
+                          >
+                            Driving License Front
+                          </label>
+                          <Field name="driving_license_front_image">
+                            {({ field }) => (
+                              <input
+                                type="file"
+                                id="driving_license_front_image"
+                                className="w-64 border border-gray-300 rounded-lg shadow-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                onChange={async (e) => {
+                                  const file = e.target.files[0];
+                                  const image = await ResizeImage(file);
+
+                                  setFieldValue(
+                                    "driving_license_front_image",
+                                    image
+                                  );
+                                  setImagePreviews((prev) => ({
+                                    ...prev,
+                                    driving_license_front_image: file
+                                      ? URL.createObjectURL(file)
+                                      : null,
+                                  }));
+                                }}
+                              />
+                            )}
+                          </Field>
+
+                          <ErrorMessage
+                            name="driving_license_front_image"
+                            component="div"
+                            className="text-red-500 text-sm mt-1"
+                          />
+                        </div>
+
+                        <div className="col-span-1">
+                          <div className="mt-2">
+                            <Image
+                              src={
+                                imagePreviews.driving_license_back_image ||
+                                (data?.user?.driving_license_back_image &&
+                                !values.driving_license_back_image
+                                  ? data.user.driving_license_back_image
+                                  : placeholder)
+                              }
+                              alt="Driving License Back Preview"
+                              width={250}
+                              height={128}
+                              className="mt-2 object-cover rounded-lg"
+                            />
+                          </div>
+                          <label
+                            htmlFor="driving_license_back_image"
+                            className="block text-lg font-medium text-gray-700 mb-2"
+                          >
+                            Driving License Back
+                          </label>
+                          <Field name="driving_license_back_image">
+                            {({ field }) => (
+                              <input
+                                type="file"
+                                id="driving_license_back_image"
+                                className="w-64 border border-gray-300 rounded-lg shadow-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                onChange={async (e) => {
+                                  const file = e.target.files[0];
+                                  const image = await ResizeImage(file);
+
+                                  setFieldValue(
+                                    "driving_license_back_image",
+                                    image
+                                  );
+                                  setImagePreviews((prev) => ({
+                                    ...prev,
+                                    driving_license_back_image: file
+                                      ? URL.createObjectURL(file)
+                                      : null,
+                                  }));
+                                }}
+                              />
+                            )}
+                          </Field>
+
+                          <ErrorMessage
+                            name="driving_license_back_image"
+                            component="div"
+                            className="text-red-500 text-sm mt-1"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="my-8 flex justify-center">
+                      <ButtonLoading
+                          // loading={callUpdateUserMutation.isLoading ? 1 : 0}
+                          type="submit"
+                          color="indigo"
+                        >
+                          Update Documents{" "}
+                        </ButtonLoading>
+                      </div>
+                    </div>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        )}
+      </div>
     </DashboardTemplate>
   );
 }

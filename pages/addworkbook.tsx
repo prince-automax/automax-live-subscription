@@ -2,12 +2,12 @@ import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import FormField from "../components/ui/FormField";
 import ButtonLoading from "../components/ui/ButtonLoading";
-import {
-  useAddWorkBookMutation,
-  AddWorkBookMutationVariables,
-  useGetUserQuery,
-  GetUserQuery,
-} from "@utils/graphql";
+// import {
+//   useAddWorkBookMutation,
+//   AddWorkBookMutationVariables,
+//   useGetUserQuery,
+//   GetUserQuery,
+// } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import withPrivateRoute from "../utils/withPrivateRoute";
 import Loader from "@components/ui/Loader";
@@ -49,18 +49,18 @@ function AddWorkBook() {
     "image/png",
   ];
 
-  const AddWorkBookMutation =
-    useAddWorkBookMutation<AddWorkBookMutationVariables>(
-      graphQLClient({ Authorization: `Bearer ${accessToken}` })
-    );
+//   const AddWorkBookMutation =
+//     useAddWorkBookMutation<AddWorkBookMutationVariables>(
+//       graphQLClient({ Authorization: `Bearer ${accessToken}` })
+//     );
 
-  const { data } = useGetUserQuery<GetUserQuery>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    { where: { id } },
-    {
-      enabled: accessToken !== "",
-    }
-  );
+//   const { data } = useGetUserQuery<GetUserQuery>(
+//     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+//     { where: { id } },
+//     {
+//       enabled: accessToken !== "",
+//     }
+//   );
 
   const validationSchema = Yup.object().shape({
     RegistrationNo: Yup.string().required(
@@ -108,23 +108,23 @@ function AddWorkBook() {
   };
 
   const onSubmit = async (values, { resetForm }) => {
-    const result = await AddWorkBookMutation.mutateAsync({
-      data: {
-        registrationNumber: values.RegistrationNo,
-        make: values.make,
-        model: values.model,
-        chassis: values.ChaissNo,
-        engineNo: values.EngineNo,
-        varient: values.Varient,
-        vehicleCondition: values.VehicleConditon,
-        image1: values.image1,
-        image2: values.image2,
-        image3: values.image3,
-        image4: values.image4,
-        image5: values.image5,
-        userDetail: { connect: { id: id } },
-      },
-    });
+    // const result = await AddWorkBookMutation.mutateAsync({
+    //   data: {
+    //     registrationNumber: values.RegistrationNo,
+    //     make: values.make,
+    //     model: values.model,
+    //     chassis: values.ChaissNo,
+    //     engineNo: values.EngineNo,
+    //     varient: values.Varient,
+    //     vehicleCondition: values.VehicleConditon,
+    //     image1: values.image1,
+    //     image2: values.image2,
+    //     image3: values.image3,
+    //     image4: values.image4,
+    //     image5: values.image5,
+    //     userDetail: { connect: { id: id } },
+    //   },
+    // });
 
     resetForm();
     const fileInputFields = ["image1", "image2", "image3", "image4", "image5"];

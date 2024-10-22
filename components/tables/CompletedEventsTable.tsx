@@ -8,12 +8,12 @@ import {
   PrinterIcon,
 } from "@heroicons/react/outline";
 import AlertModal from "../ui/AlertModal";
-import {
-  useCompliedEventsQuery,
-  CompliedEventsQuery,
-  useGetUserQuery,
-  GetUserQueryVariables,
-} from "@utils/graphql";
+// import {
+//   useCompliedEventsQuery,
+//   CompliedEventsQuery,
+//   useGetUserQuery,
+//   GetUserQueryVariables,
+// } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import Router from "next/router";
 import Link from "next/link";
@@ -46,36 +46,36 @@ export default function EventsTable({
       },
     },
   };
-  const { data, isLoading } = useCompliedEventsQuery<CompliedEventsQuery>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    variables
-  );
+  // const { data, isLoading } = useCompliedEventsQuery<CompliedEventsQuery>(
+  //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+  //   variables
+  // );
 
-  const { data: userData, isLoading: loading } =
-    useGetUserQuery<GetUserQueryVariables>(
-      graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-      { where: { id } },
-      {
-        enabled: accessToken !== "",
-      }
-    );
+  // const { data: userData, isLoading: loading } =
+  //   useGetUserQuery<GetUserQueryVariables>(
+  //     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+  //     { where: { id } },
+  //     {
+  //       enabled: accessToken !== "",
+  //     }
+  //   );
 
-  const payment = userData ? userData["user"]?.payments : "";
+  // const payment = userData ? userData["user"]?.payments : "";
 
-  useEffect(() => {
-    if (payment) {
-      payment?.map((item) => {
-        if (item.paymentFor === "registrations") {
-          if (item.status === "success") {
-            setRegistered(true);
-          } else {
-            item.status;
-          }
-        } else {
-        }
-      });
-    }
-  }, [payment]);
+  // useEffect(() => {
+  //   if (payment) {
+  //     payment?.map((item) => {
+  //       if (item.paymentFor === "registrations") {
+  //         if (item.status === "success") {
+  //           setRegistered(true);
+  //         } else {
+  //           item.status;
+  //         }
+  //       } else {
+  //       }
+  //     });
+  //   }
+  // }, [payment]);
 
   console.log("registered", registered);
   console.log("setRegisteredStatus", registeredStatus);
@@ -168,7 +168,7 @@ export default function EventsTable({
   return (
     <>
       <div className="relative bg-white">
-        <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
+        {/* <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
           {showHeadings && (
             <div className="pt-16 pb-8">
               <h2 className="text-base font-semibold tracking-wider text-primary uppercase">
@@ -217,7 +217,7 @@ export default function EventsTable({
               )}
             </>
           )}
-        </div>
+        </div> */}
       </div>
     </>
   );
