@@ -237,6 +237,7 @@ query getUser($where: UserWhereUniqueInput!) {
     pancardNo
     mobile
     state
+    vehicleBuyingLimit
     aadharcard_front_image
     aadharcard_back_image
     driving_license_back_image

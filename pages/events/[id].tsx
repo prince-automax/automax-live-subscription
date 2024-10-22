@@ -4,6 +4,7 @@ import {
   PlusIcon,
   MinusIcon,
 } from "@heroicons/react/outline";
+
 import {
   // CreateBidMutationVariables,
   // GetEventQuery,
@@ -23,9 +24,14 @@ import {
   useCreateBidMutation,
   CreateBidMutationVariables,
   useTimeQueryQuery,
-  TimeQueryQueryVariables
+  TimeQueryQueryVariables,
+  
+  
 } from "@utils/graphql";
-import graphQLClient from "@utils/useGQLQuery";
+import useStore from "../../utils/store";
+
+import { useVehicleUpdateSubscription,VehicleUpdateSubscriptionVariables} from "@utils/apollo"
+import  graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
@@ -75,6 +81,11 @@ function Events() {
   // useEffect(()=>{
   //   TermsAndCondtionsModal()
   // },[])
+  const token = useStore((state) => state.token); // Access the token from the store
+
+  // console.log('token from store',token);
+  
+
 
   const handleClick = () => {
     setShowCode(!showCode);
@@ -85,14 +96,30 @@ function Events() {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
-
+ 
   const { data: timeData } = useTimeQueryQuery<TimeQueryQueryVariables>(
     graphQLClient(),
     {},
     { refetchInterval: 60000 }
   );
 
-console.log('timedata',timeData);
+  useEffect(() => {
+    if (timeData && timeData.time) {
+      setTick(0);
+      setserverTime(timeData.time);
+    }
+  }, [timeData]);
+
+
+// console.log('timedata',timeData);
+
+const result = useVehicleUpdateSubscription()
+// const { data:result, loading } = useVehicleUpdateSubscription();
+
+
+// console.log('sub',result?.data);
+
+
 
 
   useEffect(() => {
@@ -106,7 +133,6 @@ console.log('timedata',timeData);
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
       const id = localStorage.getItem("id");
-
       setAccessToken(token);
       setUserId(id);
       setUsrid(id);
@@ -116,7 +142,7 @@ console.log('timedata',timeData);
   // useGetEventsQuery,
   // GetEventsQuery
 
-  const { data, isLoading } = useGetEventsQuery<GetEventsQuery>(
+  const { data, isLoading,refetch } = useGetEventsQuery<GetEventsQuery>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     {
       where: { id: id as string },
@@ -129,10 +155,17 @@ console.log('timedata',timeData);
       skip: 0,
       // userVehicleBidsOrderBy2: [{ amount: OrderDirection.Desc }],
     },
-    { cacheTime: 5, refetchInterval: interval, enabled: accessToken !== "" }
+    { 
+      
+       enabled: accessToken !== "" }
   );
 
-  // console.log("data of live events", data);
+  console.log('data',data);
+  
+
+  useEffect(()=>{
+    refetch()
+  },[result?.data])
 
   // const {
   //   data: workbook,
@@ -199,50 +232,50 @@ console.log('timedata',timeData);
     return true;
   }
 
-  async function CallBid(amount, vehicleId) {
+  // async function CallBid(amount, vehicleId) {
     
-    const confirmed = await Swal.fire({
-      text: "Are you sure to bid for Rs. " + amount + "?",
-      title: "BID CONFIMATION",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, bid for it!",
-      customClass: {
-        popup: "animated bounceInDown",
-        container: "custom-swal-container",
-      },
-    });
+  //   const confirmed = await Swal.fire({
+  //     text: "Are you sure to bid for Rs. " + amount + "?",
+  //     title: "BID CONFIMATION",
+  //     icon: "question",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "Yes, bid for it!",
+  //     customClass: {
+  //       popup: "animated bounceInDown",
+  //       container: "custom-swal-container",
+  //     },
+  //   });
 
-    if (confirmed.isConfirmed) {
-      try {
-        const result = await callCreateBid.mutateAsync({
-          // data: {
-          //   amount: parseInt(amount),
-          //   bidVehicle: {
-          //     connect: {
-          //       id: vehicleId,
-          //     },
-          //   },
-          // },
-          // bidVehicleId:"123",
-          // createBidInput{
-          //   amount:"123",
-          //   name:"prince"
-          // }
-          bidVehicleId: vehicleId,
-          createBidInput: {
-            amount: amount, // ensure that amount is a number, not a string
-          },
-        });
-        console.log("cc: ", result);
-        Swal.fire("Success!", "Your bid has been submitted.", "success");
-      } catch (e) {
-        // console.log("EEE: ", e);
-      }
-    }
-  }
+  //   if (confirmed.isConfirmed) {
+  //     try {
+  //       const result = await callCreateBid.mutateAsync({
+  //         // data: {
+  //         //   amount: parseInt(amount),
+  //         //   bidVehicle: {
+  //         //     connect: {
+  //         //       id: vehicleId,
+  //         //     },
+  //         //   },
+  //         // },
+  //         // bidVehicleId:"123",
+  //         // createBidInput{
+  //         //   amount:"123",
+  //         //   name:"prince"
+  //         // }
+  //         bidVehicleId: vehicleId,
+  //         createBidInput: {
+  //           amount: amount, // ensure that amount is a number, not a string
+  //         },
+  //       });
+  //       console.log("bidresult ", result);
+  //       Swal.fire("Success!", "Your bid has been submitted.", "success");
+  //     } catch (e) {
+  //       // console.log("EEE: ", e);
+  //     }
+  //   }
+  // }
 
   // const watchListMutation = useAddToWatchListMutation(
   //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
@@ -298,7 +331,52 @@ console.log('timedata',timeData);
   // });
 
   // console.log("isLoading", data?.event?.vehicles);
-
+  async function CallBid(amount, vehicleId) {
+    const confirmed = await Swal.fire({
+      text: `Are you sure to bid for Rs. ${amount}?`,
+      title: "BID CONFIRMATION",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, bid for it!",
+      customClass: {
+        popup: "animated bounceInDown",
+        container: "custom-swal-container",
+      },
+    });
+  
+    if (confirmed.isConfirmed) {
+      try {
+        const result = await callCreateBid.mutateAsync({
+          bidVehicleId: vehicleId,
+          createBidInput: {
+            amount: Number(amount), // Ensure amount is a number
+          },
+        });
+        console.log("Bid", result);
+        Swal.fire("Success!", "Your bid has been submitted.", "success");
+      } catch (e) {
+        // Handle different types of errors
+        let errorMessage = "An error occurred. Please try again.";
+  
+        if (e.response) {
+          // Check for specific error messages
+          const errorMessages = e.response.errors || [];
+          if (errorMessages.length > 0) {
+            errorMessage = errorMessages.map(err => err.message).join(", ");
+          }
+        } else if (e.message) {
+          // Fallback for general errors
+          errorMessage = e.message;
+        }
+  
+        // Display the error message to the user
+        Swal.fire("Error!", errorMessage, "error");
+      }
+    }
+  }
+  
   return (
     // <>
     // </>
@@ -339,7 +417,7 @@ console.log('timedata',timeData);
               <>
                 {/*MOBILE DESIGN*/}
                 <div
-                  key={`d${index}`}
+                  key={`d${item?.id}`}
                   className={`sm:hidden sm:max-md:flex-col font-sans border  rounded  mt-4 ${
                     moment(item?.bidTimeExpire).diff(moment(), "s") <= 120 &&
                     moment(item?.bidTimeExpire).diff(moment(), "s") > 0
@@ -502,14 +580,14 @@ console.log('timedata',timeData);
                               className=" flex items-center justify-between text-sm font-roboto font-medium text-blue-800 "
                               onClick={() => setShowInspectionReportModal(true)}
                             >
-                              <Link href={item.inspectionLink}>
+                              {/* <Link href={item.inspectionLink}>
                                 <a
                                   target="_blank"
                                   className="flex items-center text-sm font-roboto font-medium text-[#2563EB]"
                                 >
                                   Inspection Report
                                 </a>
-                              </Link>
+                              </Link> */}
 
                               <FontAwesomeIcon icon={faCircleInfo} />
                             </div>
@@ -946,7 +1024,7 @@ console.log('timedata',timeData);
                             />
                             Inspection Report
                              */}
-                            <Link href={item.inspectionLink}>
+                            {/* <Link href={item.inspectionLink}>
                               <a
                                 target="_blank"
                                 className="flex items-center text-xs sm:text-sm  text-blue-800"
@@ -957,7 +1035,7 @@ console.log('timedata',timeData);
                                 />
                                 Inspection Report
                               </a>
-                            </Link>
+                            </Link> */}
                           </div>
                           <div className="mt-2">
                             <Link href={`/vehicle/${item.id}`}>
@@ -1101,7 +1179,7 @@ console.log('timedata',timeData);
 export default withPrivateRoute(Events);
 
 const EnterBid = ({ row, call, event }) => {
-  console.log("event", event);
+  // console.log("event", event);
 
   const [bidAmount, setBidAmount] = useState("");
   // console.log("hh", row?.userVehicleBids[0]?.amount + +row?.quoteIncreament);
@@ -1122,7 +1200,7 @@ const EnterBid = ({ row, call, event }) => {
         let amt = row?.userVehicleBids?.length
           ? row?.userVehicleBids[0]?.amount + +row?.quoteIncreament
           : row.startPrice;
-        setBidAmount(amt.toString());
+        setBidAmount(amt?.toString());
       } else if (row.startPrice) {
         setBidAmount(row.startPrice);
       } else if (!row?.startPrice) {

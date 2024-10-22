@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
-  // useQueryQuery,
-  // QueryQueryVariables,
+  useTimeQueryQuery,
+  TimeQueryQueryVariables,
   GetUserQueryVariables,
   useGetUserQuery,
   GetUserQuery
@@ -17,7 +17,7 @@ export default function Welcome() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const name = localStorage.getItem("name");
-
+ 
       setName(name);
     }
   }, []);

@@ -3,3 +3,9 @@
 #     eventNo
 #   }
 # }
+
+subscription VehicleUpdate {
+  subscriptionVehicleUpdates {
+  id  
+  }
+}
