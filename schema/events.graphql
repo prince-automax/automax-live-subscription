@@ -351,7 +351,7 @@ query LiveEvents($orderBy: [VehicleOrderByInput!], $take: Int, $skip: Int) {
     location {
       name
       id
-      state
+    #  state
     }
     noOfBids
     pauseDate
@@ -391,7 +391,7 @@ query UpcomingEvents($take: Int, $skip: Int) {
     id
     location {
       name
-      state
+    #  state
     }
     noOfBids
     pauseDate
@@ -433,7 +433,7 @@ query GetEvents(
     id
     location {
       name
-      state
+     # state
       id
     }
     noOfBids
@@ -518,7 +518,7 @@ query GetEvents(
       shape
       startPrice
       startBidAmount
-      state
+     # state
       updatedAt
       varient
       vehicleCondition

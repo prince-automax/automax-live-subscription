@@ -28,7 +28,6 @@ import {
   
   
 } from "@utils/graphql";
-import { useSubscription, gql } from '@apollo/client';
 import useStore from "../../utils/store";
 
 import { useVehicleUpdateSubscription,VehicleUpdateSubscriptionVariables} from "@utils/apollo"
@@ -94,15 +93,23 @@ function Events() {
   useEffect(() => {
     const timer = setInterval(() => {
       setTick((tic) => tic + 1);
-    }, 60000);
+    }, 1000);
     return () => clearInterval(timer);
   }, []);
-
+ 
   const { data: timeData } = useTimeQueryQuery<TimeQueryQueryVariables>(
     graphQLClient(),
     {},
     { refetchInterval: 60000 }
   );
+
+  useEffect(() => {
+    if (timeData && timeData.time) {
+      setTick(0);
+      setserverTime(timeData.time);
+    }
+  }, [timeData]);
+
 
 // console.log('timedata',timeData);
 
@@ -112,9 +119,7 @@ const result = useVehicleUpdateSubscription()
 
 // console.log('sub',result?.data);
 
-useEffect(()=>{
-  refetch()
-},[result?.data])
+
 
 
   useEffect(() => {
@@ -158,13 +163,9 @@ useEffect(()=>{
   console.log('data',data);
   
 
-  // useEffect(()=>{
-  //   refetch()
-  //   console.log('item001');
-    
-  //     },[result])
-  
-  // console.log("data of live events", data);
+  useEffect(()=>{
+    refetch()
+  },[result?.data])
 
   // const {
   //   data: workbook,
@@ -231,50 +232,50 @@ useEffect(()=>{
     return true;
   }
 
-  async function CallBid(amount, vehicleId) {
+  // async function CallBid(amount, vehicleId) {
     
-    const confirmed = await Swal.fire({
-      text: "Are you sure to bid for Rs. " + amount + "?",
-      title: "BID CONFIMATION",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, bid for it!",
-      customClass: {
-        popup: "animated bounceInDown",
-        container: "custom-swal-container",
-      },
-    });
+  //   const confirmed = await Swal.fire({
+  //     text: "Are you sure to bid for Rs. " + amount + "?",
+  //     title: "BID CONFIMATION",
+  //     icon: "question",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "Yes, bid for it!",
+  //     customClass: {
+  //       popup: "animated bounceInDown",
+  //       container: "custom-swal-container",
+  //     },
+  //   });
 
-    if (confirmed.isConfirmed) {
-      try {
-        const result = await callCreateBid.mutateAsync({
-          // data: {
-          //   amount: parseInt(amount),
-          //   bidVehicle: {
-          //     connect: {
-          //       id: vehicleId,
-          //     },
-          //   },
-          // },
-          // bidVehicleId:"123",
-          // createBidInput{
-          //   amount:"123",
-          //   name:"prince"
-          // }
-          bidVehicleId: vehicleId,
-          createBidInput: {
-            amount: amount, // ensure that amount is a number, not a string
-          },
-        });
-        console.log("cc: ", result);
-        Swal.fire("Success!", "Your bid has been submitted.", "success");
-      } catch (e) {
-        // console.log("EEE: ", e);
-      }
-    }
-  }
+  //   if (confirmed.isConfirmed) {
+  //     try {
+  //       const result = await callCreateBid.mutateAsync({
+  //         // data: {
+  //         //   amount: parseInt(amount),
+  //         //   bidVehicle: {
+  //         //     connect: {
+  //         //       id: vehicleId,
+  //         //     },
+  //         //   },
+  //         // },
+  //         // bidVehicleId:"123",
+  //         // createBidInput{
+  //         //   amount:"123",
+  //         //   name:"prince"
+  //         // }
+  //         bidVehicleId: vehicleId,
+  //         createBidInput: {
+  //           amount: amount, // ensure that amount is a number, not a string
+  //         },
+  //       });
+  //       console.log("bidresult ", result);
+  //       Swal.fire("Success!", "Your bid has been submitted.", "success");
+  //     } catch (e) {
+  //       // console.log("EEE: ", e);
+  //     }
+  //   }
+  // }
 
   // const watchListMutation = useAddToWatchListMutation(
   //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
@@ -330,7 +331,52 @@ useEffect(()=>{
   // });
 
   // console.log("isLoading", data?.event?.vehicles);
-
+  async function CallBid(amount, vehicleId) {
+    const confirmed = await Swal.fire({
+      text: `Are you sure to bid for Rs. ${amount}?`,
+      title: "BID CONFIRMATION",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, bid for it!",
+      customClass: {
+        popup: "animated bounceInDown",
+        container: "custom-swal-container",
+      },
+    });
+  
+    if (confirmed.isConfirmed) {
+      try {
+        const result = await callCreateBid.mutateAsync({
+          bidVehicleId: vehicleId,
+          createBidInput: {
+            amount: Number(amount), // Ensure amount is a number
+          },
+        });
+        console.log("Bid", result);
+        Swal.fire("Success!", "Your bid has been submitted.", "success");
+      } catch (e) {
+        // Handle different types of errors
+        let errorMessage = "An error occurred. Please try again.";
+  
+        if (e.response) {
+          // Check for specific error messages
+          const errorMessages = e.response.errors || [];
+          if (errorMessages.length > 0) {
+            errorMessage = errorMessages.map(err => err.message).join(", ");
+          }
+        } else if (e.message) {
+          // Fallback for general errors
+          errorMessage = e.message;
+        }
+  
+        // Display the error message to the user
+        Swal.fire("Error!", errorMessage, "error");
+      }
+    }
+  }
+  
   return (
     // <>
     // </>
@@ -534,14 +580,14 @@ useEffect(()=>{
                               className=" flex items-center justify-between text-sm font-roboto font-medium text-blue-800 "
                               onClick={() => setShowInspectionReportModal(true)}
                             >
-                              <Link href={item.inspectionLink}>
+                              {/* <Link href={item.inspectionLink}>
                                 <a
                                   target="_blank"
                                   className="flex items-center text-sm font-roboto font-medium text-[#2563EB]"
                                 >
                                   Inspection Report
                                 </a>
-                              </Link>
+                              </Link> */}
 
                               <FontAwesomeIcon icon={faCircleInfo} />
                             </div>
@@ -978,7 +1024,7 @@ useEffect(()=>{
                             />
                             Inspection Report
                              */}
-                            <Link href={item.inspectionLink}>
+                            {/* <Link href={item.inspectionLink}>
                               <a
                                 target="_blank"
                                 className="flex items-center text-xs sm:text-sm  text-blue-800"
@@ -989,7 +1035,7 @@ useEffect(()=>{
                                 />
                                 Inspection Report
                               </a>
-                            </Link>
+                            </Link> */}
                           </div>
                           <div className="mt-2">
                             <Link href={`/vehicle/${item.id}`}>
@@ -1154,7 +1200,7 @@ const EnterBid = ({ row, call, event }) => {
         let amt = row?.userVehicleBids?.length
           ? row?.userVehicleBids[0]?.amount + +row?.quoteIncreament
           : row.startPrice;
-        setBidAmount(amt.toString());
+        setBidAmount(amt?.toString());
       } else if (row.startPrice) {
         setBidAmount(row.startPrice);
       } else if (!row?.startPrice) {
