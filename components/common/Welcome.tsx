@@ -17,7 +17,7 @@ export default function Welcome() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const name = localStorage.getItem("name");
-
+ 
       setName(name);
     }
   }, []);
