@@ -114,10 +114,10 @@ function ProfileUpdate() {
 
   useEffect(() => {
     if (data && data["user"]) {
-      console.log("userData", data["user"]["firstName"]);
+      // console.log("userData", data["user"]["firstName"]);
       setSelectedState(data["user"]["state"]);
     } else {
-      console.log("Loading or no user data available yet.");
+      // console.log("Loading or no user data available yet.");
     }
   }, [data?.["user"]?.["state"]]);
 
@@ -128,7 +128,7 @@ function ProfileUpdate() {
       graphQLClient({ Authorization: `Bearer ${accessToken}` })
     );
 
-  console.log(process.env.API_URL, "147147147");
+  // console.log(process.env.API_URL, "147147147");
 
   if (isLoadingGetUser) {
     return <Loader />;
@@ -184,7 +184,7 @@ function ProfileUpdate() {
 
   const onSubmit = async (values) => {
     try {
-      console.log("touched here", values);
+      // console.log("touched here", values);
 
       const result = await callUpdateUserMutation.mutateAsync({
         data: {
@@ -206,7 +206,7 @@ function ProfileUpdate() {
         where: { id: values.id },
       });
 
-      console.log("result", result);
+      // console.log("result", result);
       // Save
       localStorage.setItem("isVerified", JSON.stringify(true));
 
@@ -303,7 +303,7 @@ function ProfileUpdate() {
   // };
 
   const handleSubmit = async (values) => {
-    console.log("values", values);
+    // console.log("values", values);
 
     const formData = new FormData();
 
@@ -345,7 +345,7 @@ function ProfileUpdate() {
         },
       });
 
-      console.log("result", response);
+      // console.log("result", response);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -436,7 +436,7 @@ function ProfileUpdate() {
                         label="First Name"
                         width="w-full"
                         placeholder="First Name"
-                        disabled
+                        
                       />
                     </div>
 
@@ -448,7 +448,7 @@ function ProfileUpdate() {
                         label="Last Name"
                         width="w-full"
                         placeholder="Last Name"
-                        disabled
+                        
                       />
                     </div>
 
@@ -472,7 +472,7 @@ function ProfileUpdate() {
                       <FormField
                         field="input"
                         required
-                        disabled
+                        
                         name="mobile"
                         label="Mobile Number"
                         width="w-full"

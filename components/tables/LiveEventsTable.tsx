@@ -40,7 +40,7 @@ export default function EventsTable({
     }
   }, []);
 
-  console.log("access token", accessToken);
+  // console.log("access token", accessToken);
 
   const variables = {
     skip: 0,
@@ -61,7 +61,7 @@ export default function EventsTable({
     );
 
 
-  console.log("Live event table", data);
+  // console.log("Live event table", data);
 
   useEffect(() => {
     refetch();
@@ -80,8 +80,8 @@ export default function EventsTable({
 
   const payment = userData ? userData["user"]?.payments : "";
 
-  console.log(' User payments',userData);
-  console.log(' User payments stTUA',registered);
+  // console.log(' User payments',userData);
+  // console.log(' User payments stTUA',registered);
   
 
   const PaymentStatus = () => {
@@ -306,7 +306,7 @@ function View(value, eventCategory) {
 }
 
 function RenderEventTypes(eventTypes) {
-  console.log('eventTypes',eventTypes);
+  // console.log('eventTypes',eventTypes);
   
   // if (eventTypes && eventTypes.length > 0) {
   //   return (

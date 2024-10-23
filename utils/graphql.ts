@@ -274,10 +274,18 @@ export type Event = {
   vehicleLiveTimeIn?: Maybe<Scalars['Float']>;
   vehicles?: Maybe<Array<Vehicle>>;
   vehiclesCount?: Maybe<Scalars['Int']>;
+  vehiclesLive: Array<Vehicle>;
 };
 
 
 export type EventVehiclesArgs = {
+  orderBy?: InputMaybe<Array<VehicleOrderByInput>>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type EventVehiclesLiveArgs = {
   orderBy?: InputMaybe<Array<VehicleOrderByInput>>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
@@ -1547,7 +1555,7 @@ export type GetEventsQueryVariables = Exact<{
 }>;
 
 
-export type GetEventsQuery = { __typename?: 'Query', event: { __typename?: 'Event', bidLock?: string | null, createdAt?: any | null, vehiclesCount?: number | null, createdById: string, downloadableFile_filename?: string | null, endDate: any, eventCategory: string, eventNo: number, extraTime?: number | null, extraTimeTrigerIn?: number | null, firstVehicleEndDate: any, gapInBetweenVehicles?: number | null, id: string, noOfBids: number, pauseDate?: any | null, pausedTotalTime?: number | null, startDate: any, status?: string | null, termsAndConditions: string, vehicleLiveTimeIn?: number | null, location?: { __typename?: 'Location', name: string, id: string } | null, seller?: { __typename?: 'Seller', mobile: string, name: string, nationalHead: string, id: string, contactPerson?: string | null } | null, vehicleCategory?: { __typename?: 'VehicleCategory', name: string } | null, vehicles?: Array<{ __typename?: 'Vehicle', YOM?: number | null, additionalRemarks?: string | null, approxParkingCharges?: string | null, area?: string | null, auctionManager?: string | null, autobseContact?: string | null, autobse_contact_person?: string | null, bidAmountUpdate?: number | null, bidStartTime: any, bidTimeExpire: any, buyerFees?: string | null, category?: string | null, chassisNo?: string | null, city?: string | null, clientContactNo?: string | null, clientContactPerson?: string | null, climateControl?: string | null, color?: string | null, createdAt?: any | null, createdById?: string | null, currentBidAmount?: number | null, dateOfRegistration?: string | null, doorCount?: number | null, engineNo?: string | null, fitness?: string | null, fuel?: string | null, gearBox?: string | null, hypothication?: string | null, id: string, image?: string | null, inspectionLink?: string | null, insurance?: string | null, insuranceStatus?: string | null, insuranceValidTill?: string | null, kmReading?: number | null, loanAgreementNo: string, lotNumber?: number | null, make?: string | null, mileage?: number | null, model?: string | null, ownership?: number | null, parkingCharges?: string | null, parkingRate?: string | null, paymentTerms?: string | null, permit?: string | null, powerSteering?: string | null, quoteIncreament?: number | null, rcStatus?: string | null, registeredOwnerName?: string | null, registrationNumber: string, repoDt?: string | null, reservePrice?: number | null, rtoFine?: string | null, shape?: string | null, startPrice?: number | null, startBidAmount?: number | null, updatedAt?: any | null, varient?: string | null, vehicleCondition?: string | null, vehicleIndexNo: number, vehicleRemarks?: string | null, veicleLocation?: string | null, yardLocation?: string | null, userVehicleBidsCount?: number | null, totalBids?: number | null, myBidRank?: number | null, userVehicleBids?: Array<{ __typename?: 'Bid', amount: number, userId: string, id: string, name: string, bidVehicleId: string }> | null }> | null } };
+export type GetEventsQuery = { __typename?: 'Query', event: { __typename?: 'Event', bidLock?: string | null, createdAt?: any | null, vehiclesCount?: number | null, createdById: string, downloadableFile_filename?: string | null, endDate: any, eventCategory: string, eventNo: number, extraTime?: number | null, extraTimeTrigerIn?: number | null, firstVehicleEndDate: any, gapInBetweenVehicles?: number | null, id: string, noOfBids: number, pauseDate?: any | null, pausedTotalTime?: number | null, startDate: any, status?: string | null, termsAndConditions: string, vehicleLiveTimeIn?: number | null, location?: { __typename?: 'Location', name: string, id: string } | null, seller?: { __typename?: 'Seller', mobile: string, name: string, nationalHead: string, id: string, contactPerson?: string | null } | null, vehicleCategory?: { __typename?: 'VehicleCategory', name: string } | null, vehiclesLive: Array<{ __typename?: 'Vehicle', YOM?: number | null, additionalRemarks?: string | null, approxParkingCharges?: string | null, area?: string | null, auctionManager?: string | null, autobseContact?: string | null, autobse_contact_person?: string | null, bidAmountUpdate?: number | null, bidStartTime: any, bidTimeExpire: any, buyerFees?: string | null, category?: string | null, chassisNo?: string | null, city?: string | null, clientContactNo?: string | null, clientContactPerson?: string | null, climateControl?: string | null, color?: string | null, createdAt?: any | null, createdById?: string | null, currentBidAmount?: number | null, dateOfRegistration?: string | null, doorCount?: number | null, engineNo?: string | null, fitness?: string | null, fuel?: string | null, gearBox?: string | null, hypothication?: string | null, id: string, image?: string | null, inspectionLink?: string | null, insurance?: string | null, insuranceStatus?: string | null, insuranceValidTill?: string | null, kmReading?: number | null, loanAgreementNo: string, lotNumber?: number | null, make?: string | null, mileage?: number | null, model?: string | null, ownership?: number | null, parkingCharges?: string | null, parkingRate?: string | null, paymentTerms?: string | null, permit?: string | null, powerSteering?: string | null, quoteIncreament?: number | null, rcStatus?: string | null, registeredOwnerName?: string | null, registrationNumber: string, repoDt?: string | null, reservePrice?: number | null, rtoFine?: string | null, shape?: string | null, startPrice?: number | null, startBidAmount?: number | null, updatedAt?: any | null, varient?: string | null, vehicleCondition?: string | null, vehicleIndexNo: number, vehicleRemarks?: string | null, veicleLocation?: string | null, yardLocation?: string | null, userVehicleBidsCount?: number | null, totalBids?: number | null, myBidRank?: number | null, userVehicleBids?: Array<{ __typename?: 'Bid', amount: number, userId: string, id: string, name: string, bidVehicleId: string }> | null }> } };
 
 export type TimeQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1887,7 +1895,7 @@ export const GetEventsDocument = `
       name
     }
     vehicleLiveTimeIn
-    vehicles(orderBy: $orderBy, take: $take, skip: $skip) {
+    vehiclesLive(orderBy: $orderBy, take: $take, skip: $skip) {
       YOM
       userVehicleBids {
         amount

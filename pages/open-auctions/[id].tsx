@@ -385,7 +385,7 @@ function OpenAuctions() {
   };
 
 
-  console.log('upcoming',upcoming);
+  // console.log('upcoming',upcoming);
   
   return (
     <DashboardTemplate>

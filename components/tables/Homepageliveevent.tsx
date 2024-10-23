@@ -9,21 +9,21 @@ import {
 } from "@heroicons/react/outline";
 import AlertModal from "../ui/AlertModal";
 
-// import {
-//   LiveEventsQuery,
-//   useLiveEventsQuery,
-//   GetUserQueryVariables,
-//   useGetUserQuery,
-//   useUserWorkBookQuery,
-//   UserWorkBookQueryVariables,
-// } from "@utils/graphql";
+import {
+  useLiveEventsQuery,
+  LiveEventsQueryVariables,
+  LiveEventsQuery,
+  useGetUserQuery,
+  GetUserQueryVariables,
+  GetUserQuery,
+} from "@utils/graphql";
 
 import graphQLClient from "@utils/useGQLQuery";
 import Router from "next/router";
 import Link from "next/link";
 import DataTableUILogout from "../ui/DataTableUILogout";
 
-export  function LiveEventHomePage({
+export function LiveEventHomePage({
   showHeadings,
   hideSearch,
   allowDownload,
@@ -58,17 +58,17 @@ export  function LiveEventHomePage({
       ],
     },
   };
-  // const { data, refetch, isLoading } = useLiveEventsQuery<LiveEventsQuery>(
-  //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-  //   variablesLive
-  // );
+  const { data, refetch, isLoading } = useLiveEventsQuery<LiveEventsQuery>(
+    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+    variablesLive
+  );
 
-  // console.log('evebt ',data);
-  
+  console.log('evebt ', data);
 
-  // useEffect(() => {
-  //   refetch();
-  // }, [data]);
+
+  useEffect(() => {
+    refetch();
+  }, [data]);
 
   const columns = [
     {
@@ -81,15 +81,15 @@ export  function LiveEventHomePage({
       accessor: "seller.name",
     },
     { Header: "Event Type", accessor: "eventCategory" },
-   
-  
+
+
     {
       Header: "Location",
       accessor: "location.name",
     },
     {
       Header: "Category",
-      accessor: "eventType",
+      accessor: "vehicleCategory",
       Cell: ({ cell: { value } }) => RenderEventTypes(value),
     },
     {
@@ -100,58 +100,56 @@ export  function LiveEventHomePage({
   ];
 
   return (
-    <>
-    
-    </>
-    // <>
-    //   <div className="relative bg-white ">
-    //     <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
-    //       {showHeadings && (
-    //         <div className=" ">
-    //           {data?.liveEvents?.length == 0 && (
-    //             <p className="mt-px text-xl font-extrabold text-gray-900 tracking-tight sm:text-xl animate-pulse">
-    //               NO LIVE EVENTS ...
-    //             </p>
-    //           )}
-              
-    //         </div>
-    //       )}
 
-    //       {isLoading ? (
-    //         <Loader />
-    //       ) : (
-    //         <>
-             
-    //           <>
-    //             <div className="sm:hidden">
-    //               {data?.liveEvents?.map((event, eventIdx) => {
-    //                 return (
-    //                   <MobielViewCard
-    //                     key={eventIdx}
-    //                     index1={eventIdx}
-    //                     event={event}
-    //                     allowDownload={allowDownload}
-    //                     registered={registered}
-    //                     registeredStatus={registeredStatus}
-    //                     // noOfVehicles={event?.v}
-    //                   />
-    //                 );
-    //               })}
-    //             </div>
-    //             <div className="hidden sm:block">
-    //               <Datatable
-    //                 hideSearch={hideSearch}
-    //                 tableData={data?.liveEvents}
-    //                 tableColumns={columns}
-    //               />
-    //             </div>
-    //           </>
-    //           {/* )} */}
-    //         </>
-    //       )}
-    //     </div>
-    //   </div>
-    // </>
+    <>
+      <div className="relative bg-white ">
+        <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
+          {showHeadings && (
+            <div className=" ">
+              {data?.liveEvents?.length == 0 && (
+                <p className="mt-px text-xl font-extrabold text-gray-900 tracking-tight sm:text-xl animate-pulse">
+                  NO LIVE EVENTS ...
+                </p>
+              )}
+
+            </div>
+          )}
+
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <>
+
+              <>
+                <div className="sm:hidden">
+                  {data?.liveEvents?.map((event, eventIdx) => {
+                    return (
+                      <MobielViewCard
+                        key={eventIdx}
+                        index1={eventIdx}
+                        event={event}
+                        allowDownload={allowDownload}
+                        registered={registered}
+                        registeredStatus={registeredStatus}
+                      // noOfVehicles={event?.v}
+                      />
+                    );
+                  })}
+                </div>
+                <div className="hidden sm:block">
+                  <Datatable
+                    hideSearch={hideSearch}
+                    tableData={data?.liveEvents}
+                    tableColumns={columns}
+                  />
+                </div>
+              </>
+              {/* )} */}
+            </>
+          )}
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -161,7 +159,7 @@ LiveEventHomePage.defaultProps = {
 };
 
 function vechileCount(value) {
- 
+
 
   return (
     <div>
@@ -171,14 +169,13 @@ function vechileCount(value) {
 }
 
 function View(value, eventCategory) {
- 
+
 
   return (
     <div>
       <Link
-        href={`/${
-          eventCategory === "open" ? "open-auctions" : "events"
-        }/${value}?type=l`}
+        href={`/${eventCategory === "open" ? "open-auctions" : "events"
+          }/${value}?type=l`}
       >
         <a target="_blank">
           <div>
@@ -191,22 +188,18 @@ function View(value, eventCategory) {
 }
 
 function RenderEventTypes(eventTypes) {
-  if (eventTypes && eventTypes.length > 0) {
+
+  if (eventTypes) {
     return (
       <div>
-        {eventTypes.map((type, index) => {
-          return (
-            <div key={`d${index}`}>
-              <span>{type.name}</span>
-            </div>
-          );
-        })}
+        {eventTypes?.name}
       </div>
     );
   } else {
     return <div />;
   }
 }
+
 
 function StartDate(value) {
   return (

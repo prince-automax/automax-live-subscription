@@ -106,7 +106,7 @@ function Vehicle() {
     }
   );
 
-  console.log("data",data);
+  // console.log("data",data);
   
 
   const options = {
@@ -132,7 +132,7 @@ function Vehicle() {
     );
   }, [data]);
 
-  console.log('vehicles',vehicle);
+  // console.log('vehicles',vehicle);
   
 
   useEffect(() => {

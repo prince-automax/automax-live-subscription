@@ -113,8 +113,8 @@ export default function LoginUsingOtp() {
   // }
 
   async function CallUserCreation(userInput) {
-    console.log("hit on user Creation");
-    console.log("User Input for creation:", userInput);
+    // console.log("hit on user Creation");
+    // console.log("User Input for creation:", userInput);
   
     try {
       const { firstName, lastName, pancard, state, mobile } = userInput;
@@ -139,7 +139,7 @@ export default function LoginUsingOtp() {
           },
         });
   
-        console.log("Result of user creation:", result);
+        // console.log("Result of user creation:", result);
   
         if (result?.sendOtp?.status === "Success") {
           setVerificationMode(true);
@@ -166,9 +166,9 @@ export default function LoginUsingOtp() {
   
 
   async function CallLogin() {
-    console.log("hit on login");
+    // console.log("hit on login");
 
-    console.log("Mobile for login:", mobileNumber);
+    // console.log("Mobile for login:", mobileNumber);
 
     try {
       let isValid = true;
@@ -185,7 +185,7 @@ export default function LoginUsingOtp() {
           sendOtpDto: { mobile: mobileNumber },
         });
 
-        console.log("Result of OTP sending for login:", result);
+        // console.log("Result of OTP sending for login:", result);
 
         if (result?.sendOtp?.status === "Success") {
           setVerificationMode(true);
@@ -222,7 +222,7 @@ export default function LoginUsingOtp() {
         isValid = false;
       }
 
-      console.log('mobileNUmber:',mobileNumber,'otp:',otp);
+      // console.log('mobileNUmber:',mobileNumber,'otp:',otp);
       
 
       if (isValid) {
@@ -230,10 +230,10 @@ export default function LoginUsingOtp() {
           verfiyOtpDto: { mobile: mobileNumber, otp },
         });
 
-        console.log("result of verify otp", result);
+        // console.log("result of verify otp", result);
 
         if (result?.verifyOtp?.["access_token"]) {
-          console.log("hit");
+          // console.log("hit");
 
           // Perform necessary actions upon successful OTP verification
 
@@ -297,7 +297,7 @@ export default function LoginUsingOtp() {
   };
   // Submit handler
   const onSubmit = (values) => {
-    console.log(values);
+    // console.log(values);
     // You can perform actions like sending the data to an API here
   };
   const renderingStates = states.map((state) => {

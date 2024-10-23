@@ -44,7 +44,7 @@ export default function PaymentsTable() {
     // { refetchInterval: 10000, enabled: accessToken != "" }
   );
 
-  console.log("userPayments", data?.user?.payments);
+  // console.log("userPayments", data?.user?.payments);
 
   const renderPaymentFor = (paymentFor) => {
     switch (paymentFor) {

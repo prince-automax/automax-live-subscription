@@ -126,7 +126,7 @@ function ProfileUpdate() {
   //   }
   // }, [data]);
 
-  console.log("datas", data);
+  // console.log("datas", data);
 
   // const pancard = data ? data["user"]?.pancard?.url : "";
 
@@ -303,7 +303,7 @@ function ProfileUpdate() {
   });
 
   const handleSubmit = async (values) => {
-    console.log("values", values);
+    // console.log("values", values);
 
     const formData = new FormData();
 
@@ -345,7 +345,7 @@ function ProfileUpdate() {
         },
       });
 
-      console.log("result", response);
+      // console.log("result", response);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

@@ -25,13 +25,13 @@ import {
   CreateBidMutationVariables,
   useTimeQueryQuery,
   TimeQueryQueryVariables,
-  
-  
+
+
 } from "@utils/graphql";
 import useStore from "../../utils/store";
 
-import { useVehicleUpdateSubscription,VehicleUpdateSubscriptionVariables} from "@utils/apollo"
-import  graphQLClient from "@utils/useGQLQuery";
+import { useVehicleUpdateSubscription, VehicleUpdateSubscriptionVariables, useBidCreationSubscription } from "@utils/apollo"
+import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
@@ -84,7 +84,7 @@ function Events() {
   const token = useStore((state) => state.token); // Access the token from the store
 
   // console.log('token from store',token);
-  
+
 
 
   const handleClick = () => {
@@ -96,7 +96,7 @@ function Events() {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
- 
+
   const { data: timeData } = useTimeQueryQuery<TimeQueryQueryVariables>(
     graphQLClient(),
     {},
@@ -111,13 +111,15 @@ function Events() {
   }, [timeData]);
 
 
-// console.log('timedata',timeData);
+  // console.log('timedata',timeData);
 
-const result = useVehicleUpdateSubscription()
-// const { data:result, loading } = useVehicleUpdateSubscription();
+  const vehicleUpdate = useVehicleUpdateSubscription()
+  const BidUpdate = useBidCreationSubscription()
+
+  // const { data:result, loading } = useVehicleUpdateSubscription();
 
 
-// console.log('sub',result?.data);
+  // console.log('sub',result?.data);
 
 
 
@@ -142,7 +144,7 @@ const result = useVehicleUpdateSubscription()
   // useGetEventsQuery,
   // GetEventsQuery
 
-  const { data, isLoading,refetch } = useGetEventsQuery<GetEventsQuery>(
+  const { data, isLoading, refetch } = useGetEventsQuery<GetEventsQuery>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     {
       where: { id: id as string },
@@ -155,17 +157,18 @@ const result = useVehicleUpdateSubscription()
       skip: 0,
       // userVehicleBidsOrderBy2: [{ amount: OrderDirection.Desc }],
     },
-    { 
-      
-       enabled: accessToken !== "" }
+    {
+
+      enabled: accessToken !== ""
+    }
   );
 
-  console.log('data',data);
-  
+  console.log('data', data);
 
-  useEffect(()=>{
+
+  useEffect(() => {
     refetch()
-  },[result?.data])
+  }, [vehicleUpdate, BidUpdate])
 
   // const {
   //   data: workbook,
@@ -206,7 +209,7 @@ const result = useVehicleUpdateSubscription()
           );
         }
       }
-    } catch {}
+    } catch { }
     return (
       <div className="w-full">
         <div className="text-xs">End's in</div>
@@ -228,12 +231,12 @@ const result = useVehicleUpdateSubscription()
           return false;
         }
       }
-    } catch {}
+    } catch { }
     return true;
   }
 
   // async function CallBid(amount, vehicleId) {
-    
+
   //   const confirmed = await Swal.fire({
   //     text: "Are you sure to bid for Rs. " + amount + "?",
   //     title: "BID CONFIMATION",
@@ -345,7 +348,7 @@ const result = useVehicleUpdateSubscription()
         container: "custom-swal-container",
       },
     });
-  
+
     if (confirmed.isConfirmed) {
       try {
         const result = await callCreateBid.mutateAsync({
@@ -359,7 +362,7 @@ const result = useVehicleUpdateSubscription()
       } catch (e) {
         // Handle different types of errors
         let errorMessage = "An error occurred. Please try again.";
-  
+
         if (e.response) {
           // Check for specific error messages
           const errorMessages = e.response.errors || [];
@@ -370,13 +373,13 @@ const result = useVehicleUpdateSubscription()
           // Fallback for general errors
           errorMessage = e.message;
         }
-  
+
         // Display the error message to the user
         Swal.fire("Error!", errorMessage, "error");
       }
     }
   }
-  
+
   return (
     // <>
     // </>
@@ -398,8 +401,8 @@ const result = useVehicleUpdateSubscription()
         <Loader />
       ) : (
         <div className="space-y-6 mt-8 ">
-          {!data?.event?.vehicles?.length && <div>No Vehicles Found</div>}
-          {data?.event?.vehicles?.map((item, index) => {
+          {!data?.event?.vehiclesLive?.length && <div>No Vehicles Found</div>}
+          {data?.event?.vehiclesLive?.map((item, index) => {
             const expiryTime = moment(item.bidTimeExpire);
             const currentTime = moment(serverTime).add(tick, "seconds");
             const diff = expiryTime.diff(currentTime, "seconds");
@@ -418,16 +421,14 @@ const result = useVehicleUpdateSubscription()
                 {/*MOBILE DESIGN*/}
                 <div
                   key={`d${item?.id}`}
-                  className={`sm:hidden sm:max-md:flex-col font-sans border  rounded  mt-4 ${
-                    moment(item?.bidTimeExpire).diff(moment(), "s") <= 120 &&
-                    moment(item?.bidTimeExpire).diff(moment(), "s") > 0
+                  className={`sm:hidden sm:max-md:flex-col font-sans border  rounded  mt-4 ${moment(item?.bidTimeExpire).diff(moment(), "s") <= 120 &&
+                      moment(item?.bidTimeExpire).diff(moment(), "s") > 0
                       ? "blink"
                       : ""
-                  } ${
-                    index % 2 == 0
+                    } ${index % 2 == 0
                       ? "border-[#A7C2FF80] bg-[#EEF1FB] "
                       : "border-[#A7C2FF80] bg-[#EEF1FB]"
-                  }  `}
+                    }  `}
                 >
                   {/* workbook, title, image, vehic info, add to watch, more details , inspection report */}
                   <div className="flex-auto p-3 space-y-5  ">
@@ -457,24 +458,24 @@ const result = useVehicleUpdateSubscription()
                         </div>
                       </div>
                     </div>
-                    {/* {item?.frontImage && (
-                          <div
-                            className="flex-none w-70 h-56  sm:max-md:h-56 sm:max-md:w-full md:h-auto sm:w-60 relative p-6 hover:cursor-pointer"
-                            onClick={() => {
-                              // BindVehicleImage(item);
-                              setImages((item?.frontImage).split(","));
+                    {item?.image && (
+                      <div
+                        className="flex-none w-70 h-56  sm:max-md:h-56 sm:max-md:w-full md:h-auto sm:w-60 relative p-6 hover:cursor-pointer"
+                        onClick={() => {
+                          // BindVehicleImage(item);
+                          setImages((item?.image).split(","));
 
-                              setShowImageCarouselModal(true);
-                            }}
-                          >
-                            <Image
-                              alt="img"
-                              src={item?.frontImage}
-                              layout="fill"
-                              className="absolute inset-0 w-full h-full object-cover rounded"
-                            />
-                          </div>
-                        )} */}
+                          setShowImageCarouselModal(true);
+                        }}
+                      >
+                        <Image
+                          alt="img"
+                          src={item?.image}
+                          layout="fill"
+                          className="absolute inset-0 w-full h-full object-cover rounded"
+                        />
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex-auto    ">
@@ -491,13 +492,13 @@ const result = useVehicleUpdateSubscription()
                           </dd>
                         </div>
                         <div className=" sm:col-span-1 flex items-center justify-between sm:block">
-                            <dt className="text-sm font-bold sm:font-medium text-gray-500">
-                              Ownership
-                            </dt>
-                            <dd className="text-sm font-medium sm:font-normal file: text-gray-900">
-                              {item?.ownership}
-                            </dd>
-                          </div>
+                          <dt className="text-sm font-bold sm:font-medium text-gray-500">
+                            Ownership
+                          </dt>
+                          <dd className="text-sm font-medium sm:font-normal file: text-gray-900">
+                            {item?.ownership}
+                          </dd>
+                        </div>
                         <div className=" flex flex-col items-center justify-between sm:block">
                           <dt className="text-sm font-bold sm:font-medium text-gray-500">
                             RC Book
@@ -521,25 +522,25 @@ const result = useVehicleUpdateSubscription()
                             Total Bids
                           </dt>
                           <dd className="text-sm font-medium sm:font-normal text-gray-900">
-                                {item?.totalBids}
-                              </dd>
+                            {item?.totalBids}
+                          </dd>
                         </div>
                         <div className=" flex flex-col items-center justify-between sm:block">
                           <dt className="text-sm font-bold sm:font-medium text-gray-500">
                             Bids Remaining
                           </dt>
                           <dd className="text-sm font-medium sm:font-normal text-gray-900">
-                                {data?.event?.noOfBids -
-                                  item?.userVehicleBidsCount}
-                              </dd>
+                            {data?.event?.noOfBids -
+                              item?.userVehicleBidsCount}
+                          </dd>
                         </div>
                         <div className=" flex flex-col items-center justify-between sm:block">
                           <dt className="text-sm font-bold sm:font-medium text-gray-500">
                             Rank
                           </dt>
                           <dd className="text-base font-medium sm:font-normal text-gray-900">
-                                {item?.myBidRank ? item.myBidRank : "N/A"}
-                              </dd>
+                            {item?.myBidRank ? item.myBidRank : "N/A"}
+                          </dd>
                         </div>
 
                         <div className=" col-span-3 sm:col-span-1 flex max-sm:flex-col items-center justify-between sm:block  ">
@@ -558,10 +559,10 @@ const result = useVehicleUpdateSubscription()
                                 Your Latest Quote
                               </dt>
                               <dd className="text-base font-medium sm:font-normal text-gray-900">
-                                    {item?.userVehicleBids?.length
-                                      ? item?.userVehicleBids[0].amount
-                                      : "N/A"}
-                                  </dd>
+                                {item?.userVehicleBids?.length
+                                  ? item?.userVehicleBids[0].amount
+                                  : "N/A"}
+                              </dd>
                             </>
                           )}
                         </div>
@@ -580,14 +581,14 @@ const result = useVehicleUpdateSubscription()
                               className=" flex items-center justify-between text-sm font-roboto font-medium text-blue-800 "
                               onClick={() => setShowInspectionReportModal(true)}
                             >
-                              {/* <Link href={item.inspectionLink}>
+                              <Link href={item?.inspectionLink}>
                                 <a
                                   target="_blank"
                                   className="flex items-center text-sm font-roboto font-medium text-[#2563EB]"
                                 >
                                   Inspection Report
                                 </a>
-                              </Link> */}
+                              </Link>
 
                               <FontAwesomeIcon icon={faCircleInfo} />
                             </div>
@@ -671,8 +672,8 @@ const result = useVehicleUpdateSubscription()
                         <p className="font-semibold font-roboto ">
                           {data?.event?.startDate
                             ? moment(data?.event?.startDate).format(
-                                "MMMM Do, YYYY ddd h:mm a"
-                              )
+                              "MMMM Do, YYYY ddd h:mm a"
+                            )
                             : "NA"}
                         </p>
                       </div>
@@ -683,8 +684,8 @@ const result = useVehicleUpdateSubscription()
                         <p className="items-start font-semibold font-roboto">
                           {item?.bidTimeExpire
                             ? moment(item?.bidTimeExpire).format(
-                                "MMMM Do, YYYY ddd h:mm a"
-                              )
+                              "MMMM Do, YYYY ddd h:mm a"
+                            )
                             : "NA"}
                         </p>
                       </div>
@@ -728,36 +729,36 @@ const result = useVehicleUpdateSubscription()
                             </span>
                           </div>
                           <div className="flex  items-center justify-between">
-                                    <span  className="font-bold">Current Status</span>
-                                    {item.userVehicleBidsCount &&
-                                    item.myBidRank ? (
-                                      item.myBidRank == 1 ? (
-                                        <p className="space-x-2">
-                                          <FontAwesomeIcon icon={faThumbsUp} />
-                                          <span style={{ color: "#00CC00" }}  className="font-bold text-base">
-                                            Winning
-                                          </span>
-                                        </p>
-                                      ) : (
-                                        <p className="space-x-2">
-                                          {" "}
-                                          <FontAwesomeIcon
-                                            icon={faThumbsDown}
-                                          />{" "}
-                                          <span style={{ color: "#FF3333" }}  className="font-bold text-base">
-                                            Losing
-                                          </span>
-                                        </p>
-                                      )
-                                    ) : (
-                                      <p className="space-x-2">
-                                        <FontAwesomeIcon icon={faUserSlash} />{" "}
-                                        <span style={{ color: "#CCCC00" }}  className="font-bold text-base">
-                                          Not Enrolled
-                                        </span>
-                                      </p>
-                                    )}
-                                  </div>
+                            <span className="font-bold">Current Status</span>
+                            {item.userVehicleBidsCount &&
+                              item.myBidRank ? (
+                              item.myBidRank == 1 ? (
+                                <p className="space-x-2">
+                                  <FontAwesomeIcon icon={faThumbsUp} />
+                                  <span style={{ color: "#00CC00" }} className="font-bold text-base">
+                                    Winning
+                                  </span>
+                                </p>
+                              ) : (
+                                <p className="space-x-2">
+                                  {" "}
+                                  <FontAwesomeIcon
+                                    icon={faThumbsDown}
+                                  />{" "}
+                                  <span style={{ color: "#FF3333" }} className="font-bold text-base">
+                                    Losing
+                                  </span>
+                                </p>
+                              )
+                            ) : (
+                              <p className="space-x-2">
+                                <FontAwesomeIcon icon={faUserSlash} />{" "}
+                                <span style={{ color: "#CCCC00" }} className="font-bold text-base">
+                                  Not Enrolled
+                                </span>
+                              </p>
+                            )}
+                          </div>
                         </div>
                       </div>
                       <div>
@@ -783,35 +784,33 @@ const result = useVehicleUpdateSubscription()
                 {/* dESKTOP DESIGN */}
                 <div
                   key={`d${index}`}
-                  className={`hidden sm:flex sm:max-md:flex-col font-sans border  rounded  ${
-                    moment(item?.bidTimeExpire).diff(moment(), "s") <= 120 &&
-                    moment(item?.bidTimeExpire).diff(moment(), "s") > 0
+                  className={`hidden sm:flex sm:max-md:flex-col font-sans border  rounded  ${moment(item?.bidTimeExpire).diff(moment(), "s") <= 120 &&
+                      moment(item?.bidTimeExpire).diff(moment(), "s") > 0
                       ? "blink"
                       : ""
-                  } ${
-                    index % 2 == 0
+                    } ${index % 2 == 0
                       ? "border-yellow-300 bg-gray-100 "
                       : "border-gray-300 bg-slate-50"
-                  }  `}
+                    }  `}
                 >
-                  {/* {item?.frontImage && (
-                        <div
-                          className="flex-none w-70 h-56  sm:max-md:h-56 sm:max-md:w-full md:h-auto sm:w-60 relative p-6 hover:cursor-pointer"
-                          onClick={() => {
-                            // BindVehicleImage(item);
-                            setImages((item?.frontImage).split(","));
+                  {item?.image && (
+                    <div
+                      className="flex-none w-70 h-56  sm:max-md:h-56 sm:max-md:w-full md:h-auto sm:w-60 relative p-6 hover:cursor-pointer"
+                      onClick={() => {
+                        // BindVehicleImage(item);
+                        setImages((item?.image).split(","));
 
-                            setShowImageCarouselModal(true);
-                          }}
-                        >
-                          <Image
-                            alt="img"
-                            src={item?.frontImage}
-                            layout="fill"
-                            className="absolute inset-0 w-full h-full object-cover rounded"
-                          />
-                        </div>
-                      )} */}
+                        setShowImageCarouselModal(true);
+                      }}
+                    >
+                      <Image
+                        alt="img"
+                        src={item?.image}
+                        layout="fill"
+                        className="absolute inset-0 w-full h-full object-cover rounded"
+                      />
+                    </div>
+                  )}
                   <div className={`flex-auto p-3 lg:space-y-4 sm:p-6 `}>
                     {/* <div className="mb-3">
                           {find?.length > 0 && (
@@ -856,9 +855,8 @@ const result = useVehicleUpdateSubscription()
                         )}
                       </button>
                       <div
-                        className={`${
-                          showCode ? "block mt-2 sm:mt-4" : "hidden"
-                        } sm:block  `}
+                        className={`${showCode ? "block mt-2 sm:mt-4" : "hidden"
+                          } sm:block  `}
                       >
                         <dl className="grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-3">
                           <div className="sm:col-span-1 flex items-center justify-between sm:block">
@@ -900,25 +898,25 @@ const result = useVehicleUpdateSubscription()
                               Total Bids
                             </dt>
                             <dd className="text-sm font-medium sm:font-normal text-gray-900">
-                                  {item?.totalBids}
-                                </dd>
+                              {item?.totalBids}
+                            </dd>
                           </div>
                           <div className="sm:col-span-1 flex items-center justify-between sm:block">
                             <dt className="text-sm font-bold sm:font-medium text-gray-500">
                               Bids Remaining
                             </dt>
                             <dd className="text-sm font-medium sm:font-normal text-gray-900">
-                                  {data?.event?.noOfBids -
-                                    item?.userVehicleBidsCount}
-                                </dd>
+                              {data?.event?.noOfBids -
+                                item?.userVehicleBidsCount}
+                            </dd>
                           </div>
                           <div className="sm:col-span-1 flex items-center justify-between sm:block">
                             <dt className="text-sm font-bold sm:font-medium text-gray-500">
                               Rank
                             </dt>
                             <dd className="text-base font-medium sm:font-normal text-gray-900">
-                                  {item?.myBidRank ? item.myBidRank : "N/A"}
-                                </dd>
+                              {item?.myBidRank ? item.myBidRank : "N/A"}
+                            </dd>
                           </div>
                           {data.event.bidLock === "locked" ? (
                             <div className="sm:col-span-1 flex items-center justify-between sm:block">
@@ -935,12 +933,13 @@ const result = useVehicleUpdateSubscription()
                                 Your Latest Quote
                               </dt>
                               <dd className="text-base font-medium sm:font-normal text-gray-900">
-                                    {item?.userVehicleBids?.length
-                                      ? item?.userVehicleBids[0].amount
-                                      : "N/A"}
-                                  </dd>
+                                {item?.userVehicleBids?.length
+                                  ? item?.userVehicleBids?.[0]?.amount
+                                  : "N/A"}
+                              </dd>
                             </div>
                           )}
+
                         </dl>
                       </div>
                     </div>
@@ -1016,7 +1015,7 @@ const result = useVehicleUpdateSubscription()
                           <div
                             className="mt-2 flex items-center text-sm text-blue-800 hover:cursor-pointer hover:text-blue-600"
                             // onClick={() => setShowInspectionReportModal(true)}
-                            onClick={() => {}}
+                            onClick={() => { }}
                           >
                             {/* <DocumentReportIcon
                               className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
@@ -1024,7 +1023,7 @@ const result = useVehicleUpdateSubscription()
                             />
                             Inspection Report
                              */}
-                            {/* <Link href={item.inspectionLink}>
+                            <Link href={item?.inspectionLink}>
                               <a
                                 target="_blank"
                                 className="flex items-center text-xs sm:text-sm  text-blue-800"
@@ -1035,7 +1034,7 @@ const result = useVehicleUpdateSubscription()
                                 />
                                 Inspection Report
                               </a>
-                            </Link> */}
+                            </Link>
                           </div>
                           <div className="mt-2">
                             <Link href={`/vehicle/${item.id}`}>
@@ -1069,8 +1068,8 @@ const result = useVehicleUpdateSubscription()
                             <span>
                               {data.event.startDate
                                 ? moment(data.event.startDate).format(
-                                    "MMMM Do, YYYY ddd h:mm a"
-                                  )
+                                  "MMMM Do, YYYY ddd h:mm a"
+                                )
                                 : "NA"}
                             </span>
                           </div>
@@ -1080,8 +1079,8 @@ const result = useVehicleUpdateSubscription()
                           <span>
                             {item?.bidTimeExpire
                               ? moment(item?.bidTimeExpire).format(
-                                  "MMMM Do, YYYY ddd h:mm a"
-                                )
+                                "MMMM Do, YYYY ddd h:mm a"
+                              )
                               : "NA"}
                           </span>
                         </div>
@@ -1090,8 +1089,7 @@ const result = useVehicleUpdateSubscription()
                       <div className=" w-64 sm:max-md:w-1/2 md:w-full bg-gray-200 rounded-lg">
                         <div className="px-4 py-2">
                           <h2 className="text-sm font-semibold text-gray-900">
-                            Bid Details
-                          </h2>
+                            Bid Details                          </h2>
 
                           <div className="space-y-2 mt-2">
                             <div className="flex items-center justify-between text-xs text-gray-700">
@@ -1107,46 +1105,46 @@ const result = useVehicleUpdateSubscription()
                               <span>{item?.quoteIncreament}</span>
                             </div>
                             <div className="flex  items-center justify-between text-xs text-gray-700">
-                                  <span>Current Status</span>
-                                  {item.userVehicleBidsCount &&
-                                  item.myBidRank ? (
-                                    item.myBidRank == 1 ? (
-                                      <p className="space-x-2">
-                                        <FontAwesomeIcon icon={faThumbsUp} />
-                                        <span style={{ color: "#00CC00" }}>
-                                          Winning
-                                        </span>
-                                      </p>
-                                    ) : (
-                                      <p className="space-x-2">
-                                        {" "}
-                                        <FontAwesomeIcon
-                                          icon={faThumbsDown}
-                                        />{" "}
-                                        <span style={{ color: "#FF3333" }}>
-                                          Losing
-                                        </span>
-                                      </p>
-                                    )
-                                  ) : (
-                                    <p className="space-x-2">
-                                      <FontAwesomeIcon icon={faUserSlash} />{" "}
-                                      <span style={{ color: "#CCCC00" }}>
-                                        Not Enrolled
-                                      </span>
-                                    </p>
-                                  )}
-                                </div>
+                              <span>Current Status</span>
+                              {item.userVehicleBidsCount &&
+                                item.myBidRank ? (
+                                item.myBidRank == 1 ? (
+                                  <p className="space-x-2">
+                                    <FontAwesomeIcon icon={faThumbsUp} />
+                                    <span style={{ color: "#00CC00" }}>
+                                      Winning
+                                    </span>
+                                  </p>
+                                ) : (
+                                  <p className="space-x-2">
+                                    {" "}
+                                    <FontAwesomeIcon
+                                      icon={faThumbsDown}
+                                    />{" "}
+                                    <span style={{ color: "#FF3333" }}>
+                                      Losing
+                                    </span>
+                                  </p>
+                                )
+                              ) : (
+                                <p className="space-x-2">
+                                  <FontAwesomeIcon icon={faUserSlash} />{" "}
+                                  <span style={{ color: "#CCCC00" }}>
+                                    Not Enrolled
+                                  </span>
+                                </p>
+                              )}
+                            </div>
                           </div>
                         </div>
                         <div>
                           {IsCompleted(item) && (
-                          <EnterBid
-                            row={item}
-                            call={CallBid}
-                            event={data["event"]}
-                          />
-           ) }
+                            <EnterBid
+                              row={item}
+                              call={CallBid}
+                              event={data["event"]}
+                            />
+                          )}
                         </div>
                       </div>
                     </div>
@@ -1188,10 +1186,10 @@ const EnterBid = ({ row, call, event }) => {
 
   useEffect(() => {
     if (event?.bidLock === "locked") {
-      if (row.currentBidAmount) {
-        setBidAmount(row.currentBidAmount + +row?.quoteIncreament);
-      } else if (row.startPrice) {
-        setBidAmount(row.startPrice);
+      if (row?.currentBidAmount) {
+        setBidAmount(row?.currentBidAmount + +row?.quoteIncreament);
+      } else if (row?.startPrice) {
+        setBidAmount(row?.startPrice);
       } else if (!row?.startPrice) {
         setBidAmount(row?.quoteIncreament);
       }
@@ -1199,10 +1197,10 @@ const EnterBid = ({ row, call, event }) => {
       if (row.currentBidAmount) {
         let amt = row?.userVehicleBids?.length
           ? row?.userVehicleBids[0]?.amount + +row?.quoteIncreament
-          : row.startPrice;
+          : row?.startPrice;
         setBidAmount(amt?.toString());
-      } else if (row.startPrice) {
-        setBidAmount(row.startPrice);
+      } else if (row?.startPrice) {
+        setBidAmount(row?.startPrice);
       } else if (!row?.startPrice) {
         setBidAmount(row?.quoteIncreament);
       }
@@ -1254,9 +1252,9 @@ const EnterBid = ({ row, call, event }) => {
               position: "top",
             });
           } else if (parseInt(bidAmount) % row.quoteIncreament !== 0) {
-            let value=parseInt(bidAmount) % row.quoteIncreament 
-            console.log("963",value);
-            
+            let value = parseInt(bidAmount) % row.quoteIncreament
+            console.log("963", value);
+
             Swal.fire({
               title:
                 "Bid amount should be greater than minimum quote increment.",

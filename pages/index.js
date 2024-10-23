@@ -37,7 +37,7 @@ export default function Example() {
     <>
       <HeroSection />
 
-      {/* <HomePageEventCalender/> */}
+      <HomePageEventCalender/>
       {/* <AllEventsTable/> */}
       <Cards />
       {/* <RecentlySold /> */}

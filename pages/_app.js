@@ -17,7 +17,7 @@ const queryClient = new QueryClient({
   },
 });
 
-console.log('apolloClient',apolloClient);
+// console.log('apolloClient',apolloClient);
 
 
 export default function MyApp({ Component, pageProps }) {
