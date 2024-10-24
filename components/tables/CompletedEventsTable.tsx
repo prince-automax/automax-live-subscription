@@ -77,8 +77,8 @@ export default function EventsTable({
   //   }
   // }, [payment]);
 
-  console.log("registered", registered);
-  console.log("setRegisteredStatus", registeredStatus);
+  // console.log("registered", registered);
+  // console.log("setRegisteredStatus", registeredStatus);
 
   const PaymentStatus = () => {
     toast(

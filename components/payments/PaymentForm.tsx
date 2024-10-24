@@ -59,7 +59,7 @@ export default function PaymentForm() {
 
   const onSubmit = async (values, resetForm) => {
     setIsLoading(true);
-    console.log("Submitting payment details:", values);
+    // console.log("Submitting payment details:", values);
 
     try {
       // Step 1: Call GraphQL API to create payment
@@ -72,12 +72,12 @@ export default function PaymentForm() {
         },
       });
 
-      console.log("response frm details", response);
+      // console.log("response frm details", response);
       const paymentId = response?.createPayment?.id;
 
       // Step 2: If GraphQL API is successful, proceed to call the REST API for image upload
       if (response) {
-        console.log("GraphQL API successful, uploading image...");
+        // console.log("GraphQL API successful, uploading image...");
 
         // Call REST API to upload the image (proof)
         const formData = new FormData();
@@ -93,7 +93,7 @@ export default function PaymentForm() {
           },
         });
 
-        console.log("upload response of image", uploadResponse);
+        // console.log("upload response of image", uploadResponse);
 
         if (uploadResponse.ok) {
           toast.success("Payment and image uploaded successfully.");
@@ -212,7 +212,7 @@ export default function PaymentForm() {
 
                     props.setFieldValue("proof", image);
                   } catch (err) {
-                    console.log("error", err);
+                    // console.log("error", err);
                   }
                 }}
                 name="proof"

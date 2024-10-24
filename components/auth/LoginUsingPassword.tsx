@@ -87,8 +87,8 @@ export default function LoginUsingPassword() {
           },
         });
   
-        console.log("result of the login", result);
-        console.log("token", result?.login["access_token"]);
+        // console.log("result of the login", result);
+        // console.log("token", result?.login["access_token"]);
   
         if (result?.login["access_token"]) {
           localStorage.setItem("token", result.login["access_token"]);

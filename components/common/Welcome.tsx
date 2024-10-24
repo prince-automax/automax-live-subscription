@@ -4,7 +4,8 @@ import {
   TimeQueryQueryVariables,
   GetUserQueryVariables,
   useGetUserQuery,
-  GetUserQuery
+  GetUserQuery,
+  
 } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
@@ -52,18 +53,18 @@ export default function Welcome() {
     localStorage.setItem("username", username);
   }
 
-  // const { data } = useQueryQuery<QueryQueryVariables>(
-  //   graphQLClient(),
-  //   {},
-  //   { refetchInterval: 60000 }
-  // );
+  const { data } = useTimeQueryQuery<TimeQueryQueryVariables>(
+    graphQLClient(),
+    {},
+    { refetchInterval: 60000 }
+  );
 
-  // useEffect(() => {
-  //   if (data && data.time) {
-  //     setTick(0);
-  //     setserverTime(data.time);
-  //   }
-  // }, [data]);
+  useEffect(() => {
+    if (data && data.time) {
+      setTick(0);
+      setserverTime(data.time);
+    }
+  }, [data]);
 
   return (
     <div className="flex flex-col space-y-1 sm:space-y-0">

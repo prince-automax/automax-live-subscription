@@ -24,7 +24,7 @@ const offices = [
     address: ["Green Earth Building", " palarivattam ,682024"],
   },
 ];
-console.log("123", states);
+// console.log("123", states);
 
 export default function Contact() {
   const formikRef = useRef(null);
@@ -33,7 +33,7 @@ export default function Contact() {
     useCreateEnquiryMutation<CreateEnquiryMutationVariables>(graphQLClient());
 
   const onSubmitData = async (values, { resetForm }) => {
-    console.log("values", values);
+    // console.log("values", values);
 
     try {
       // Ensure the object matches the expected type
