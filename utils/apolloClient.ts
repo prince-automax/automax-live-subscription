@@ -71,7 +71,7 @@ import { createClient } from 'graphql-ws';
 const isNode = typeof window === 'undefined';
 const WebSocketImpl = isNode ? require('ws') : WebSocket;
 const localStorageToken = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-console.log('456', localStorageToken);
+// console.log('456', localStorageToken);
 
 // Create the WebSocket link
 const wsLink = typeof window !== 'undefined' ? new GraphQLWsLink(

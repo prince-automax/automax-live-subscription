@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import graphQLClient from "@utils/useGQLQuery";
 import withPrivateRoute from "../../utils/withPrivateRoute";
 import Welcome from "@components/common/Welcome";
+import {useBidCreationSubscription} from "@utils/apollo"
 
 function TopBar() {
   const id = localStorage.getItem("id");
@@ -20,9 +21,10 @@ function TopBar() {
 
   // console.log("id from local storeage",id);
   // console.log("access token  from local storeage",accessToken);
-  
+  const result = useBidCreationSubscription()
 
-  const { data } = useGetUserQuery<GetUserQuery>(
+
+  const { data,refetch } = useGetUserQuery<GetUserQuery>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     { where: { id } },
     {
@@ -30,8 +32,12 @@ function TopBar() {
     }
   );
 
-  // console.log("data from api call", data);
+  // console.log('data',data);
   
+
+useEffect(()=>{
+refetch()
+},[result?.data])  
 
 
   useEffect(() => {

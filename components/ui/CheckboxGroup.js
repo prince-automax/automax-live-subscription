@@ -1,5 +1,7 @@
 import { Field, ErrorMessage } from 'formik';
 export default function CheckboxGroup(props) {
+  console.log('props',props);
+  
   return (
     <fieldset>
       <div className="mt-4">

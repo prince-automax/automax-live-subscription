@@ -374,6 +374,12 @@ query LiveEvents($orderBy: [VehicleOrderByInput!], $take: Int, $skip: Int) {
   }
 }
 
+
+
+
+
+
+
 query UpcomingEvents($take: Int, $skip: Int) {
   upcomingEvents(take: $take, skip: $skip) {
     bidLock
@@ -453,7 +459,7 @@ query GetEvents(
       name
     }
     vehicleLiveTimeIn
-    vehicles(orderBy: $orderBy, take: $take, skip: $skip) {
+    vehiclesLive(orderBy: $orderBy, take: $take, skip: $skip) {
       YOM
         userVehicleBids {
         amount
@@ -535,4 +541,17 @@ query GetEvents(
 
 query TimeQuery {
   time
+}
+
+
+query EventsCount {
+  events {
+    events {
+      id
+    }
+    upcomingEventCount
+    liveEventCount
+    totalEventsCount
+    completedEventCount
+  }
 }

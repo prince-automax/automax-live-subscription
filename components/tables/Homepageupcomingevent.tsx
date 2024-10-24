@@ -10,12 +10,12 @@ import {
 import { useEffect, useState } from "react";
 import AlertModal from "../ui/AlertModal";
 
-// import {
-//   GetUserQueryVariables,
-//   UpcomingEventsQuery,
-//   useGetUserQuery,
-//   useUpcomingEventsQuery,
-// } from "@utils/graphql";
+import {
+  GetUserQueryVariables,
+  UpcomingEventsQuery,
+  useGetUserQuery,
+  useUpcomingEventsQuery,
+} from "@utils/graphql";
 
 import graphQLClient from "@utils/useGQLQuery";
 import Router from "next/router";
@@ -42,6 +42,21 @@ export function UpcomingEventHomePage({
     take: 10,
   };
 
+
+  const { data, isLoading, refetch } =
+    useUpcomingEventsQuery<UpcomingEventsQuery>(
+      graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+      variables
+    );
+
+  console.log("data", data);
+
+  //   useEffect(() => {
+  //     refetch();
+  //  }, [data]);
+
+  
+
  
 
 
@@ -64,10 +79,14 @@ export function UpcomingEventHomePage({
       Header: "Location",
       accessor: "location.name",
     },
- 
+    {
+      Header: "Vehicle",
+      accessor: "vehiclesCount",
+      Cell: ({ cell: { value } }) => (value ? value : ""),
+    },
     {
       Header: "Category",
-      accessor: "eventType",
+      accessor: "vehicleCategory",
       Cell: ({ cell: { value } }) => RenderEventTypes(value),
     },
     {
@@ -80,7 +99,7 @@ export function UpcomingEventHomePage({
 
   return (
     <>
-      {/* <div className=" bg-white ">
+      <div className=" bg-white ">
         <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
         
 
@@ -124,22 +143,17 @@ export function UpcomingEventHomePage({
             </>
           )}
         </div>
-      </div> */}
+      </div>
     </>
   );
 }
 
 function RenderEventTypes(eventTypes) {
-  if (eventTypes && eventTypes.length > 0) {
+
+  if (eventTypes) {
     return (
       <div>
-        {eventTypes.map((type, index) => {
-          return (
-            <div key={`d${index}`}>
-              <span>{type.name}</span>
-            </div>
-          );
-        })}
+        {eventTypes?.name}
       </div>
     );
   } else {

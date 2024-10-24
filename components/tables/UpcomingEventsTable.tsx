@@ -184,8 +184,8 @@ export default function UpcomingEventsTable({
             {showHeadings && (
               <div className="pt-4 pb-1">
                 {data &&
-                data?.upcomingEvents &&
-                data?.upcomingEvents?.length > 0 ? (
+                  data?.upcomingEvents &&
+                  data?.upcomingEvents?.length > 0 ? (
                   <p className="mt-px text-3xl font-extrabold text-gray-900 tracking-tight sm:text-3xl animate-pulse">
                     Event Calender
                   </p>
@@ -243,7 +243,8 @@ export default function UpcomingEventsTable({
 }
 
 function RenderEventTypes(eventTypes) {
-  console.log("event tuypes", eventTypes);
+  console.log('eventTypes',eventTypes);
+  
   return <div>{eventTypes?.name}</div>;
 }
 
