@@ -245,6 +245,8 @@ export type EnquiryWhereUniqueInput = {
 
 export type Event = {
   __typename?: 'Event';
+  CompletedEventCount?: Maybe<Scalars['Int']>;
+  LiveEventCount?: Maybe<Scalars['Int']>;
   Report?: Maybe<Scalars['JSON']>;
   bidLock?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['DateTime']>;
@@ -268,6 +270,8 @@ export type Event = {
   startDate: Scalars['DateTime'];
   status?: Maybe<Scalars['String']>;
   termsAndConditions: Scalars['String'];
+  totalEventsCount?: Maybe<Scalars['Int']>;
+  upcomingEventCount?: Maybe<Scalars['Int']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   vehicleCategory?: Maybe<VehicleCategory>;
   vehicleCategoryId: Scalars['String'];
@@ -289,6 +293,16 @@ export type EventVehiclesLiveArgs = {
   orderBy?: InputMaybe<Array<VehicleOrderByInput>>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+export type EventListResponse = {
+  __typename?: 'EventListResponse';
+  completedEventCount?: Maybe<Scalars['Int']>;
+  events?: Maybe<Array<Event>>;
+  liveEventCount?: Maybe<Scalars['Int']>;
+  totalEventsCount?: Maybe<Scalars['Int']>;
+  upcomingEventCount?: Maybe<Scalars['Int']>;
+  vehiclesCount: Scalars['Int'];
 };
 
 export type EventOrderByInput = {
@@ -738,6 +752,7 @@ export type Payment = {
   __typename?: 'Payment';
   amount?: Maybe<Scalars['Float']>;
   createdAt?: Maybe<Scalars['DateTime']>;
+  createdBy?: Maybe<User>;
   createdById?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   emdUpdate?: Maybe<Array<Emdupdate>>;
@@ -782,6 +797,7 @@ export type Query = {
   Enquiry: Enquiry;
   State: State;
   States: Array<State>;
+  completedEvents?: Maybe<Array<Event>>;
   deletedEnquiries: Array<Enquiry>;
   deletedEvent: Event;
   deletedEvents: Array<Event>;
@@ -804,7 +820,7 @@ export type Query = {
   emdUpdate: Emdupdate;
   emdUpdates: Array<Emdupdate>;
   event: Event;
-  events: Array<Event>;
+  events?: Maybe<EventListResponse>;
   eventsCount: Scalars['Int'];
   excelUpload: Excelupload;
   excelUploads: Array<Excelupload>;
@@ -826,7 +842,7 @@ export type Query = {
   time: Scalars['String'];
   upcomingEvents?: Maybe<Array<Event>>;
   user?: Maybe<User>;
-  users: Array<Maybe<User>>;
+  users?: Maybe<Array<User>>;
   usersCount: Scalars['Int'];
   vehicle: Vehicle;
   vehicleCategories: Array<VehicleCategory>;
@@ -849,6 +865,14 @@ export type QueryEnquiryArgs = {
 
 export type QueryStateArgs = {
   where: StateWhereUniqueInput;
+};
+
+
+export type QueryCompletedEventsArgs = {
+  orderBy?: InputMaybe<Array<EventOrderByInput>>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<EventWhereUniqueInput>;
 };
 
 
@@ -908,6 +932,7 @@ export type QueryEventArgs = {
 
 
 export type QueryEventsArgs = {
+  options?: InputMaybe<QueryOptionsType>;
   orderBy?: InputMaybe<Array<EventOrderByInput>>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
@@ -972,6 +997,14 @@ export type QueryUserArgs = {
 };
 
 
+export type QueryUsersArgs = {
+  orderBy?: InputMaybe<Array<UserOrderByInput>>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<UserWhereUniqueInput>;
+};
+
+
 export type QueryVehicleArgs = {
   where: VehicleWhereUniqueInput;
 };
@@ -979,6 +1012,17 @@ export type QueryVehicleArgs = {
 
 export type QueryVehicleCategoryArgs = {
   where: VehicleCategoryWhereUniqueInput;
+};
+
+
+export type QueryVehiclesArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<VehicleWhereUniqueInput>;
+};
+
+export type QueryOptionsType = {
+  enabled?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type Recentsold = {
@@ -1032,9 +1076,10 @@ export type SendOtpResponse = {
 export type State = {
   __typename?: 'State';
   createdAt?: Maybe<Scalars['DateTime']>;
+  createdBy?: Maybe<User>;
   createdById: Scalars['String'];
   id: Scalars['String'];
-  location: Location;
+  location?: Maybe<Array<Location>>;
   name: StateNames;
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
@@ -1140,7 +1185,7 @@ export type UpdateEventInput = {
 
 export type UpdateLocationInput = {
   name?: InputMaybe<Scalars['String']>;
-  state?: InputMaybe<Scalars['String']>;
+  stateId?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdatePaymentInput = {
@@ -1314,6 +1359,12 @@ export enum UserIdProofTypeType {
   Passport = 'Passport'
 }
 
+export type UserOrderByInput = {
+  createdAt?: InputMaybe<OrderDirection>;
+  id?: InputMaybe<OrderDirection>;
+  idNo?: InputMaybe<OrderDirection>;
+};
+
 export enum UserRoleType {
   Admin = 'admin',
   Dealer = 'dealer',
@@ -1333,6 +1384,7 @@ export type UserWhereUniqueInput = {
   idNo?: InputMaybe<Scalars['Float']>;
   mobile?: InputMaybe<Scalars['String']>;
   pancardNo?: InputMaybe<Scalars['String']>;
+  state?: InputMaybe<StateNames>;
   tempToken?: InputMaybe<Scalars['Float']>;
 };
 
@@ -1562,6 +1614,11 @@ export type TimeQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type TimeQueryQuery = { __typename?: 'Query', time: string };
 
+export type EventsCountQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type EventsCountQuery = { __typename?: 'Query', events?: { __typename?: 'EventListResponse', upcomingEventCount?: number | null, liveEventCount?: number | null, totalEventsCount?: number | null, completedEventCount?: number | null, events?: Array<{ __typename?: 'Event', id: string }> | null } | null };
+
 export type CreatePaymentMutationVariables = Exact<{
   createPaymentInput: CreatePaymentInput;
 }>;
@@ -1580,6 +1637,11 @@ export type VehicleUpdateSubscriptionVariables = Exact<{ [key: string]: never; }
 
 
 export type VehicleUpdateSubscription = { __typename?: 'Subscription', subscriptionVehicleUpdates: { __typename?: 'Vehicle', id: string } };
+
+export type BidCreationSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type BidCreationSubscription = { __typename?: 'Subscription', subscriptionBidCreation: { __typename?: 'Bid', id: string } };
 
 export type UpdateUserMutationVariables = Exact<{
   data: UpdateUserInput;
@@ -2006,6 +2068,33 @@ export const useTimeQueryQuery = <
       fetcher<TimeQueryQuery, TimeQueryQueryVariables>(client, TimeQueryDocument, variables, headers),
       options
     );
+export const EventsCountDocument = `
+    query EventsCount {
+  events {
+    events {
+      id
+    }
+    upcomingEventCount
+    liveEventCount
+    totalEventsCount
+    completedEventCount
+  }
+}
+    `;
+export const useEventsCountQuery = <
+      TData = EventsCountQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: EventsCountQueryVariables,
+      options?: UseQueryOptions<EventsCountQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<EventsCountQuery, TError, TData>(
+      variables === undefined ? ['EventsCount'] : ['EventsCount', variables],
+      fetcher<EventsCountQuery, EventsCountQueryVariables>(client, EventsCountDocument, variables, headers),
+      options
+    );
 export const CreatePaymentDocument = `
     mutation CreatePayment($createPaymentInput: CreatePaymentInput!) {
   createPayment(createPaymentInput: $createPaymentInput) {
@@ -2066,6 +2155,13 @@ export const useFindUserPaymentsQuery = <
 export const VehicleUpdateDocument = `
     subscription VehicleUpdate {
   subscriptionVehicleUpdates {
+    id
+  }
+}
+    `;
+export const BidCreationDocument = `
+    subscription BidCreation {
+  subscriptionBidCreation {
     id
   }
 }

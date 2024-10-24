@@ -79,7 +79,11 @@ export function UpcomingEventHomePage({
       Header: "Location",
       accessor: "location.name",
     },
- 
+    {
+      Header: "Vehicle",
+      accessor: "vehiclesCount",
+      Cell: ({ cell: { value } }) => (value ? value : ""),
+    },
     {
       Header: "Category",
       accessor: "vehicleCategory",

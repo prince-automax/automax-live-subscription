@@ -82,7 +82,11 @@ export function LiveEventHomePage({
     },
     { Header: "Event Type", accessor: "eventCategory" },
 
-
+    {
+      Header: "Vehicle",
+      accessor: "vehiclesCount",
+      Cell: ({ cell: { value } }) => (value ? value : ""),
+    },
     {
       Header: "Location",
       accessor: "location.name",

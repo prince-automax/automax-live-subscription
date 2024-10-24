@@ -136,7 +136,7 @@ function Vehicle() {
   
 
   useEffect(() => {
-    setImages(vehicle?.frontImage?.split(","));
+    setImages(vehicle?.image?.split(","));
   }, [vehicle]);
 
   async function CallBid(amount, vehicleId) {
@@ -165,7 +165,21 @@ function Vehicle() {
         // console.log("cc: ", cc);
         Swal.fire("Success!", "Your bid has been submitted.", "success");
       } catch (e) {
-        // console.log("EEE: ", e);
+        let errorMessage = "An error occurred. Please try again.";
+
+        if (e.response) {
+          // Check for specific error messages
+          const errorMessages = e.response.errors || [];
+          if (errorMessages.length > 0) {
+            errorMessage = errorMessages.map(err => err.message).join(", ");
+          }
+        } else if (e.message) {
+          // Fallback for general errors
+          errorMessage = e.message;
+        }
+
+        // Display the error message to the user
+        Swal.fire("Error!", errorMessage, "error");
       }
     }
   }
@@ -305,7 +319,7 @@ function Vehicle() {
           {/* deskop view for the image ends here */}
 
           {/* mobile view of image starts here*/}
-          {vehicle?.frontImage ? (
+          {vehicle?.image ? (
             <section className="sm:hidden border-2 ">
               <div className=" h-fit border-2 rounded-lg  ">
                 <Splide options={options} aria-label="React Splide Example">

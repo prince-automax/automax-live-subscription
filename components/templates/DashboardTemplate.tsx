@@ -34,7 +34,7 @@ import graphQLClient from "@utils/useGQLQuery";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Welcome from "../common/Welcome";
-// import { useLiveEventscountQuery,LiveEventscountQueryVariables,useUpcomingEventsCountsQuery } from "@utils/graphql";
+import { useEventsCountQuery,EventsCountQueryVariables} from "@utils/graphql";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -58,29 +58,43 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
     }
   }, []);
 
-  // const { data, isLoading,refetch} = useLiveEventscountQuery(
+  // const { data, isLoading, refetch } = useEventsCountQuery(
   //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+  //   {
 
+  //     enabled: accessToken !== ""
+  //   }l
   // );
+  const queryOptions = accessToken ? { enabled: true } : { enabled: false };
+
+  const { data, isLoading, refetch } = useEventsCountQuery(
+    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+    undefined, // No variables for this query
+    queryOptions
+  );
+  
+  
+  
+
+  console.log('Events count ', data?.events?.liveEventCount);
+    
   // const {data:upcoming}=useUpcomingEventsCountsQuery(
   //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
   // )
 
-  // useEffect(()=>{
-  //   if(data?.liveEvents[0]){
-  //     const liveOnline=data?.liveEvents?.filter((online)=>online?.eventCategory=='online')
-  //     const openlive=data?.liveEvents?.filter((online)=>online?.eventCategory=='open')
+  useEffect(()=>{
+    if(data?.events?.liveEventCount){
+      const liveOnline=data?.events?.liveEventCount
+      const upcomingEventsCount=data?.events?.upcomingEventCount
 
-  //     setLiveOnline(liveOnline?.length)
-  //     setLiveOpen(openlive?.length)
-  //   }
-  //   if(upcoming?.upcomingEvents){
-  //     setUpcoming(upcoming?.upcomingEvents?.length)
-
-  //   }
-  // },[data,upcoming])
+      setLiveOnline(liveOnline)
+      setUpcoming(upcomingEventsCount)
+    }
+    
+  },[data])
 
   // Inside DashboardTemplate
+
   const setNavigationLink = (href) => {
     router.push(href);
     // Optionally, you can also set the active link state here if needed.
@@ -106,12 +120,12 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
       icon: CalendarIcon,
       current: router.pathname == "/upcoming-events" ? true : false,
     },
-    {
-      name: `Open Auctions  (${liveOpen})`,
-      href: "/open-auctions",
-      icon: ClockIcon,
-      current: router.pathname == "/open-auctions" ? true : false,
-    },
+    // {
+    //   name: `Open Auctions  (${liveOpen})`,
+    //   href: "/open-auctions",
+    //   icon: ClockIcon,
+    //   current: router.pathname == "/open-auctions" ? true : false,
+    // },
   ];
 
   // Inside DashboardTemplate
@@ -202,7 +216,7 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
     },
   ];
 
-  // const mobileNavigation=[...eventsNavigations,...activityNavigations,...accountNavigations]
+  const mobileNavigation=[...eventsNavigations,...activityNavigations,...accountNavigations]
 
   return (
     <>
@@ -220,7 +234,7 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
               {/* <Welcome /> */}
               <nav className="mt-1 sm:max-lg:mt-8 space-y-4 max-md:w-full  ">
                 <div className=" text-black bg-white lg:hidden flex w-full space-x-4  overflow-x-scroll scrollbar-hide ">
-                  {/* {mobileNavigation.map((item, index) => (
+                  {mobileNavigation.map((item, index) => (
   <ul key={index} className="space-x-4">
     <li className="space-x-4 ">
       <Link key={item.name} href={item.href}>
@@ -241,7 +255,7 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
       </Link>
     </li>
   </ul>
-))} */}
+))}
                 </div>
 
                 <div className="hidden lg:block">

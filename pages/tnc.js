@@ -5,7 +5,7 @@ export default function Contact() {
  <strong className="text-center">Terms &amp; Conditions</strong>{" "}</p>
  <div className="w-full p-2 sm:p-4 text-[12px] sm:text-base  space-y-4 font-roboto ">
  <p className="text-[#717171]">
-        By downloading or using the app, these terms will automatically apply to
+        By downloading or using the app or website, these terms will automatically apply to
         you – you should make sure therefore that you read them carefully before
         using the app. You’re not allowed to copy or modify the app, any part of
         the app, or our trademarks in any way. You’re not allowed to attempt to

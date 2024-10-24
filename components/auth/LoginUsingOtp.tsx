@@ -23,6 +23,7 @@ import {
   useVerifyOtpMutation,
   VerfiyOtpDto,
 } from "@utils/graphql";
+import Link from "next/link";
 
 export default function LoginUsingOtp() {
   const router = useRouter();
@@ -113,57 +114,56 @@ export default function LoginUsingOtp() {
   // }
 
   async function CallUserCreation(userInput) {
-    // console.log("hit on user Creation");
+    console.log("hit on user Creation");
     // console.log("User Input for creation:", userInput);
-  
-    try {
-      const { firstName, lastName, pancard, state, mobile } = userInput;
-      setMobileNumber(mobile);
-  
-      let isValid = true;
-  
-      if (!IsValidValue(mobile) || !IsValidMobile(mobile)) {
-        setError({ text: "Please enter a valid Mobile Number" });
-        isValid = false;
-      }
-  
-      if (isValid) {
-        // Proceed with user creation (sending OTP)
-        const result = await callOTPMutation.mutateAsync({
-          sendOtpDto: {
-            firstName,
-            lastName,
-            pancardNo: pancard,
-            state,
-            mobile,
-          },
-        });
-  
-        // console.log("Result of user creation:", result);
-  
-        if (result?.sendOtp?.status === "Success") {
-          setVerificationMode(true);
-          setSuccess({
-            text: "User created successfully. Please enter the OTP.",
-          });
-        } else {
-          setError({ text: "User creation failed. Please try again." });
-        }
-      }
-    } catch (error: any) {
-      // Extracting the specific error message
-      const graphqlError = error?.response?.errors?.[0]?.message || "An error occurred during OTP sending. Please try again.";
-  
-      // Log full error for debugging purposes
-      console.error("Error during OTP sending for user creation:", error);
-  
-      // Display the extracted error message to the user
-      setError({
-        text: graphqlError,
-      });
-    }
+
+    // try {
+    //   const { firstName, lastName, pancard, state, mobile } = userInput;
+    //   setMobileNumber(mobile);
+
+    //   let isValid = true;
+
+    //   if (!IsValidValue(mobile) || !IsValidMobile(mobile)) {
+    //     setError({ text: "Please enter a valid Mobile Number" });
+    //     isValid = false;
+    //   }
+
+    //   if (isValid) {
+    //     // Proceed with user creation (sending OTP)
+    //     const result = await callOTPMutation.mutateAsync({
+    //       sendOtpDto: {
+    //         firstName,
+    //         lastName,
+    //         pancardNo: pancard,
+    //         state,
+    //         mobile,
+    //       },
+    //     });
+
+    //     // console.log("Result of user creation:", result);
+
+    //     if (result?.sendOtp?.status === "Success") {
+    //       setVerificationMode(true);
+    //       setSuccess({
+    //         text: "User created successfully. Please enter the OTP.",
+    //       });
+    //     } else {
+    //       setError({ text: "User creation failed. Please try again." });
+    //     }
+    //   }
+    // } catch (error: any) {
+    //   // Extracting the specific error message
+    //   const graphqlError = error?.response?.errors?.[0]?.message || "An error occurred during OTP sending. Please try again.";
+
+    //   // Log full error for debugging purposes
+    //   console.error("Error during OTP sending for user creation:", error);
+
+    //   // Display the extracted error message to the user
+    //   setError({
+    //     text: graphqlError,
+    //   });
+    // }
   }
-  
 
   async function CallLogin() {
     // console.log("hit on login");
@@ -200,11 +200,13 @@ export default function LoginUsingOtp() {
       }
     } catch (error) {
       // Extracting the specific error message
-      const graphqlError = error?.response?.errors?.[0]?.message || "An error occurred during OTP sending. Please try again.";
-  
+      const graphqlError =
+        error?.response?.errors?.[0]?.message ||
+        "An error occurred during OTP sending. Please try again.";
+
       // Log full error for debugging purposes
       console.error("Error during OTP sending for user creation:", error);
-  
+
       // Display the extracted error message to the user
       setError({
         text: graphqlError,
@@ -223,7 +225,6 @@ export default function LoginUsingOtp() {
       }
 
       // console.log('mobileNUmber:',mobileNumber,'otp:',otp);
-      
 
       if (isValid) {
         const result = await callVerifyOTP.mutateAsync({
@@ -239,24 +240,21 @@ export default function LoginUsingOtp() {
 
           // router.push(`/dashboard`);
 
-          
-            setVerificationMode(true);
-            setSuccess({
-              text: "You have been successfully logged in.",
-            });
-         
-         
-            localStorage.setItem("token", result.verifyOtp?.["access_token"]);
-            localStorage.setItem("id", result.verifyOtp?.["user"]["id"]);
-            localStorage.setItem("status", result.verifyOtp["user"]["status"]);
-            localStorage.setItem("name", result.verifyOtp["user"]["firstName"]);
+          setVerificationMode(true);
+          setSuccess({
+            text: "You have been successfully logged in.",
+          });
 
-            setToken(result.verifyOtp["access_token"]);
-            setSuccess({
-              text: "You have been successfully logged in.",
-            });
-            router.push(`/dashboard`);
-          
+          localStorage.setItem("token", result.verifyOtp?.["access_token"]);
+          localStorage.setItem("id", result.verifyOtp?.["user"]["id"]);
+          localStorage.setItem("status", result.verifyOtp["user"]["status"]);
+          localStorage.setItem("name", result.verifyOtp["user"]["firstName"]);
+
+          setToken(result.verifyOtp["access_token"]);
+          setSuccess({
+            text: "You have been successfully logged in.",
+          });
+          router.push(`/dashboard`);
         } else {
           setError({
             text: "OTP verification failed. Please contact the support team.",
@@ -264,15 +262,17 @@ export default function LoginUsingOtp() {
         }
       }
     } catch (error) {
-      const graphqlError = error?.response?.errors?.[0]?.message || "An error occurred during OTP sending. Please try again.";
-  
+      const graphqlError =
+        error?.response?.errors?.[0]?.message ||
+        "An error occurred during OTP sending. Please try again.";
+
       // Log full error for debugging purposes
       console.error("Error during OTP sending for user creation:", error);
-  
+
       // Display the extracted error message to the user
       setError({
         text: graphqlError,
-      }); 
+      });
       setVerificationMode(false);
     }
   }
@@ -287,6 +287,10 @@ export default function LoginUsingOtp() {
     mobile: Yup.string()
       .matches(/^[0-9]{10}$/, "Mobile number must be only 10 digits long") // Ensures only 10 digits
       .required("Mobile number is required"),
+    terms: Yup.boolean().oneOf(
+      [true],
+      "You must accept the terms and conditions"
+    ),
   });
 
   // Initial form values
@@ -294,7 +298,11 @@ export default function LoginUsingOtp() {
     firstName: "",
     lastName: "",
     pancard: "",
+    state: "Kerala", // default value
+    mobile: "",
+    terms: false, // checkbox initial value
   };
+
   // Submit handler
   const onSubmit = (values) => {
     // console.log(values);
@@ -316,107 +324,163 @@ export default function LoginUsingOtp() {
                   validationSchema={validationSchema}
                   onSubmit={CallUserCreation}
                 >
-                  {(props) => (
-                    <Form>
-                      <div className="mt-6 grid grid-cols-1 gap-6">
-                        <div className="col-span-6 sm:col-span-3">
-                          <FormField
-                            field="input"
-                            required
-                            name="firstName"
-                            label="First Name"
-                            width="w-full"
-                            placeholder="First Name"
-                          />
-                        </div>
-                        <div className="col-span-6 sm:col-span-3">
-                          <FormField
-                            field="input"
-                            required
-                            name="lastName"
-                            label="Last Name"
-                            width="w-full"
-                            placeholder="Last Name"
-                          />
-                        </div>
-                        <div className="col-span-6 sm:col-span-3">
-                          <FormField
-                            field="input"
-                            required
-                            name="pancard"
-                            label="Pan Card"
-                            width="w-full"
-                            placeholder="Pan Card"
-                          />
-                        </div>
+                  {(props) => {
+                    console.log(props, "klklk");
+                    return (
+                      <Form>
+                        <div className="mt-6 grid grid-cols-1 gap-6 ">
+                          <div className="col-span-6 sm:col-span-3">
+                            <FormField
+                              field="input"
+                              required
+                              name="firstName"
+                              label="First Name"
+                              width="w-full"
+                              placeholder="First Name"
+                            />
+                          </div>
+                          <div className="col-span-6 sm:col-span-3">
+                            <FormField
+                              field="input"
+                              required
+                              name="lastName"
+                              label="Last Name"
+                              width="w-full"
+                              placeholder="Last Name"
+                            />
+                          </div>
+                          <div className="col-span-6 sm:col-span-3">
+                            <FormField
+                              field="input"
+                              required
+                              name="pancard"
+                              label="Pan Card"
+                              width="w-full"
+                              placeholder="Pan Card"
+                            />
+                          </div>
 
-                        <div className="col-span-6 sm:col-span-3">
-                          <FormField
-                            field="select"
-                            required
-                            name="state"
-                            label="State"
-                            width="w-full"
-                            placeholder="State"
-                            options={renderingStates}
-                            defaultValue="Kerala"
-                            onChange={async (e) => {
-                              const { value } = e.target;
-                              props.setFieldValue("state", value);
-                            }}
-                          />
-                        </div>
+                          <div className="col-span-6 sm:col-span-3">
+                            <FormField
+                              field="select"
+                              required
+                              name="state"
+                              label="State"
+                              width="w-full"
+                              placeholder="State"
+                              options={renderingStates}
+                              defaultValue="Kerala"
+                              onChange={async (e) => {
+                                const { value } = e.target;
+                                props.setFieldValue("state", value);
+                              }}
+                            />
+                          </div>
 
-                        <div className="col-span-6 sm:col-span-3">
-                          <FormField
-                            field="input"
-                            required
-                            name="mobile"
-                            label="Enter Mobile Number"
-                            width="w-full"
-                            placeholder="Mobile Number"
-                          />
+                          <div className="col-span-6 sm:col-span-3 ">
+                            <FormField
+                              field="input"
+                              required
+                              name="mobile"
+                              label="Enter Mobile Number"
+                              width="w-full"
+                              placeholder="Mobile Number"
+                            />
+                          </div>
+                          <div className="col-span-6 sm:col-span-3 flex">
+                            <div className="flex items-center h-5">
+                              <input
+                                id="terms"
+                                name="terms"
+                                type="checkbox"
+                                className="w-5 h-5 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600  dark:ring-offset-gray-800 focus:outline-none focus:ring-0 "
+                                onChange={props.handleChange}
+                                onBlur={props.handleBlur}
+                                checked={props.values.terms}
+                              />
+                            </div>
+                            <div className="ml-3  text-base  w-full">
+                              <label className={`font-light  `}>
+                                I accept the{" "}
+                                <Link
+                                  className="font-medium  hover:underline  text-blue-800 bg-red-700 "
+                                  href="/tnc"
+                                >
+                                  <span className="text-blue-800 font-normal underline">
+                                    {" "}
+                                    Terms and Conditions
+                                  </span>
+                                </Link>
+                              </label>
+                              {props.errors.terms &&
+                                props.touched.terms &&
+                                typeof props.errors.terms === "string" && (
+                                  <div className="text-red-500 text-sm">
+                                    {props.errors.terms}
+                                  </div>
+                                )}
+                            </div>
+                          </div>
+                          <div className="col-span-6 sm:col-span-3 ">
+                            <Button
+                              btnclass="w-full"
+                              type="submit"
+                              color="indigo"
+                              // onClick={CallUserCreation}
+                            >
+                              Send OTP
+                            </Button>
+                          </div>
+                        
                         </div>
-                        <Button
-                          btnclass="w-full"
-                          type="submit"
-                          color="indigo"
-                          // onClick={CallUserCreation}
-                        >
-                          Send OTP
-                        </Button>
-                      </div>
-                    </Form>
-                  )}
+                        <div className="mt-3">
+                            <p className="text-base font-light text-gray-500 dark:text-gray-400">
+                              Already have an account?
+                              <Link
+                                href="/login"
+                                className="font-medium !text-red-700 hover:underline"
+                              >
+                                <span className="font-medium !text-blue-700 hover:underline">
+                                  {" "}
+                                  Login here
+                                </span>
+                              </Link>
+                            </p>
+                          </div>
+                      </Form>
+                    );
+                  }}
                 </Formik>
               </>
             ) : (
               <>
-                <label
-                  htmlFor="mobile"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Mobile Number
-                </label>
-                <input
-                  type="text"
-                  name="mobile"
-                  placeholder="Please enter your mobile number"
-                  value={mobileNumber}
-                  onChange={(e) => {
-                    setMobileNumber(e.target.value);
-                  }}
-                  maxLength={10}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-                <Button
-                  btnclass="w-full"
-                  type="submit"
-                  color="indigo"
-                  onClick={CallLogin}
-                >
-                  Send OTP
-                </Button>
+                <div className=" space-y-3 sm:space-y-4">
+                  <label
+                    htmlFor="mobile"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Mobile Number
+                  </label>
+                  <input
+                    type="text"
+                    name="mobile"
+                    placeholder="Please enter your mobile number"
+                    value={mobileNumber}
+                    onChange={(e) => {
+                      setMobileNumber(e.target.value);
+                    }}
+                    maxLength={10}
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  />
+                  <Button
+                    btnclass="w-full"
+                    type="submit"
+                    color="indigo"
+                    onClick={CallLogin}
+                  >
+                    Send OTP
+                  </Button>
+                </div>
               </>
             )}
           </>
