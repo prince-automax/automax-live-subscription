@@ -48,7 +48,7 @@ export default function Cards() {
                             Real Time Auction
                         </h3>
                         <p className="mt-4 text-base text-blue-gray-500 group-hover:text-blue-700">
-                        From Two Wheelers , Four Wheelers , Commercial Vehicles and Construction equipments, you will find some of the  most lucrative deals on Autobse Auctions.
+                        From Two Wheelers , Four Wheelers , Commercial Vehicles and maintenance equipments, you will find some of the  most lucrative deals on Autobse Auctions.
                         </p>
                     </div>
                 </div>
