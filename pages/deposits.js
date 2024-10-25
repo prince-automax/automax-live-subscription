@@ -275,7 +275,7 @@ function Deposit() {
           </div>
           <Image
             src={maintaince}
-            alt="Under Construction"
+            alt="Under maintenance"
             className="mx-auto mb-4 w-64"
           />
           <p className="text-gray-500 text-sm mb-6">
