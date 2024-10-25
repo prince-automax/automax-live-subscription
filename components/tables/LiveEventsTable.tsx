@@ -61,7 +61,7 @@ export default function EventsTable({
     );
 
 
-  // console.log("Live event table", data);
+  console.log("Live event table", data);
 
   useEffect(() => {
     refetch();
@@ -192,7 +192,7 @@ export default function EventsTable({
     },
     {
       Header: "Download",
-      accessor: "downloadableFile",
+      accessor: "downloadableFile_filename",
       Cell: ({ cell: { value } }) =>
         registered ? (
           <DownloadButton file={value} allowDownload={allowDownload} />
@@ -374,6 +374,8 @@ function EndDate(value) {
 }
 
 function DownloadButton({ file, allowDownload }) {
+  console.log('file',file);
+  
   const [showAlert, setShowAlert] = useState(false);
 
   const showAlertModal = () => {
@@ -389,9 +391,9 @@ function DownloadButton({ file, allowDownload }) {
     <>
       {allowDownload ? (
         <>
-          {file && file?.url && (
+          {file  && (
             <a
-              href={`${process.env.BASE_URL}${file?.url}`}
+              href={`${file}`}
               rel="noopener noreferrer"
               target="_blank"
             >

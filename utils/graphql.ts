@@ -26,8 +26,10 @@ export type Bid = {
   __typename?: 'Bid';
   amount: Scalars['Float'];
   bidVehicleId: Scalars['String'];
+  createdAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['String'];
   name: Scalars['String'];
+  updatedAt?: Maybe<Scalars['DateTime']>;
   user?: Maybe<User>;
   userId: Scalars['String'];
 };
@@ -94,10 +96,10 @@ export type CreatePaymentInput = {
 };
 
 export type CreateRecentsoldInput = {
-  image: Scalars['String'];
-  location: Scalars['String'];
-  soldDate: Scalars['DateTime'];
-  vehicleName: Scalars['String'];
+  image?: InputMaybe<Scalars['String']>;
+  location?: InputMaybe<Scalars['String']>;
+  soldDate?: InputMaybe<Scalars['String']>;
+  vehicleName?: InputMaybe<Scalars['String']>;
 };
 
 export type CreateSellerInput = {
@@ -279,6 +281,7 @@ export type Event = {
   vehicles?: Maybe<Array<Vehicle>>;
   vehiclesCount?: Maybe<Scalars['Int']>;
   vehiclesLive: Array<Vehicle>;
+  vehiclesTemp: Array<Vehicle>;
 };
 
 
@@ -300,6 +303,7 @@ export type EventListResponse = {
   completedEventCount?: Maybe<Scalars['Int']>;
   events?: Maybe<Array<Event>>;
   liveEventCount?: Maybe<Scalars['Int']>;
+  totalBids?: Maybe<Scalars['Int']>;
   totalEventsCount?: Maybe<Scalars['Int']>;
   upcomingEventCount?: Maybe<Scalars['Int']>;
   vehiclesCount: Scalars['Int'];
@@ -832,6 +836,7 @@ export type Query = {
   payment: Payment;
   payments: Array<Payment>;
   paymentsCount: Scalars['Int'];
+  recentSold: Recentsold;
   recentSolds: Array<Recentsold>;
   restoreState: State;
   seller: Seller;
@@ -968,6 +973,11 @@ export type QueryPaymentArgs = {
 };
 
 
+export type QueryRecentSoldArgs = {
+  where: RecentsoldWhereUniqueInput;
+};
+
+
 export type QueryRestoreStateArgs = {
   where: StateWhereUniqueInput;
 };
@@ -1027,9 +1037,12 @@ export type QueryOptionsType = {
 
 export type Recentsold = {
   __typename?: 'Recentsold';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
   image: Scalars['String'];
   location: Scalars['String'];
-  soldDate: Scalars['DateTime'];
+  soldDate: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
   vehicleName: Scalars['String'];
 };
 
@@ -1198,10 +1211,10 @@ export type UpdatePaymentInput = {
 };
 
 export type UpdateRecentsoldInput = {
-  image: Scalars['String'];
-  location: Scalars['String'];
-  soldDate: Scalars['DateTime'];
-  vehicleName: Scalars['String'];
+  image?: InputMaybe<Scalars['String']>;
+  location?: InputMaybe<Scalars['String']>;
+  soldDate?: InputMaybe<Scalars['String']>;
+  vehicleName?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateSellerInput = {
@@ -1601,9 +1614,6 @@ export type UpcomingEventsQuery = { __typename?: 'Query', upcomingEvents?: Array
 
 export type GetEventsQueryVariables = Exact<{
   where: EventWhereUniqueInput;
-  orderBy?: InputMaybe<Array<VehicleOrderByInput> | VehicleOrderByInput>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -1921,7 +1931,7 @@ export const useUpcomingEventsQuery = <
       options
     );
 export const GetEventsDocument = `
-    query GetEvents($where: EventWhereUniqueInput!, $orderBy: [VehicleOrderByInput!], $take: Int, $skip: Int) {
+    query GetEvents($where: EventWhereUniqueInput!) {
   event(where: $where) {
     bidLock
     createdAt
@@ -1957,7 +1967,7 @@ export const GetEventsDocument = `
       name
     }
     vehicleLiveTimeIn
-    vehiclesLive(orderBy: $orderBy, take: $take, skip: $skip) {
+    vehiclesLive {
       YOM
       userVehicleBids {
         amount
