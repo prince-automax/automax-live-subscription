@@ -25,12 +25,14 @@ import {
   CreateBidMutationVariables,
   useTimeQueryQuery,
   TimeQueryQueryVariables,
-
-
 } from "@utils/graphql";
 import useStore from "../../utils/store";
 
-import { useVehicleUpdateSubscription, VehicleUpdateSubscriptionVariables, useBidCreationSubscription } from "@utils/apollo"
+import {
+  useVehicleUpdateSubscription,
+  VehicleUpdateSubscriptionVariables,
+  useBidCreationSubscription,
+} from "@utils/apollo";
 import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
 import Image from "next/image";
@@ -85,8 +87,6 @@ function Events() {
 
   // console.log('token from store',token);
 
-
-
   const handleClick = () => {
     setShowCode(!showCode);
   };
@@ -110,19 +110,19 @@ function Events() {
     }
   }, [timeData]);
 
-
   // console.log('timedata',timeData);
 
-  const vehicleUpdate = useVehicleUpdateSubscription()
-  const BidUpdate = useBidCreationSubscription()
+  const vehicleUpdate = useVehicleUpdateSubscription();
+  const BidUpdate = useBidCreationSubscription();
+
+  console.log('bid',BidUpdate?.data);
+  console.log('vehicle',vehicleUpdate);
+  
+  
 
   // const { data:result, loading } = useVehicleUpdateSubscription();
 
-
   // console.log('sub',result?.data);
-
-
-
 
   useEffect(() => {
     if (timeData && timeData.time) {
@@ -153,26 +153,20 @@ function Events() {
       //     bidTimeExpire: OrderDirection.Asc,
       //   },
       // ],
-      take: 10,
-      skip: 0,
+      // take: 10,
+      // skip: 0,
       // userVehicleBidsOrderBy2: [{ amount: OrderDirection.Desc }],
     },
     {
-
-      enabled: accessToken !== ""
+      enabled: accessToken !== "",
     }
   );
 
-  console.log('data', data);
-
+  console.log("data", data);
 
   useEffect(() => {
-    let res=refetch()
-
-    // return ()=>{
-    //   unsub
-    // }
-  }, [vehicleUpdate, BidUpdate])
+    refetch();
+  }, [vehicleUpdate, BidUpdate]);
 
   // const {
   //   data: workbook,
@@ -213,7 +207,7 @@ function Events() {
           );
         }
       }
-    } catch { }
+    } catch {}
     return (
       <div className="w-full">
         <div className="text-xs">End's in</div>
@@ -235,7 +229,7 @@ function Events() {
           return false;
         }
       }
-    } catch { }
+    } catch {}
     return true;
   }
 
@@ -361,7 +355,7 @@ function Events() {
             amount: Number(amount), // Ensure amount is a number
           },
         });
-        console.log("Bid", result);
+        // console.log("Bid", result);
         Swal.fire("Success!", "Your bid has been submitted.", "success");
       } catch (e) {
         // Handle different types of errors
@@ -371,7 +365,7 @@ function Events() {
           // Check for specific error messages
           const errorMessages = e.response.errors || [];
           if (errorMessages.length > 0) {
-            errorMessage = errorMessages.map(err => err.message).join(", ");
+            errorMessage = errorMessages.map((err) => err.message).join(", ");
           }
         } else if (e.message) {
           // Fallback for general errors
@@ -383,6 +377,11 @@ function Events() {
       }
     }
   }
+
+
+                    
+
+  
 
   return (
     // <>
@@ -420,19 +419,25 @@ function Events() {
             //   (wb) => wb.registrationNumber === item.registrationNumber
             // );
 
+            // console.log('item',item);
+            
+            console.log("biddssss", item?.registrationNumber ,data?.event?.noOfBids,item?.userVehicleBidsCount)            
+
             return (
               <>
                 {/*MOBILE DESIGN*/}
                 <div
                   key={`d${item?.id}`}
-                  className={`sm:hidden sm:max-md:flex-col font-sans border  rounded  mt-4 ${moment(item?.bidTimeExpire).diff(moment(), "s") <= 120 &&
-                      moment(item?.bidTimeExpire).diff(moment(), "s") > 0
+                  className={`sm:hidden sm:max-md:flex-col font-sans border  rounded  mt-4 ${
+                    moment(item?.bidTimeExpire).diff(moment(), "s") <= 120 &&
+                    moment(item?.bidTimeExpire).diff(moment(), "s") > 0
                       ? "blink"
                       : ""
-                    } ${index % 2 == 0
+                  } ${
+                    index % 2 == 0
                       ? "border-[#A7C2FF80] bg-[#EEF1FB] "
                       : "border-[#A7C2FF80] bg-[#EEF1FB]"
-                    }  `}
+                  }  `}
                 >
                   {/* workbook, title, image, vehic info, add to watch, more details , inspection report */}
                   <div className="flex-auto p-3 space-y-5  ">
@@ -534,8 +539,8 @@ function Events() {
                             Bids Remaining
                           </dt>
                           <dd className="text-sm font-medium sm:font-normal text-gray-900">
-                            {data?.event?.noOfBids -
-                              item?.userVehicleBidsCount}
+                           
+                            {data?.event?.noOfBids - item?.userVehicleBidsCount}
                           </dd>
                         </div>
                         <div className=" flex flex-col items-center justify-between sm:block">
@@ -676,8 +681,8 @@ function Events() {
                         <p className="font-semibold font-roboto ">
                           {data?.event?.startDate
                             ? moment(data?.event?.startDate).format(
-                              "MMMM Do, YYYY ddd h:mm a"
-                            )
+                                "MMMM Do, YYYY ddd h:mm a"
+                              )
                             : "NA"}
                         </p>
                       </div>
@@ -688,8 +693,8 @@ function Events() {
                         <p className="items-start font-semibold font-roboto">
                           {item?.bidTimeExpire
                             ? moment(item?.bidTimeExpire).format(
-                              "MMMM Do, YYYY ddd h:mm a"
-                            )
+                                "MMMM Do, YYYY ddd h:mm a"
+                              )
                             : "NA"}
                         </p>
                       </div>
@@ -734,22 +739,25 @@ function Events() {
                           </div>
                           <div className="flex  items-center justify-between">
                             <span className="font-bold">Current Status</span>
-                            {item.userVehicleBidsCount &&
-                              item.myBidRank ? (
+                            {item.userVehicleBidsCount && item.myBidRank ? (
                               item.myBidRank == 1 ? (
                                 <p className="space-x-2">
                                   <FontAwesomeIcon icon={faThumbsUp} />
-                                  <span style={{ color: "#00CC00" }} className="font-bold text-base">
+                                  <span
+                                    style={{ color: "#00CC00" }}
+                                    className="font-bold text-base"
+                                  >
                                     Winning
                                   </span>
                                 </p>
                               ) : (
                                 <p className="space-x-2">
                                   {" "}
-                                  <FontAwesomeIcon
-                                    icon={faThumbsDown}
-                                  />{" "}
-                                  <span style={{ color: "#FF3333" }} className="font-bold text-base">
+                                  <FontAwesomeIcon icon={faThumbsDown} />{" "}
+                                  <span
+                                    style={{ color: "#FF3333" }}
+                                    className="font-bold text-base"
+                                  >
                                     Losing
                                   </span>
                                 </p>
@@ -757,7 +765,10 @@ function Events() {
                             ) : (
                               <p className="space-x-2">
                                 <FontAwesomeIcon icon={faUserSlash} />{" "}
-                                <span style={{ color: "#CCCC00" }} className="font-bold text-base">
+                                <span
+                                  style={{ color: "#CCCC00" }}
+                                  className="font-bold text-base"
+                                >
                                   Not Enrolled
                                 </span>
                               </p>
@@ -788,14 +799,16 @@ function Events() {
                 {/* dESKTOP DESIGN */}
                 <div
                   key={`d${index}`}
-                  className={`hidden sm:flex sm:max-md:flex-col font-sans border  rounded  ${moment(item?.bidTimeExpire).diff(moment(), "s") <= 120 &&
-                      moment(item?.bidTimeExpire).diff(moment(), "s") > 0
+                  className={`hidden sm:flex sm:max-md:flex-col font-sans border  rounded  ${
+                    moment(item?.bidTimeExpire).diff(moment(), "s") <= 120 &&
+                    moment(item?.bidTimeExpire).diff(moment(), "s") > 0
                       ? "blink"
                       : ""
-                    } ${index % 2 == 0
+                  } ${
+                    index % 2 == 0
                       ? "border-yellow-300 bg-gray-100 "
                       : "border-gray-300 bg-slate-50"
-                    }  `}
+                  }  `}
                 >
                   {item?.image && (
                     <div
@@ -859,8 +872,9 @@ function Events() {
                         )}
                       </button>
                       <div
-                        className={`${showCode ? "block mt-2 sm:mt-4" : "hidden"
-                          } sm:block  `}
+                        className={`${
+                          showCode ? "block mt-2 sm:mt-4" : "hidden"
+                        } sm:block  `}
                       >
                         <dl className="grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-3">
                           <div className="sm:col-span-1 flex items-center justify-between sm:block">
@@ -943,7 +957,6 @@ function Events() {
                               </dd>
                             </div>
                           )}
-
                         </dl>
                       </div>
                     </div>
@@ -1019,7 +1032,7 @@ function Events() {
                           <div
                             className="mt-2 flex items-center text-sm text-blue-800 hover:cursor-pointer hover:text-blue-600"
                             // onClick={() => setShowInspectionReportModal(true)}
-                            onClick={() => { }}
+                            onClick={() => {}}
                           >
                             {/* <DocumentReportIcon
                               className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
@@ -1072,8 +1085,8 @@ function Events() {
                             <span>
                               {data.event.startDate
                                 ? moment(data.event.startDate).format(
-                                  "MMMM Do, YYYY ddd h:mm a"
-                                )
+                                    "MMMM Do, YYYY ddd h:mm a"
+                                  )
                                 : "NA"}
                             </span>
                           </div>
@@ -1083,8 +1096,8 @@ function Events() {
                           <span>
                             {item?.bidTimeExpire
                               ? moment(item?.bidTimeExpire).format(
-                                "MMMM Do, YYYY ddd h:mm a"
-                              )
+                                  "MMMM Do, YYYY ddd h:mm a"
+                                )
                               : "NA"}
                           </span>
                         </div>
@@ -1093,7 +1106,8 @@ function Events() {
                       <div className=" w-64 sm:max-md:w-1/2 md:w-full bg-gray-200 rounded-lg">
                         <div className="px-4 py-2">
                           <h2 className="text-sm font-semibold text-gray-900">
-                            Bid Details                          </h2>
+                            Bid Details{" "}
+                          </h2>
 
                           <div className="space-y-2 mt-2">
                             <div className="flex items-center justify-between text-xs text-gray-700">
@@ -1110,8 +1124,7 @@ function Events() {
                             </div>
                             <div className="flex  items-center justify-between text-xs text-gray-700">
                               <span>Current Status</span>
-                              {item.userVehicleBidsCount &&
-                                item.myBidRank ? (
+                              {item.userVehicleBidsCount && item.myBidRank ? (
                                 item.myBidRank == 1 ? (
                                   <p className="space-x-2">
                                     <FontAwesomeIcon icon={faThumbsUp} />
@@ -1122,9 +1135,7 @@ function Events() {
                                 ) : (
                                   <p className="space-x-2">
                                     {" "}
-                                    <FontAwesomeIcon
-                                      icon={faThumbsDown}
-                                    />{" "}
+                                    <FontAwesomeIcon icon={faThumbsDown} />{" "}
                                     <span style={{ color: "#FF3333" }}>
                                       Losing
                                     </span>
@@ -1256,8 +1267,8 @@ const EnterBid = ({ row, call, event }) => {
               position: "top",
             });
           } else if (parseInt(bidAmount) % row.quoteIncreament !== 0) {
-            let value = parseInt(bidAmount) % row.quoteIncreament
-            console.log("963", value);
+            let value = parseInt(bidAmount) % row.quoteIncreament;
+            // console.log("963", value);
 
             Swal.fire({
               title:

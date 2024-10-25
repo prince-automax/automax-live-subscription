@@ -36,6 +36,12 @@ import {
   useCreateBidMutation,
   CreateBidMutationVariables,
 } from "@utils/graphql";
+import {
+  useVehicleUpdateSubscription,
+  VehicleUpdateSubscriptionVariables,
+  useBidCreationSubscription,
+} from "@utils/apollo";
+
 import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
 import Swal from "sweetalert2";
@@ -72,7 +78,6 @@ function Vehicle() {
     return () => clearInterval(timer);
   }, []);
 
- 
   const { data: timeData } = useTimeQueryQuery<TimeQueryQueryVariables>(
     graphQLClient(),
     {},
@@ -90,8 +95,17 @@ function Vehicle() {
     graphQLClient({ Authorization: `Bearer ${accessToken}` })
   );
 
+  const vehicleUpdate = useVehicleUpdateSubscription();
 
-  const { data, isLoading } = useGetVehicleQuery<GetVehicleQuery>(
+  console.log('vehicle update subscription',vehicleUpdate);
+  
+  
+  const BidUpdate = useBidCreationSubscription();
+  
+  console.log('Bid update subscription',BidUpdate);
+
+
+  const { data, isLoading, refetch } = useGetVehicleQuery<GetVehicleQuery>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     {
       where: { id: id as string },
@@ -100,14 +114,18 @@ function Vehicle() {
       // userVehicleBidsOrderBy2: [{ amount: OrderDirection.Desc }],
     },
     {
-      cacheTime: 5,
-      refetchInterval: interval,
-      enabled: accessToken !== "" && id !== "",
+     enabled: accessToken !== "" && id !== "",
     }
   );
 
-  // console.log("data",data);
+  console.log('data',data);
   
+
+  useEffect(() => {
+    refetch();
+  }, [vehicleUpdate, BidUpdate]);
+
+  // console.log("data",data);
 
   const options = {
     rewind: true,
@@ -127,13 +145,10 @@ function Vehicle() {
   });
 
   useEffect(() => {
-    setVehicle(
-      data && data.vehicle ? data.vehicle : null
-    );
+    setVehicle(data && data.vehicle ? data.vehicle : null);
   }, [data]);
 
   // console.log('vehicles',vehicle);
-  
 
   useEffect(() => {
     setImages(vehicle?.image?.split(","));
@@ -171,7 +186,7 @@ function Vehicle() {
           // Check for specific error messages
           const errorMessages = e.response.errors || [];
           if (errorMessages.length > 0) {
-            errorMessage = errorMessages.map(err => err.message).join(", ");
+            errorMessage = errorMessages.map((err) => err.message).join(", ");
           }
         } else if (e.message) {
           // Fallback for general errors
@@ -200,37 +215,28 @@ function Vehicle() {
     return true;
   }
 
-
-
   useEffect(() => {
     if (vehicle?.event?.bidLock === "locked") {
       if (vehicle?.currentBidAmount) {
-        setBidAmount(vehicle?.currentBidAmount+(+vehicle?.quoteIncreament));
-      }
-      else if(vehicle?.startPrice){
+        setBidAmount(vehicle?.currentBidAmount + +vehicle?.quoteIncreament);
+      } else if (vehicle?.startPrice) {
         setBidAmount(vehicle?.startPrice);
+      } else if (!vehicle?.startPrice) {
+        setBidAmount(vehicle?.quoteIncreament);
       }
-      else if(!vehicle?.startPrice){
-        setBidAmount(vehicle?.quoteIncreament)
-      }
-  
     } else {
       if (vehicle?.currentBidAmount) {
         let amt = vehicle?.userVehicleBids?.length
-          ? vehicle?.userVehicleBids[0]?.amount+(+vehicle?.quoteIncreament)
+          ? vehicle?.userVehicleBids[0]?.amount + +vehicle?.quoteIncreament
           : vehicle?.startPrice;
         setBidAmount(amt.toString());
-      }
-         else if(vehicle?.startPrice){
+      } else if (vehicle?.startPrice) {
         setBidAmount(vehicle?.startPrice);
+      } else if (!vehicle?.startPrice) {
+        setBidAmount(vehicle?.quoteIncreament);
       }
-      else if(!vehicle?.startPrice){
-        setBidAmount(vehicle?.quoteIncreament)
-      }
- 
     }
-  }, [vehicle?.event?.bidLock,vehicle]);
-
+  }, [vehicle?.event?.bidLock, vehicle]);
 
   return (
     <DashboardTemplate>
@@ -272,7 +278,7 @@ function Vehicle() {
                       <Image
                         alt={`image${index}`}
                         src={image.trim()}
-                        className="w-full h-full sm:rounded-lg "  
+                        className="w-full h-full sm:rounded-lg "
                         width={500}
                         height={300}
                         objectFit="cover"
@@ -537,8 +543,7 @@ function Vehicle() {
                         confirmButtonText: "OK",
                         position: "top",
                       });
-                    }
-                     else if (
+                    } else if (
                       vehicle?.event?.bidLock != "locked" &&
                       vehicle?.userVehicleBids?.length &&
                       vehicle?.userVehicleBids[0].amount >= parseInt(bidAmount)
@@ -548,12 +553,9 @@ function Vehicle() {
                         confirmButtonText: "OK",
                         position: "top",
                       });
-                    }
-                    else if (
+                    } else if (
                       vehicle?.event?.bidLock === "locked" &&
-
-                      parseInt(bidAmount) % vehicle?.quoteIncreament !==
-                      0
+                      parseInt(bidAmount) % vehicle?.quoteIncreament !== 0
                     ) {
                       Swal.fire({
                         title:
@@ -561,20 +563,19 @@ function Vehicle() {
                         confirmButtonText: "OK",
                         position: "top",
                       });
-                    }
-                    else if(   vehicle?.event?.bidLock  != "locked" &&
-                    vehicle?.userVehicleBids?.length &&
-                    vehicle.quoteIncreament >
-                      parseInt(bidAmount) - vehicle?.userVehicleBids[0].amount){
-                        Swal.fire({
-                          title:
-                            "Bid amount should be greater than minimum quote increment.",
-                          confirmButtonText: "OK",
-                          position: "top",
-                        });
-
-                    }
-                    else if (vehicle?.startPrice > parseInt(bidAmount)) {
+                    } else if (
+                      vehicle?.event?.bidLock != "locked" &&
+                      vehicle?.userVehicleBids?.length &&
+                      vehicle.quoteIncreament >
+                        parseInt(bidAmount) - vehicle?.userVehicleBids[0].amount
+                    ) {
+                      Swal.fire({
+                        title:
+                          "Bid amount should be greater than minimum quote increment.",
+                        confirmButtonText: "OK",
+                        position: "top",
+                      });
+                    } else if (vehicle?.startPrice > parseInt(bidAmount)) {
                       Swal.fire({
                         title: "Bid amount should be greater than start price.",
                         confirmButtonText: "OK",
@@ -640,8 +641,8 @@ function Vehicle() {
 export default withPrivateRoute(Vehicle);
 
 function GeneralDetailsTab(props) {
-  console.log('props form GeneralDetailsTab',props);
-  
+  // console.log("props form GeneralDetailsTab", props);
+
   return (
     <div className="border border-gray-200 px-4 py-5 sm:p-0 rounded">
       <dl className="sm:divide-y sm:divide-gray-200">
@@ -944,5 +945,3 @@ function OtherDetailsTab(props) {
     </div>
   );
 }
-
-
