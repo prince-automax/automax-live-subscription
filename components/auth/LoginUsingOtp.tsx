@@ -70,99 +70,57 @@ export default function LoginUsingOtp() {
     }
   }, [success, error]);
 
-  //This function, CallOTP, is an asynchronous function that handles the logic when the user clicks on the "Send OTP" button.
-  // async function CallOTP() {
-  //   try {
-  //     console.log("mobile", mobile);
-
-  //     let isValid = true;
-  //     if (!IsValidValue(mobile) || !IsValidMobile(mobile)) {
-  //       setError({ text: "Please enter a valid Mobile Number" });
-  //       isValid = false;
-  //     }
-
-  //     if (isValid) {
-  //       // the callOTPMutation to send the OTP, passing the mobile value as a parameter
-  //       const result = await callOTPMutation.mutateAsync({
-  //         sendOtpDto: { mobile }, // Wrap mobile in the sendOtpDto object
-  //       });
-
-  //       console.log("result of otp", result);
-
-  //       if (result?.sendOtp?.status === "Success") {
-  //         // user with the provided mobile number exists.
-  //         setOtpPhase(true);
-  //         setSuccess({
-  //           text: "Please enter the OTP received on your registered mobile number.",
-  //         });
-  //       } else {
-  //         setVerificationMode(false);
-  //         setError({
-  //           text: "Unable to send OTP. Please contact the support team.",
-  //         });
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error sending OTP:", error);
-
-  //     // General error handling for failures in OTP sending process
-  //     setError({
-  //       text: "An unexpected error occurred. Please try again later.",
-  //     });
-  //     setVerificationMode(false);
-  //   }
-  // }
-
+ 
   async function CallUserCreation(userInput) {
     console.log("hit on user Creation");
-    // console.log("User Input for creation:", userInput);
+    console.log("User Input for creation:", userInput);
 
-    // try {
-    //   const { firstName, lastName, pancard, state, mobile } = userInput;
-    //   setMobileNumber(mobile);
+    try {
+      const { firstName, lastName, pancard, state, mobile } = userInput;
+      setMobileNumber(mobile);
 
-    //   let isValid = true;
+      let isValid = true;
 
-    //   if (!IsValidValue(mobile) || !IsValidMobile(mobile)) {
-    //     setError({ text: "Please enter a valid Mobile Number" });
-    //     isValid = false;
-    //   }
+      if (!IsValidValue(mobile) || !IsValidMobile(mobile)) {
+        setError({ text: "Please enter a valid Mobile Number" });
+        isValid = false;
+      }
 
-    //   if (isValid) {
-    //     // Proceed with user creation (sending OTP)
-    //     const result = await callOTPMutation.mutateAsync({
-    //       sendOtpDto: {
-    //         firstName,
-    //         lastName,
-    //         pancardNo: pancard,
-    //         state,
-    //         mobile,
-    //       },
-    //     });
+      if (isValid) {
+        // Proceed with user creation (sending OTP)
+        const result = await callOTPMutation.mutateAsync({
+          sendOtpDto: {
+            firstName,
+            lastName,
+            pancardNo: pancard,
+            state,
+            mobile:mobileNumber,
+          },
+        });
 
-    //     // console.log("Result of user creation:", result);
+        console.log("Result of user creation:", result);
 
-    //     if (result?.sendOtp?.status === "Success") {
-    //       setVerificationMode(true);
-    //       setSuccess({
-    //         text: "User created successfully. Please enter the OTP.",
-    //       });
-    //     } else {
-    //       setError({ text: "User creation failed. Please try again." });
-    //     }
-    //   }
-    // } catch (error: any) {
-    //   // Extracting the specific error message
-    //   const graphqlError = error?.response?.errors?.[0]?.message || "An error occurred during OTP sending. Please try again.";
+        if (result?.sendOtp?.status === "Success") {
+          setVerificationMode(true);
+          setSuccess({
+            text: "User created successfully. Please enter the OTP.",
+          });
+        } else {
+          setError({ text: "User creation failed. Please try again." });
+        }
+      }
+    } catch (error: any) {
+      // Extracting the specific error message
+      const graphqlError = error?.response?.errors?.[0]?.message || "An error occurred during OTP sending. Please try again.";
 
-    //   // Log full error for debugging purposes
-    //   console.error("Error during OTP sending for user creation:", error);
+      // Log full error for debugging purposes
+      console.error("Error during OTP sending for user creation:", error);
 
-    //   // Display the extracted error message to the user
-    //   setError({
-    //     text: graphqlError,
-    //   });
-    // }
+      // Display the extracted error message to the user
+      setError({
+        text: graphqlError,
+      });
+    }
   }
 
   async function CallLogin() {
@@ -262,27 +220,34 @@ export default function LoginUsingOtp() {
         }
       }
     } catch (error) {
+      console.log('error of verify otp',error);
+      
       const graphqlError =
         error?.response?.errors?.[0]?.message ||
         "An error occurred during OTP sending. Please try again.";
 
       // Log full error for debugging purposes
       console.error("Error during OTP sending for user creation:", error);
-
+      if (graphqlError === "Invalid otp.") {
+        setVerificationMode(true);
+        setOTP("")
+      } else {
+        setVerificationMode(false);
+      }
       // Display the extracted error message to the user
       setError({
         text: graphqlError,
       });
-      setVerificationMode(false);
+      // setVerificationMode(false);
     }
   }
 
   const validationSchema = Yup.object({
     firstName: Yup.string().required("First Name is required"),
     lastName: Yup.string().required("Last Name is required"),
-    pancard: Yup.string()
-      .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN card format")
-      .required("PAN card is required"),
+    // pancard: Yup.string()
+    //   .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN card format")
+    //   .required("PAN card is required"),
     state: Yup.string().required("State is required"),
     mobile: Yup.string()
       .matches(/^[0-9]{10}$/, "Mobile number must be only 10 digits long") // Ensures only 10 digits
@@ -325,7 +290,7 @@ export default function LoginUsingOtp() {
                   onSubmit={CallUserCreation}
                 >
                   {(props) => {
-                    console.log(props, "klklk");
+                    // console.log(props, "klklk");
                     return (
                       <Form>
                         <div className="mt-6 grid grid-cols-1 gap-6 ">
@@ -551,7 +516,7 @@ export default function LoginUsingOtp() {
             </div>
             <button
               type="button"
-              // onClick={CallOTP}
+              onClick={CallLogin}
               className="w-full flex items-center justify-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 hover:text-indigo-800 focus:outline-none"
             >
               Click here to resend OTP

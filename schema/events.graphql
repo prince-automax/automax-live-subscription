@@ -419,9 +419,9 @@ query UpcomingEvents($take: Int, $skip: Int) {
 
 query GetEvents(
   $where: EventWhereUniqueInput!
-  $orderBy: [VehicleOrderByInput!]
-  $take: Int
-  $skip: Int
+  # $orderBy: [VehicleOrderByInput!]
+  # $take: Int
+  # $skip: Int
 ) {
   event(where: $where) {
     bidLock
@@ -459,7 +459,7 @@ query GetEvents(
       name
     }
     vehicleLiveTimeIn
-    vehiclesLive(orderBy: $orderBy, take: $take, skip: $skip) {
+    vehiclesLive {
       YOM
         userVehicleBids {
         amount

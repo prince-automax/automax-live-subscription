@@ -76,7 +76,7 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
   
   
 
-  console.log('Events count ', data?.events?.liveEventCount);
+  // console.log('Events count ', data?.events?.liveEventCount);
     
   // const {data:upcoming}=useUpcomingEventsCountsQuery(
   //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
