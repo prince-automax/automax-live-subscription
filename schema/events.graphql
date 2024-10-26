@@ -459,7 +459,7 @@ query GetEvents(
       name
     }
     vehicleLiveTimeIn
-    vehiclesLive {
+    vehiclesTemp {
       YOM
         userVehicleBids {
         amount

@@ -60,29 +60,24 @@ export default function EventsTable({
       { enabled: accessToken != "", refetchOnWindowFocus: false }
     );
 
-
   console.log("Live event table", data);
 
   useEffect(() => {
     refetch();
   }, [data]);
 
-
-
-  const { data: userData, isLoading: loading } =
-    useGetUserQuery<GetUserQuery>(
-      graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-      { where: { id } },
-      {
-        enabled: accessToken !== "",
-      }
-    );
+  const { data: userData, isLoading: loading } = useGetUserQuery<GetUserQuery>(
+    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+    { where: { id } },
+    {
+      enabled: accessToken !== "",
+    }
+  );
 
   const payment = userData ? userData["user"]?.payments : "";
 
   // console.log(' User payments',userData);
   // console.log(' User payments stTUA',registered);
-  
 
   const PaymentStatus = () => {
     toast(
@@ -163,7 +158,7 @@ export default function EventsTable({
     },
     {
       Header: "Closing Date",
-      accessor: "firstVehicleBidTimeExpire",
+      accessor: "firstVehicleEndDate",
       Cell: ({ cell: { value } }) => EndDate(value),
     },
     {
@@ -223,7 +218,6 @@ export default function EventsTable({
                     Live Events
                   </h2>
                 )}
-                
               </div>
             )}
 
@@ -231,7 +225,6 @@ export default function EventsTable({
               <Loader />
             ) : (
               <>
-                
                 <>
                   <div className="sm:hidden">
                     {data?.liveEvents?.map((event, eventIdx) => {
@@ -256,7 +249,6 @@ export default function EventsTable({
                     />
                   </div>
                 </>
-                
               </>
             )}
           </div>
@@ -307,7 +299,7 @@ function View(value, eventCategory) {
 
 function RenderEventTypes(eventTypes) {
   // console.log('eventTypes',eventTypes);
-  
+
   // if (eventTypes && eventTypes.length > 0) {
   //   return (
   //     <div>
@@ -324,11 +316,7 @@ function RenderEventTypes(eventTypes) {
   //   return <div />;
   // }
   if (eventTypes) {
-    return (
-      <div>
-        {eventTypes?.name}
-      </div>
-    );
+    return <div>{eventTypes?.name}</div>;
   } else {
     return <div />;
   }
@@ -374,8 +362,8 @@ function EndDate(value) {
 }
 
 function DownloadButton({ file, allowDownload }) {
-  console.log('file',file);
-  
+  console.log("file", file);
+
   const [showAlert, setShowAlert] = useState(false);
 
   const showAlertModal = () => {
@@ -391,12 +379,8 @@ function DownloadButton({ file, allowDownload }) {
     <>
       {allowDownload ? (
         <>
-          {file  && (
-            <a
-              href={`${file}`}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
+          {file && (
+            <a href={`${file}`} rel="noopener noreferrer" target="_blank">
               <DocumentDownloadIcon className="h-8 w-8 text-gray-600 hover:text-green-600" />
             </a>
           )}
