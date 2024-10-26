@@ -94,7 +94,7 @@ export default function LoginUsingOtp() {
             lastName,
             pancardNo: pancard,
             state,
-            mobile:mobileNumber,
+            mobile:mobile,
           },
         });
 
@@ -105,16 +105,22 @@ export default function LoginUsingOtp() {
           setSuccess({
             text: "User created successfully. Please enter the OTP.",
           });
-        } else {
+        } 
+        else {
           setError({ text: "User creation failed. Please try again." });
         }
       }
     } catch (error: any) {
+
+      console.log('error',error);
+      
       // Extracting the specific error message
-      const graphqlError = error?.response?.errors?.[0]?.message || "An error occurred during OTP sending. Please try again.";
+      // const graphqlError = error?.response?.errors?.[0]?.message || "An error occurred during OTP sending. Please try again.";
+      const graphqlError = error?.response?.errors?.[0]?.extensions?.exception?.originalError?.message?.[0] || "An error occurred during OTP sending. Please try again.";
+
+console.log('grahqlError',graphqlError);
 
       // Log full error for debugging purposes
-      console.error("Error during OTP sending for user creation:", error);
 
       // Display the extracted error message to the user
       setError({

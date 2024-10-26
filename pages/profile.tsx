@@ -49,7 +49,7 @@ function ProfilePage() {
     }
   );
 
-  // console.log("data of user007", data);
+  console.log("data of user007", data);
 
   useEffect(() => {
     if (!isLoading && data && data["user"]) {
