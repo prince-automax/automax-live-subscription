@@ -404,8 +404,8 @@ function Events() {
         <Loader />
       ) : (
         <div className="space-y-6 mt-8 ">
-          {!data?.event?.vehiclesLive?.length && <div>No Vehicles Found</div>}
-          {data?.event?.vehiclesLive?.map((item, index) => {
+          {!data?.event?.vehiclesTemp?.length && <div>No Vehicles Found</div>}
+          {data?.event?.vehiclesTemp?.map((item, index) => {
             const expiryTime = moment(item.bidTimeExpire);
             const currentTime = moment(serverTime).add(tick, "seconds");
             const diff = expiryTime.diff(currentTime, "seconds");
@@ -531,7 +531,7 @@ function Events() {
                             Total Bids
                           </dt>
                           <dd className="text-sm font-medium sm:font-normal text-gray-900">
-                            {item?.totalBids}
+                            {item?.userVehicleBidsCount}
                           </dd>
                         </div>
                         <div className=" flex flex-col items-center justify-between sm:block">
@@ -590,14 +590,19 @@ function Events() {
                               className=" flex items-center justify-between text-sm font-roboto font-medium text-blue-800 "
                               onClick={() => setShowInspectionReportModal(true)}
                             >
-                              <Link href={item?.inspectionLink}>
-                                <a
-                                  target="_blank"
-                                  className="flex items-center text-sm font-roboto font-medium text-[#2563EB]"
-                                >
-                                  Inspection Report
-                                </a>
-                              </Link>
+                              {
+                                item?.inspectionLink !== "" && item?.inspectionLink !==null && (
+                                  <Link href={item?.inspectionLink}>
+                                  <a
+                                    target="_blank"
+                                    className="flex items-center text-sm font-roboto font-medium text-[#2563EB]"
+                                  >
+                                    Inspection Report
+                                  </a>
+                                </Link>
+                                )
+                              }
+                             
 
                               <FontAwesomeIcon icon={faCircleInfo} />
                             </div>
@@ -916,7 +921,7 @@ function Events() {
                               Total Bids
                             </dt>
                             <dd className="text-sm font-medium sm:font-normal text-gray-900">
-                              {item?.totalBids}
+                              {item?.userVehicleBidsCount}
                             </dd>
                           </div>
                           <div className="sm:col-span-1 flex items-center justify-between sm:block">
@@ -1040,18 +1045,21 @@ function Events() {
                             />
                             Inspection Report
                              */}
-                            <Link href={item?.inspectionLink}>
-                              <a
-                                target="_blank"
-                                className="flex items-center text-xs sm:text-sm  text-blue-800"
-                              >
-                                <DocumentReportIcon
-                                  className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
-                                  aria-hidden="true"
-                                />
-                                Inspection Report
-                              </a>
-                            </Link>
+                             { item?.inspectionLink !== "" && item?.inspectionLink !==null && (
+                               <Link href={item?.inspectionLink}>
+                               <a
+                                 target="_blank"
+                                 className="flex items-center text-xs sm:text-sm  text-blue-800"
+                               >
+                                 <DocumentReportIcon
+                                   className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
+                                   aria-hidden="true"
+                                 />
+                                 Inspection Report
+                               </a>
+                             </Link>
+                             )}
+                           
                           </div>
                           <div className="mt-2">
                             <Link href={`/vehicle/${item.id}`}>
