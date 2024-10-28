@@ -419,9 +419,9 @@ query UpcomingEvents($take: Int, $skip: Int) {
 
 query GetEvents(
   $where: EventWhereUniqueInput!
-  # $orderBy: [VehicleOrderByInput!]
-  # $take: Int
-  # $skip: Int
+  $take: Int
+  $skip: Int
+  $orderBy: [VehicleOrderByInput!]
 ) {
   event(where: $where) {
     bidLock
@@ -439,7 +439,7 @@ query GetEvents(
     id
     location {
       name
-     # state
+      # state
       id
     }
     noOfBids
@@ -459,15 +459,14 @@ query GetEvents(
       name
     }
     vehicleLiveTimeIn
-    vehiclesTemp {
+    vehiclesTemp(take: $take, skip: $skip, orderBy: $orderBy) {
       YOM
-        userVehicleBids {
+      userVehicleBids {
         amount
         userId
         id
         name
         bidVehicleId
-        
       }
       additionalRemarks
       approxParkingCharges
@@ -524,7 +523,7 @@ query GetEvents(
       shape
       startPrice
       startBidAmount
-     # state
+      # state
       updatedAt
       varient
       vehicleCondition
@@ -532,12 +531,13 @@ query GetEvents(
       vehicleRemarks
       veicleLocation
       yardLocation
-        userVehicleBidsCount
-    totalBids
-    myBidRank
+      userVehicleBidsCount
+      totalBids
+      myBidRank
     }
   }
 }
+
 
 query TimeQuery {
   time

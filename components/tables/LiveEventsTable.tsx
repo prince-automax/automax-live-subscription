@@ -21,6 +21,7 @@ import Router from "next/router";
 import Link from "next/link";
 import DataTableUILoggedIn from "../ui/DataTableUILoggedIn";
 import toast from "react-hot-toast";
+import { OrderDirection } from "@utils/apollo";
 export default function EventsTable({
   showHeadings,
   hideSearch,
@@ -45,6 +46,11 @@ export default function EventsTable({
   const variables = {
     skip: 0,
     take: 10,
+    orderBy: [
+      {
+        bidTimeExpire: OrderDirection.Desc,
+      },
+    ],
     // where: {
     //   eventCategory: {
     //     equals: eventCategory,

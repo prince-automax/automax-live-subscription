@@ -115,8 +115,8 @@ export default function LoginUsingOtp() {
       console.log('error',error);
       
       // Extracting the specific error message
-      // const graphqlError = error?.response?.errors?.[0]?.message || "An error occurred during OTP sending. Please try again.";
-      const graphqlError = error?.response?.errors?.[0]?.extensions?.exception?.originalError?.message?.[0] || "An error occurred during OTP sending. Please try again.";
+      const graphqlError = error?.response?.errors?.[0]?.message || "An error occurred during OTP sending. Please try again.";
+      // const graphqlError = error?.response?.errors?.[0]?.extensions?.exception?.originalError?.message?.[0] || "An error occurred during OTP sending. Please try again.";
 
 console.log('grahqlError',graphqlError);
 
