@@ -537,7 +537,7 @@ function ProfileUpdate() {
                       <FormField
                         field="input"
                         name="pancardNo"
-                        label="PAN Card Number"
+                        label="Pan Card Number"
                         placeholder="Enter your PAN Card Number"
                         required
                         maxLength="10"

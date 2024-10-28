@@ -53,13 +53,17 @@ export default function PaymentForm() {
   const validationSchema = Yup.object({
     amount: Yup.string().required("Amount is required"),
     paymentFor: Yup.string().required("Payment for is required"),
-
-    description: Yup.string().required("Description is required"),
+    proof:Yup.string().required("Image is required")
+   
   });
 
   const onSubmit = async (values, resetForm) => {
     setIsLoading(true);
-    // console.log("Submitting payment details:", values);
+    console.log("Submitting payment details:", values);
+    if(values?.paymentFor=="Select Payment"){
+      toast.error(
+        "errorMessage" )
+    }
 
     try {
       // Step 1: Call GraphQL API to create payment
@@ -72,12 +76,14 @@ export default function PaymentForm() {
         },
       });
 
-      // console.log("response frm details", response);
+      console.log("response frm details", response);
       const paymentId = response?.createPayment?.id;
 
       // Step 2: If GraphQL API is successful, proceed to call the REST API for image upload
-      if (response) {
+      if (paymentId &&  values?.proof !== "") {
         // console.log("GraphQL API successful, uploading image...");
+        console.log('GOT HIT');
+        
 
         // Call REST API to upload the image (proof)
         const formData = new FormData();
@@ -93,10 +99,10 @@ export default function PaymentForm() {
           },
         });
 
-        // console.log("upload response of image", uploadResponse);
+        console.log("upload response of image", uploadResponse);
 
         if (uploadResponse.ok) {
-          toast.success("Payment and image uploaded successfully.");
+          toast.success("Payment  successfully.");
           resetForm({ proof: "" });
           // setIsLoading(false)
         } else {
@@ -121,8 +127,8 @@ export default function PaymentForm() {
     <Formik
       initialValues={{
         amount: "",
-        paymentFor: "Registrations",
-        image: null,
+        paymentFor: "",
+        proof: "",
         description: "",
       }}
       validationSchema={validationSchema}
@@ -160,6 +166,7 @@ export default function PaymentForm() {
                 field="select"
                 name="paymentFor"
                 label="Payment For"
+                placeholder="Select Payment"
                 required
                 width="w-full"
                 options={paymentOptions}

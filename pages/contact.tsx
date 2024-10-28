@@ -237,7 +237,7 @@ export default function Contact() {
                     Contact information
                   </h3>
                   <p className="mt-6 text-base text-indigo-50 max-w-3xl">
-                    Live support is available Mon-Saturday 10am-5pm contact us
+                    Live support is available Monday-Saturday 10am-5pm contact us
                     in the given numbers, or write to us.
                   </p>
                   <dl className="mt-8 space-y-6">

@@ -81,7 +81,7 @@ function Vehicle() {
   const { data: timeData } = useTimeQueryQuery<TimeQueryQueryVariables>(
     graphQLClient(),
     {},
-    { refetchInterval: 60000 }
+    { refetchInterval: 300000 }
   );
 
   useEffect(() => {

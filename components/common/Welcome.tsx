@@ -56,7 +56,7 @@ export default function Welcome() {
   const { data } = useTimeQueryQuery<TimeQueryQueryVariables>(
     graphQLClient(),
     {},
-    { refetchInterval: 60000 }
+    { refetchInterval: 300000 }
   );
 
   useEffect(() => {
