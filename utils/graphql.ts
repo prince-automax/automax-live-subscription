@@ -137,7 +137,7 @@ export type CreateUserInput = {
   idProofType?: InputMaybe<UserIdProofTypeType>;
   lastName?: InputMaybe<Scalars['String']>;
   mobile: Scalars['String'];
-  pancardNo?: InputMaybe<Scalars['String']>;
+  pancardNo: Scalars['String'];
   pancard_image?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
   role?: InputMaybe<UserRoleType>;
@@ -296,6 +296,13 @@ export type EventVehiclesArgs = {
 
 
 export type EventVehiclesLiveArgs = {
+  orderBy?: InputMaybe<Array<VehicleOrderByInput>>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type EventVehiclesTempArgs = {
   orderBy?: InputMaybe<Array<VehicleOrderByInput>>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
@@ -1617,6 +1624,9 @@ export type UpcomingEventsQuery = { __typename?: 'Query', upcomingEvents?: Array
 
 export type GetEventsQueryVariables = Exact<{
   where: EventWhereUniqueInput;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<VehicleOrderByInput> | VehicleOrderByInput>;
 }>;
 
 
@@ -1669,7 +1679,7 @@ export type GetUserQueryVariables = Exact<{
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, username: string, lastName: string, BalanceEMDAmount?: number | null, firstName: string, pancardNo: string, mobile: string, state: string, vehicleBuyingLimit?: number | null, aadharcard_front_image?: string | null, aadharcard_back_image?: string | null, driving_license_back_image?: string | null, driving_license_front_image?: string | null, pancard_image?: string | null, email: string, idProofNo: string, city: string, payments?: Array<{ __typename?: 'Payment', id: string, paymentFor?: string | null, registrationExpire?: any | null, status?: string | null, amount?: number | null }> | null } | null };
+export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, username: string, lastName: string, BalanceEMDAmount?: number | null, firstName: string, pancardNo: string, mobile: string, state: string, vehicleBuyingLimit?: number | null, aadharcard_front_image?: string | null, aadharcard_back_image?: string | null, driving_license_back_image?: string | null, driving_license_front_image?: string | null, pancard_image?: string | null, email: string, createdAt?: any | null, idProofNo: string, city: string, country: string, payments?: Array<{ __typename?: 'Payment', id: string, paymentFor?: string | null, registrationExpire?: any | null, status?: string | null, amount?: number | null }> | null } | null };
 
 export type GetVehicleQueryVariables = Exact<{
   where: VehicleWhereUniqueInput;
@@ -1934,7 +1944,7 @@ export const useUpcomingEventsQuery = <
       options
     );
 export const GetEventsDocument = `
-    query GetEvents($where: EventWhereUniqueInput!) {
+    query GetEvents($where: EventWhereUniqueInput!, $take: Int, $skip: Int, $orderBy: [VehicleOrderByInput!]) {
   event(where: $where) {
     bidLock
     createdAt
@@ -1970,7 +1980,7 @@ export const GetEventsDocument = `
       name
     }
     vehicleLiveTimeIn
-    vehiclesTemp {
+    vehiclesTemp(take: $take, skip: $skip, orderBy: $orderBy) {
       YOM
       userVehicleBids {
         amount
@@ -2241,6 +2251,7 @@ export const GetUserDocument = `
     driving_license_front_image
     pancard_image
     email
+    createdAt
     payments {
       id
       paymentFor
@@ -2250,6 +2261,7 @@ export const GetUserDocument = `
     }
     idProofNo
     city
+    country
   }
 }
     `;

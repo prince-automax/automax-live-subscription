@@ -244,6 +244,7 @@ query getUser($where: UserWhereUniqueInput!) {
     driving_license_front_image
     pancard_image
     email
+    createdAt
     payments {
     id
     paymentFor
@@ -253,5 +254,6 @@ query getUser($where: UserWhereUniqueInput!) {
    }
     idProofNo
     city
+    country
   }
 }
