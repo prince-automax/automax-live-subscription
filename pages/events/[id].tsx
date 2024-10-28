@@ -25,6 +25,7 @@ import {
   CreateBidMutationVariables,
   useTimeQueryQuery,
   TimeQueryQueryVariables,
+  OrderDirection,
 } from "@utils/graphql";
 import useStore from "../../utils/store";
 
@@ -148,13 +149,13 @@ function Events() {
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     {
       where: { id: id as string },
-      // orderBy: [
-      //   {
-      //     bidTimeExpire: OrderDirection.Asc,
-      //   },
-      // ],
-      // take: 10,
-      // skip: 0,
+      orderBy: [
+        {
+          bidTimeExpire: OrderDirection.Desc,
+        },
+      ],
+      take: 1000,
+      skip: 0,
       // userVehicleBidsOrderBy2: [{ amount: OrderDirection.Desc }],
     },
     {
@@ -233,6 +234,7 @@ function Events() {
     return true;
   }
 
+ 
   // async function CallBid(amount, vehicleId) {
 
   //   const confirmed = await Swal.fire({
@@ -332,6 +334,7 @@ function Events() {
   // });
 
   // console.log("isLoading", data?.event?.vehicles);
+  
   async function CallBid(amount, vehicleId) {
     const confirmed = await Swal.fire({
       text: `Are you sure to bid for Rs. ${amount}?`,
