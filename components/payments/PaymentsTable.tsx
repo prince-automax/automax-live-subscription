@@ -47,7 +47,10 @@ export default function PaymentsTable() {
   // console.log("userPayments", data?.user?.payments);
 
   console.log('data',data);
-  
+  data?.user?.["payments"].map((item, index) => (
+    console.log('imaegge',item?.image)
+    
+  ))
 
   const renderPaymentFor = (paymentFor) => {
     switch (paymentFor) {
@@ -63,6 +66,8 @@ export default function PaymentsTable() {
         return "-";
     }
   };
+
+ 
 
   return (
     <div>
@@ -133,7 +138,7 @@ export default function PaymentsTable() {
                         <div className="mt-2">
                          {
                           item?.image && ( <Image
-                            src={item?.image ? item?.image : ""}
+                            src={item?.image && item?.image }
                             alt="payment Image"
                             width={250}
                             height={128}
