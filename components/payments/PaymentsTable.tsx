@@ -138,7 +138,7 @@ export default function PaymentsTable() {
                         <div className="mt-2">
                          {
                           item?.image && ( <Image
-                            src={item?.image && item?.image.trim() }
+                            src={item?.image && item?.image?.trim() }
                             alt="payment Image"
                             width={250}
                             height={128}
@@ -151,7 +151,7 @@ export default function PaymentsTable() {
                             className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
                             aria-hidden="true"
                           />
-                          -
+                        
                         </div>
                       </div>
                     </div>

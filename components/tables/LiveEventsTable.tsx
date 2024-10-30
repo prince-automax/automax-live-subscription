@@ -48,7 +48,7 @@ export default function EventsTable({
     take: 10,
     orderBy: [
       {
-        bidTimeExpire: OrderDirection.Desc,
+        endDate: OrderDirection.Desc,
       },
     ],
     // where: {
