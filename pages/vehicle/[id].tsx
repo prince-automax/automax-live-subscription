@@ -98,12 +98,10 @@ function Vehicle() {
   const vehicleUpdate = useVehicleUpdateSubscription();
 
   // console.log('vehicle update subscription',vehicleUpdate);
-  
-  
-  const BidUpdate = useBidCreationSubscription();
-  
-  // console.log('Bid update subscription',BidUpdate);
 
+  const BidUpdate = useBidCreationSubscription();
+
+  // console.log('Bid update subscription',BidUpdate);
 
   const { data, isLoading, refetch } = useGetVehicleQuery<GetVehicleQuery>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
@@ -114,12 +112,11 @@ function Vehicle() {
       // userVehicleBidsOrderBy2: [{ amount: OrderDirection.Desc }],
     },
     {
-     enabled: accessToken !== "" && id !== "",
+      enabled: accessToken !== "" && id !== "",
     }
   );
 
-  console.log('data',data);
-  
+  console.log("data", data);
 
   useEffect(() => {
     refetch();
@@ -156,21 +153,32 @@ function Vehicle() {
 
   async function CallBid(amount, vehicleId) {
     console.log(amount, "8888");
-    
+
     const confirmed = await Swal.fire({
-      text: "Are you sure to bid for Rs. " + amount + "?",
-      title: "BID CONFIMATION",
-      icon: "question",
+      text: `Are you sure to bid for Rs. ${amount}?`,
+      title: "BID CONFIRMATION",
+      icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, bid for it!",
       customClass: {
         popup: "animated bounceInDown",
-        container: "custom-swal-container",
+      },
+      didOpen: () => {
+        const swalContainer = Swal.getContainer();
+
+        // Styling the container to cover the full screen with a blurred overlay
+        swalContainer.style.position = "fixed";
+        swalContainer.style.top = "0";
+        swalContainer.style.left = "0";
+        swalContainer.style.width = "100vw";
+        swalContainer.style.height = "100vh";
+        swalContainer.style.background = "rgba(0, 0, 0, 0.5)"; // Dark semi-transparent background
+        swalContainer.style.backdropFilter = "blur(0.5px)"; // Apply a blur effect
+        swalContainer.style.zIndex = "1050";
       },
     });
-
     if (confirmed.isConfirmed) {
       try {
         const cc = await callCreateBid.mutateAsync({
@@ -196,10 +204,11 @@ function Vehicle() {
         }
 
         // Display the error message to the user
-        Swal.fire("Error!", errorMessage, "error");
+        Swal.fire( errorMessage, );
       }
     }
   }
+
   function IsCompleted() {
     try {
       let bidTime = data?.vehicle?.bidTimeExpire;

@@ -177,7 +177,9 @@ function ProfileUpdate() {
     //       SUPPORTED_FORMATS.join(", "),
     //     (value) => value && SUPPORTED_FORMATS.includes(value.type)
     //   ),
-    mobile: Yup.string().required("Mobile number is required"),
+    mobile: Yup.string()
+    .matches(/^[0-9]{10}$/, "Mobile number must be only 10 digits long") // Ensures only 10 digits
+    .required("Mobile number is required"),
     city: Yup.string().required("City is required"),
     state: Yup.string().required("State is required"),
   });
