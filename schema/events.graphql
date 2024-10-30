@@ -333,9 +333,9 @@
 #   }
 # }
 
-query LiveEvents($orderBy: [VehicleOrderByInput!], $take: Int, $skip: Int) {
-  liveEvents {
-    bidLock
+query LiveEvents($orderBy: [EventOrderByInput!], $take: Int, $skip: Int) {
+  liveEvents(orderBy: $orderBy, take: $take, skip: $skip) {
+   bidLock
     createdAt
     createdById
     vehiclesCount
@@ -353,7 +353,7 @@ query LiveEvents($orderBy: [VehicleOrderByInput!], $take: Int, $skip: Int) {
       id
     #  state
     }
-    noOfBids
+     noOfBids
     pauseDate
     pausedTotalTime
     seller {
@@ -368,13 +368,11 @@ query LiveEvents($orderBy: [VehicleOrderByInput!], $take: Int, $skip: Int) {
       name
     }
     vehicleLiveTimeIn
-    vehicles(orderBy: $orderBy, take: $take, skip: $skip) {
-      YOM
-    }
+    
+    
+     
   }
 }
-
-
 
 
 
