@@ -286,7 +286,7 @@ function Events() {
       const confirmed = await Swal.fire({
         text: `Are you sure to bid for Rs. ${amount}?`,
         title: "BID CONFIRMATION",
-        icon: "question",
+        icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
@@ -330,10 +330,10 @@ function Events() {
             errorMessage = e.message;
           }
     
-          Swal.fire("Error!", errorMessage, "error");
+          Swal.fire( errorMessage, );
         }
       }
-    }
+    }   
     
                     
 

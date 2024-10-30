@@ -46,11 +46,10 @@ export default function PaymentsTable() {
 
   // console.log("userPayments", data?.user?.payments);
 
-  console.log('data',data);
-  data?.user?.["payments"].map((item, index) => (
-    console.log('imaegge',item?.image)
-    
-  ))
+  console.log("data", data);
+  data?.user?.["payments"].map((item, index) =>
+    console.log("imaegge", item?.image)
+  );
 
   const renderPaymentFor = (paymentFor) => {
     switch (paymentFor) {
@@ -66,8 +65,6 @@ export default function PaymentsTable() {
         return "-";
     }
   };
-
- 
 
   return (
     <div>
@@ -105,12 +102,10 @@ export default function PaymentsTable() {
                         {`Description : ${item.description}`}
                       </div>
                       <div className="text-sm font-medium text-slate-700 flex space-x-2">
-                      <div className="text-sm font-medium text-slate-700">
-                       Created At : 
-                      </div>
+                        <div className="text-sm font-medium text-slate-700">
+                          Created At :
+                        </div>
                         <div className=" text-sm font-medium text-slate-700">
-                     
-                          
                           {item?.createdAt
                             ? moment(item?.createdAt).format(
                                 "MMMM Do, YYYY ddd h:mm a"
@@ -136,22 +131,21 @@ export default function PaymentsTable() {
                             : ""}
                         </div> */}
                         <div className="mt-2">
-                         {
-                          item?.image && ( <Image
-                            src={item?.image && item?.image?.trim() }
-                            alt="payment Image"
-                            width={250}
-                            height={128}
-                            className="mt-2 object-cover rounded-lg"
-                          />)
-                         }
+                          {item?.image && item?.image !== " " && (
+                            <img
+                              src={item?.image && item?.image?.trim()}
+                              alt={item?.image}
+                              width={250}
+                              height={128}
+                              className="mt-2 object-cover rounded-lg"
+                            />
+                          )}
                         </div>
                         <div className="mt-2 flex items-center text-sm text-gray-500">
                           <CheckCircleIcon
                             className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
                             aria-hidden="true"
                           />
-                        
                         </div>
                       </div>
                     </div>
