@@ -15,6 +15,8 @@ import Loader from "@components/ui/Loader";
 
 export default function PaymentForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [accessToken, setAccessToken] = useState("");
+
   const SUPPORTED_FORMATS = [
     "image/jpg",
     "image/jpeg",
@@ -30,13 +32,12 @@ export default function PaymentForm() {
       label: "EMD Payment",
       value: "emd",
     },
-    {
-      label: "Open Bid Payment",
-      value: "openBids",
-    },
+    // {
+    //   label: "Open Bid Payment",
+    //   value: "openBids",
+    // },
   ];
 
-  const [accessToken, setAccessToken] = useState("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -50,13 +51,15 @@ export default function PaymentForm() {
       graphQLClient({ Authorization: `Bearer ${accessToken}` })
     );
 
-  const validationSchema = Yup.object({
-    amount: Yup.string().required("Amount is required"),
-    paymentFor: Yup.string().required("Payment for is required"),
-    proof:Yup.string().required("Image is required")
-   
-  });
-
+    const validationSchema = Yup.object({
+      amount: Yup.number()
+        .typeError("Amount must be a number")
+        .required("Amount is required")
+        .max(2147483647, "Amount must not exceed 1 core"),
+      paymentFor: Yup.string().required("Payment for is required"),
+      proof: Yup.string().required("Image is required"),
+    });
+    
   const onSubmit = async (values, resetForm) => {
     setIsLoading(true);
     console.log("Submitting payment details:", values);

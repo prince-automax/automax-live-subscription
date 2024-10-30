@@ -97,12 +97,12 @@ function Vehicle() {
 
   const vehicleUpdate = useVehicleUpdateSubscription();
 
-  console.log('vehicle update subscription',vehicleUpdate);
+  // console.log('vehicle update subscription',vehicleUpdate);
   
   
   const BidUpdate = useBidCreationSubscription();
   
-  console.log('Bid update subscription',BidUpdate);
+  // console.log('Bid update subscription',BidUpdate);
 
 
   const { data, isLoading, refetch } = useGetVehicleQuery<GetVehicleQuery>(
@@ -155,6 +155,8 @@ function Vehicle() {
   }, [vehicle]);
 
   async function CallBid(amount, vehicleId) {
+    console.log(amount, "8888");
+    
     const confirmed = await Swal.fire({
       text: "Are you sure to bid for Rs. " + amount + "?",
       title: "BID CONFIMATION",
@@ -174,7 +176,7 @@ function Vehicle() {
         const cc = await callCreateBid.mutateAsync({
           bidVehicleId: vehicleId,
           createBidInput: {
-            amount: amount, // ensure that amount is a number, not a string
+            amount: +amount, // ensure that amount is a number, not a string
           },
         });
         // console.log("cc: ", cc);

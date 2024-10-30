@@ -151,7 +151,7 @@ function Events() {
       where: { id: id as string },
       orderBy: [
         {
-          bidTimeExpire: OrderDirection.Desc,
+          bidTimeExpire: OrderDirection.Asc,
         },
       ],
       take: 1000,
@@ -416,7 +416,7 @@ function Events() {
                     <div className="sm:flex flex-wrap">
                       <div className="flex-auto">
                         <h1 className="   text-base  font-roboto font-bold  text-blue-800 uppercase">
-                          {item?.YOM} {item?.model} -{item.registrationNumber}
+                          {item?.YOM} {item?.model} {item.registrationNumber}
                         </h1>
                         <div className="text-sm font-medium text-black">
                           {data?.event?.seller?.name}
@@ -808,7 +808,7 @@ function Events() {
                     <div className="sm:flex flex-wrap">
                       <div className="flex-auto">
                         <h1 className="   text-base sm:text-lg   font-bold sm:font-semibold text-blue-800 uppercase">
-                          {item?.YOM} {item?.model} -{item.registrationNumber}
+                          {item?.YOM} {item?.model} {item.registrationNumber}
                         </h1>
                         <div className="text-sm font-medium text-black">
                           {data?.event?.seller?.name}

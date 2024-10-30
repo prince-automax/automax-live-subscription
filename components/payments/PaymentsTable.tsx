@@ -86,7 +86,7 @@ export default function PaymentsTable() {
                 )} */}
                 <div className="flex-auto p-6">
                   <div className="sm:flex flex-wrap">
-                    <div className="flex-auto">
+                    <div className="flex-auto space-y-1">
                       <h1 className="text-lg font-semibold text-slate-900">
                         {`Rs. ${item.amount}`}
                       </h1>
@@ -96,13 +96,27 @@ export default function PaymentsTable() {
                       <div className="text-sm font-medium text-slate-700">
                         {`Description : ${item.description}`}
                       </div>
+                      <div className="text-sm font-medium text-slate-700 flex space-x-2">
+                      <div className="text-sm font-medium text-slate-700">
+                       Created At : 
+                      </div>
+                        <div className=" text-sm font-medium text-slate-700">
+                     
+                          
+                          {item?.createdAt
+                            ? moment(item?.createdAt).format(
+                                "MMMM Do, YYYY ddd h:mm a"
+                              )
+                            : ""}
+                        </div>
+                      </div>
                     </div>
                   </div>
 
                   <div className="flex space-x-4 mt-6 pt-4 text-sm font-medium border-t border-slate-200">
                     <div className="flex-auto flex space-x-4">
                       <div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
-                        <div className="mt-2 flex items-center text-sm text-gray-500">
+                        {/* <div className="mt-2 flex items-center text-sm text-gray-500">
                           <CalendarIcon
                             className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
                             aria-hidden="true"
@@ -112,23 +126,23 @@ export default function PaymentsTable() {
                                 "MMMM Do, YYYY ddd h:mm a"
                               )
                             : ""}
-                        </div>
+                        </div> */}
                         <div className="mt-2">
-                          {/* <Image
+                          <Image
                             src={item?.image ? item?.image : ""}
                             alt="payment Image"
                             width={250}
                             height={128}
                             className="mt-2 object-cover rounded-lg"
-                          /> */}
+                          />
                         </div>
-                        {/* <div className="mt-2 flex items-center text-sm text-gray-500">
+                        <div className="mt-2 flex items-center text-sm text-gray-500">
                           <CheckCircleIcon
                             className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
                             aria-hidden="true"
                           />
                           -
-                        </div> */}
+                        </div>
                       </div>
                     </div>
                   </div>
