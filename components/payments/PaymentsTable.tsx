@@ -46,6 +46,9 @@ export default function PaymentsTable() {
 
   // console.log("userPayments", data?.user?.payments);
 
+  console.log('data',data);
+  
+
   const renderPaymentFor = (paymentFor) => {
     switch (paymentFor) {
       case "registrations":
@@ -128,13 +131,15 @@ export default function PaymentsTable() {
                             : ""}
                         </div> */}
                         <div className="mt-2">
-                          <Image
+                         {
+                          item?.image && ( <Image
                             src={item?.image ? item?.image : ""}
                             alt="payment Image"
                             width={250}
                             height={128}
                             className="mt-2 object-cover rounded-lg"
-                          />
+                          />)
+                         }
                         </div>
                         <div className="mt-2 flex items-center text-sm text-gray-500">
                           <CheckCircleIcon

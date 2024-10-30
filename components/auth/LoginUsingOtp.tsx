@@ -251,9 +251,9 @@ console.log('grahqlError',graphqlError);
   const validationSchema = Yup.object({
     firstName: Yup.string().required("First Name is required"),
     lastName: Yup.string().required("Last Name is required"),
-    // pancard: Yup.string()
-    //   .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN card format")
-    //   .required("PAN card is required"),
+    pancard: Yup.string()
+      .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN card format")
+      .required("PAN card is required"),
     state: Yup.string().required("State is required"),
     mobile: Yup.string()
       .matches(/^[0-9]{10}$/, "Mobile number must be only 10 digits long") // Ensures only 10 digits
