@@ -45,51 +45,50 @@ export default function Navbar() {
   const isLoggedIn = Boolean(token);
 
   const navigation = [
-    {
+    !isLoggedIn && {
       name: "Home",
-      href: isLoggedIn ? "/dashboard" : "/",
-      current: router.pathname == "/" ? true : false,
+      href: "/",
+      current: router.pathname === "/" ? true : false,
       icon: <FontAwesomeIcon icon={faHouse} />,
     },
-
     {
       name: "Membership",
       href: "/membership",
-      current: router.pathname == "/membership" ? true : false,
+      current: router.pathname === "/membership" ? true : false,
       icon: <FontAwesomeIcon icon={faTag} />,
     },
     {
       name: "About Us",
       href: "/about",
-      current: router.pathname == "/about" ? true : false,
+      current: router.pathname === "/about" ? true : false,
       icon: <FontAwesomeIcon icon={faCircleInfo} />,
     },
     {
       name: "Contact Us",
       href: "/contact",
-      current: router.pathname == "/contact" ? true : false,
+      current: router.pathname === "/contact" ? true : false,
       icon: <FontAwesomeIcon icon={faHeadphones} />,
     },
     {
       name: "Dashboard",
       href: "/dashboard",
-      current: router.pathname == "/dashboard" ? true : false,
+      current: router.pathname === "/dashboard" ? true : false,
       icon: <FontAwesomeIcon icon={faTableColumns} />,
     },
     {
       name: "Open Leads",
       href: "/openleads",
-      current: router.pathname == "/openleads" ? true : false,
+      current: router.pathname === "/openleads" ? true : false,
       icon: <FontAwesomeIcon icon={faHammer} />,
     },
     {
       name: "Selling Truck",
       href: "/sellacar",
-      current: router.pathname == "/sellacar" ? true : false,
+      current: router.pathname === "/sellacar" ? true : false,
       icon: <FontAwesomeIcon icon={faCar} />,
     },
- 
-  ];
+  ].filter(Boolean); // This removes any false entries, like `Home` if `isLoggedIn` is true
+  
 
   return (
     <div className="bg-white overflow-hidden">
