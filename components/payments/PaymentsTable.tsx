@@ -46,6 +46,9 @@ export default function PaymentsTable() {
 
   // console.log("userPayments", data?.user?.payments);
 
+  console.log('data',data);
+  
+
   const renderPaymentFor = (paymentFor) => {
     switch (paymentFor) {
       case "registrations":
