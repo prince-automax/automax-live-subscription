@@ -32,7 +32,7 @@ export default function AuctionServices() {
                         Auction Services
                     </p>
                     <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-                        AutobseB2B Marketplace can do customized auctions for Seller’s. The following are the auction services we
+                        Autobse B2B Marketplace can do customized auctions for Seller’s. The following are the auction services we
                         offer.
                     </p>
                 </div>

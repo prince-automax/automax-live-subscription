@@ -846,7 +846,7 @@ function SellACar() {
       <DashboardTemplate heading="">
         <div className="min-h-screen flex   justify-center bg-gray-100">
           <div className="max-w-4xl w-full mt-20 text-center p-6 h-min bg-white shadow-lg rounded-md">
-            <h2 className="text-3xl font-semibold text-gray-800 mb-4">Sell A Car Page Coming Soon</h2>
+            <h2 className="text-3xl font-semibold text-gray-800 mb-4">Sell A Truck Page Coming Soon</h2>
             <p className="text-base text-gray-600 mb-6">
               This page is currently under maintenance. We're working on something
               great, and it will be ready soon. Stay tuned for updates.

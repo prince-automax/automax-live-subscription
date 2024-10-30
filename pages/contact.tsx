@@ -16,8 +16,8 @@ const offices = [
     city: "Chennai",
     address: ["No.23 A, 2nd Floor", "Villivakkam, 600049"],
   },
-  { id: 2, city: "Mumbai", address: ["coming Soon..."] },
-  { id: 3, city: "Hyderabad", address: ["coming Soon..."] },
+  { id: 2, city: "Mumbai", address: ["Coming Soon..."] },
+  { id: 3, city: "Hyderabad", address: ["Coming Soon..."] },
   {
     id: 4,
     city: "Kochi",
@@ -31,8 +31,9 @@ export default function Contact() {
 
   const validationSchema = Yup.object({
    
-    phone: Yup.string().required("Phone number is required"),
-    message: Yup.string().required("Message is required"),
+    phone: Yup.string()
+    .matches(/^[0-9]{10}$/, "Phone number must be only 10 digits long") // Ensures only 10 digits
+    .required("Phone number is required"),    message: Yup.string().required("Message is required"),
     state: Yup.string().required("State is required"),
   });
 
@@ -256,7 +257,7 @@ export default function Contact() {
                         className="flex-shrink-0 w-6 h-6 text-indigo-200"
                         aria-hidden="true"
                       />
-                      <span className="ml-3">+91 9962334455</span>
+                      <span className="ml-3">+91 9962 33 44 55</span>
                     </dd>
                     <dd className="flex text-base text-indigo-50">
                       <PhoneIcon
