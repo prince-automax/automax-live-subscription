@@ -151,7 +151,7 @@ function Events() {
       where: { id: id as string },
       orderBy: [
         {
-          bidTimeExpire: OrderDirection.Desc,
+          bidTimeExpire: OrderDirection.Asc,
         },
       ],
       take: 1000,
@@ -235,153 +235,106 @@ function Events() {
   }
 
  
-  // async function CallBid(amount, vehicleId) {
+ 
+    // async function CallBid(amount, vehicleId) {
+    //   const confirmed = await Swal.fire({
+    //     text: `Are you sure to bid for Rs. ${amount}?`,
+    //     title: "BID CONFIRMATION",
+    //     icon: "question",
+    //     showCancelButton: true,
+    //     confirmButtonColor: "#3085d6",
+    //     cancelButtonColor: "#d33",
+    //     confirmButtonText: "Yes, bid for it!",
+    //     customClass: {
+    //       popup: "animated bounceInDown",
+    //       container: "custom-swal-container",
+    //     },
+    //   });
 
-  //   const confirmed = await Swal.fire({
-  //     text: "Are you sure to bid for Rs. " + amount + "?",
-  //     title: "BID CONFIMATION",
-  //     icon: "question",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#3085d6",
-  //     cancelButtonColor: "#d33",
-  //     confirmButtonText: "Yes, bid for it!",
-  //     customClass: {
-  //       popup: "animated bounceInDown",
-  //       container: "custom-swal-container",
-  //     },
-  //   });
+    //   if (confirmed.isConfirmed) {
+    //     try {
+    //       const result = await callCreateBid.mutateAsync({
+    //         bidVehicleId: vehicleId,
+    //         createBidInput: {
+    //           amount: Number(amount), // Ensure amount is a number
+    //         },
+    //       });
+    //       // console.log("Bid", result);
+    //       Swal.fire("Success!", "Your bid has been submitted.", "success");
+    //     } catch (e) {
+    //       // Handle different types of errors
+    //       let errorMessage = "An error occurred. Please try again.";
 
-  //   if (confirmed.isConfirmed) {
-  //     try {
-  //       const result = await callCreateBid.mutateAsync({
-  //         // data: {
-  //         //   amount: parseInt(amount),
-  //         //   bidVehicle: {
-  //         //     connect: {
-  //         //       id: vehicleId,
-  //         //     },
-  //         //   },
-  //         // },
-  //         // bidVehicleId:"123",
-  //         // createBidInput{
-  //         //   amount:"123",
-  //         //   name:"prince"
-  //         // }
-  //         bidVehicleId: vehicleId,
-  //         createBidInput: {
-  //           amount: amount, // ensure that amount is a number, not a string
-  //         },
-  //       });
-  //       console.log("bidresult ", result);
-  //       Swal.fire("Success!", "Your bid has been submitted.", "success");
-  //     } catch (e) {
-  //       // console.log("EEE: ", e);
-  //     }
-  //   }
-  // }
+    //       if (e.response) {
+    //         // Check for specific error messages
+    //         const errorMessages = e.response.errors || [];
+    //         if (errorMessages.length > 0) {
+    //           errorMessage = errorMessages.map((err) => err.message).join(", ");
+    //         }
+    //       } else if (e.message) {
+    //         // Fallback for general errors
+    //         errorMessage = e.message;
+    //       }
 
-  // const watchListMutation = useAddToWatchListMutation(
-  //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-  //   {
-  //     onSuccess() {
-  //       queryClient.invalidateQueries("getEvent");
-  //     },
-  //   }
-  // );
+    //       // Display the error message to the user
+    //       Swal.fire("Error!", errorMessage, "error");
+    //     }
+    //   }
+    // }
 
-  // const addToWatchList = async (vehicleId: string) => {
-  //   await watchListMutation.mutateAsync({
-  //     data: {
-  //       data: {
-  //         watchList: {
-  //           connect: [
-  //             {
-  //               id: vehicleId,
-  //             },
-  //           ],
-  //         },
-  //       },
-  //       where: {
-  //         id: userId,
-  //       },
-  //     },
-  //   });
-  // };
-
-  // const removeFromWatchList = async (vehicleId: string) => {
-  //   await watchListMutation.mutateAsync({
-  //     data: {
-  //       data: {
-  //         watchList: {
-  //           disconnect: [
-  //             {
-  //               id: vehicleId,
-  //             },
-  //           ],
-  //         },
-  //       },
-  //       where: {
-  //         id: userId,
-  //       },
-  //     },
-  //   });
-  // };
-
-  // let filteredArray = data?.event?.vehicles?.map((item, index) => {
-  //   return item?.watchedBy?.filter(
-  //     (watchlistUser) => watchlistUser?.id === userId
-  //   );
-  // });
-
-  // console.log("isLoading", data?.event?.vehicles);
-  
-  async function CallBid(amount, vehicleId) {
-    const confirmed = await Swal.fire({
-      text: `Are you sure to bid for Rs. ${amount}?`,
-      title: "BID CONFIRMATION",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, bid for it!",
-      customClass: {
-        popup: "animated bounceInDown",
-        container: "custom-swal-container",
-      },
-    });
-
-    if (confirmed.isConfirmed) {
-      try {
-        const result = await callCreateBid.mutateAsync({
-          bidVehicleId: vehicleId,
-          createBidInput: {
-            amount: Number(amount), // Ensure amount is a number
-          },
-        });
-        // console.log("Bid", result);
-        Swal.fire("Success!", "Your bid has been submitted.", "success");
-      } catch (e) {
-        // Handle different types of errors
-        let errorMessage = "An error occurred. Please try again.";
-
-        if (e.response) {
-          // Check for specific error messages
-          const errorMessages = e.response.errors || [];
-          if (errorMessages.length > 0) {
-            errorMessage = errorMessages.map((err) => err.message).join(", ");
+    async function CallBid(amount, vehicleId) {
+      const confirmed = await Swal.fire({
+        text: `Are you sure to bid for Rs. ${amount}?`,
+        title: "BID CONFIRMATION",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, bid for it!",
+        customClass: {
+          popup: "animated bounceInDown",
+        },
+        didOpen: () => {
+          const swalContainer = Swal.getContainer();
+    
+          // Styling the container to cover the full screen with a blurred overlay
+          swalContainer.style.position = "fixed";
+          swalContainer.style.top = "0";
+          swalContainer.style.left = "0";
+          swalContainer.style.width = "100vw";
+          swalContainer.style.height = "100vh";
+          swalContainer.style.background = "rgba(0, 0, 0, 0.5)"; // Dark semi-transparent background
+          swalContainer.style.backdropFilter = "blur(0.5px)"; // Apply a blur effect
+          swalContainer.style.zIndex = "1050";
+        },
+      });
+    
+      if (confirmed.isConfirmed) {
+        try {
+          const result = await callCreateBid.mutateAsync({
+            bidVehicleId: vehicleId,
+            createBidInput: {
+              amount: Number(amount),
+            },
+          });
+          Swal.fire("Success!", "Your bid has been submitted.", "success");
+        } catch (e) {
+          let errorMessage = "An error occurred. Please try again.";
+    
+          if (e.response) {
+            const errorMessages = e.response.errors || [];
+            if (errorMessages.length > 0) {
+              errorMessage = errorMessages.map((err) => err.message).join(", ");
+            }
+          } else if (e.message) {
+            errorMessage = e.message;
           }
-        } else if (e.message) {
-          // Fallback for general errors
-          errorMessage = e.message;
+    
+          Swal.fire("Error!", errorMessage, "error");
         }
-
-        // Display the error message to the user
-        Swal.fire("Error!", errorMessage, "error");
       }
     }
-  }
-
-
+    
                     
 
   
@@ -463,7 +416,7 @@ function Events() {
                     <div className="sm:flex flex-wrap">
                       <div className="flex-auto">
                         <h1 className="   text-base  font-roboto font-bold  text-blue-800 uppercase">
-                          {item?.YOM} {item?.model} -{item.registrationNumber}
+                          {item?.YOM} {item?.model} {item.registrationNumber}
                         </h1>
                         <div className="text-sm font-medium text-black">
                           {data?.event?.seller?.name}
@@ -855,7 +808,7 @@ function Events() {
                     <div className="sm:flex flex-wrap">
                       <div className="flex-auto">
                         <h1 className="   text-base sm:text-lg   font-bold sm:font-semibold text-blue-800 uppercase">
-                          {item?.YOM} {item?.model} -{item.registrationNumber}
+                          {item?.YOM} {item?.model} {item.registrationNumber}
                         </h1>
                         <div className="text-sm font-medium text-black">
                           {data?.event?.seller?.name}

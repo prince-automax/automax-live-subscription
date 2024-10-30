@@ -1036,6 +1036,7 @@ export type QueryVehicleCategoryArgs = {
 
 
 export type QueryVehiclesArgs = {
+  orderBy?: InputMaybe<Array<VehicleOrderByInput>>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<VehicleWhereUniqueInput>;
@@ -1262,6 +1263,7 @@ export type UpdateUserInput = {
   password?: InputMaybe<Scalars['String']>;
   role?: InputMaybe<UserRoleType>;
   state?: InputMaybe<StateNames>;
+  states?: InputMaybe<Array<StateNames>>;
   status?: InputMaybe<UserStatusType>;
   tempToken?: InputMaybe<Scalars['Float']>;
   userCategory?: InputMaybe<Scalars['String']>;
@@ -1407,6 +1409,7 @@ export type UserWhereUniqueInput = {
   idNo?: InputMaybe<Scalars['Float']>;
   mobile?: InputMaybe<Scalars['String']>;
   pancardNo?: InputMaybe<Scalars['String']>;
+  role?: InputMaybe<UserRoleType>;
   state?: InputMaybe<StateNames>;
   tempToken?: InputMaybe<Scalars['Float']>;
 };
@@ -1686,7 +1689,7 @@ export type GetVehicleQueryVariables = Exact<{
 }>;
 
 
-export type GetVehicleQuery = { __typename?: 'Query', vehicle: { __typename?: 'Vehicle', YOM?: number | null, additionalRemarks?: string | null, approxParkingCharges?: string | null, area?: string | null, auctionManager?: string | null, autobseContact?: string | null, autobse_contact_person?: string | null, bidAmountUpdate?: number | null, bidStartTime: any, bidStatus?: string | null, bidTimeExpire: any, buyerFees?: string | null, category?: string | null, chassisNo?: string | null, city?: string | null, clientContactNo?: string | null, clientContactPerson?: string | null, climateControl?: string | null, color?: string | null, createdAt?: any | null, createdById?: string | null, currentBidAmount?: number | null, dateOfRegistration?: string | null, doorCount?: number | null, engineNo?: string | null, fitness?: string | null, fuel?: string | null, gearBox?: string | null, hypothication?: string | null, id: string, image?: string | null, inspectionLink?: string | null, insurance?: string | null, insuranceStatus?: string | null, insuranceValidTill?: string | null, kmReading?: number | null, loanAgreementNo: string, lotNumber?: number | null, make?: string | null, model?: string | null, mileage?: number | null, ownership?: number | null, parkingCharges?: string | null, parkingRate?: string | null, paymentTerms?: string | null, permit?: string | null, powerSteering?: string | null, quoteIncreament?: number | null, rcStatus?: string | null, registeredOwnerName?: string | null, registrationNumber: string, repoDt?: string | null, reservePrice?: number | null, rtoFine?: string | null, shape?: string | null, startBidAmount?: number | null, userVehicleBidsCount?: number | null, totalBids?: number | null, myBidRank?: number | null, startPrice?: number | null, state?: string | null, tax?: string | null, taxValidityDate?: string | null, type?: string | null, updatedAt?: any | null, varient?: string | null, vehicleCondition?: string | null, vehicleIndexNo: number, vehicleRemarks?: string | null, veicleLocation?: string | null, yardLocation?: string | null, event?: { __typename?: 'Event', startDate: any, noOfBids: number, bidLock?: string | null } | null } };
+export type GetVehicleQuery = { __typename?: 'Query', vehicle: { __typename?: 'Vehicle', YOM?: number | null, additionalRemarks?: string | null, approxParkingCharges?: string | null, area?: string | null, auctionManager?: string | null, autobseContact?: string | null, autobse_contact_person?: string | null, bidAmountUpdate?: number | null, bidStartTime: any, bidTimeExpire: any, buyerFees?: string | null, category?: string | null, chassisNo?: string | null, city?: string | null, clientContactNo?: string | null, clientContactPerson?: string | null, climateControl?: string | null, color?: string | null, createdAt?: any | null, createdById?: string | null, currentBidAmount?: number | null, dateOfRegistration?: string | null, doorCount?: number | null, engineNo?: string | null, fitness?: string | null, fuel?: string | null, gearBox?: string | null, hypothication?: string | null, id: string, image?: string | null, inspectionLink?: string | null, insurance?: string | null, insuranceStatus?: string | null, insuranceValidTill?: string | null, kmReading?: number | null, loanAgreementNo: string, lotNumber?: number | null, make?: string | null, mileage?: number | null, model?: string | null, ownership?: number | null, parkingCharges?: string | null, parkingRate?: string | null, paymentTerms?: string | null, permit?: string | null, powerSteering?: string | null, quoteIncreament?: number | null, rcStatus?: string | null, registeredOwnerName?: string | null, registrationNumber: string, repoDt?: string | null, reservePrice?: number | null, rtoFine?: string | null, shape?: string | null, startPrice?: number | null, startBidAmount?: number | null, updatedAt?: any | null, varient?: string | null, vehicleCondition?: string | null, vehicleIndexNo: number, vehicleRemarks?: string | null, veicleLocation?: string | null, yardLocation?: string | null, userVehicleBidsCount?: number | null, totalBids?: number | null, myBidRank?: number | null, userVehicleBids?: Array<{ __typename?: 'Bid', amount: number, userId: string, id: string, name: string, bidVehicleId: string }> | null, event?: { __typename?: 'Event', startDate: any, noOfBids: number, gapInBetweenVehicles?: number | null, bidLock?: string | null, endDate: any, status?: string | null, eventNo: number, seller?: { __typename?: 'Seller', name: string, contactPerson?: string | null } | null } | null } };
 
 
 export const LoginUsingPasswordDocument = `
@@ -2283,6 +2286,13 @@ export const GetVehicleDocument = `
     query GetVehicle($where: VehicleWhereUniqueInput!) {
   vehicle(where: $where) {
     YOM
+    userVehicleBids {
+      amount
+      userId
+      id
+      name
+      bidVehicleId
+    }
     additionalRemarks
     approxParkingCharges
     area
@@ -2291,7 +2301,6 @@ export const GetVehicleDocument = `
     autobse_contact_person
     bidAmountUpdate
     bidStartTime
-    bidStatus
     bidTimeExpire
     buyerFees
     category
@@ -2312,11 +2321,6 @@ export const GetVehicleDocument = `
     gearBox
     hypothication
     id
-    event {
-      startDate
-      noOfBids
-      bidLock
-    }
     image
     inspectionLink
     insurance
@@ -2326,8 +2330,8 @@ export const GetVehicleDocument = `
     loanAgreementNo
     lotNumber
     make
-    model
     mileage
+    model
     ownership
     parkingCharges
     parkingRate
@@ -2342,22 +2346,31 @@ export const GetVehicleDocument = `
     reservePrice
     rtoFine
     shape
-    startBidAmount
-    userVehicleBidsCount
-    totalBids
-    myBidRank
     startPrice
-    state
-    tax
-    taxValidityDate
-    type
+    startBidAmount
     updatedAt
+    event {
+      startDate
+      noOfBids
+      gapInBetweenVehicles
+      bidLock
+      endDate
+      status
+      eventNo
+      seller {
+        name
+        contactPerson
+      }
+    }
     varient
     vehicleCondition
     vehicleIndexNo
     vehicleRemarks
     veicleLocation
     yardLocation
+    userVehicleBidsCount
+    totalBids
+    myBidRank
   }
 }
     `;

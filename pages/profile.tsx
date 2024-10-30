@@ -22,7 +22,7 @@ function ProfilePage() {
       "Last Name": "-",
       Mobile: "-",
       Email: "-",
-      "Id proof Number": "-",
+      "Id Proof Number": "-",
       "Pan Number": "-",
       City: "-",
       State: "-",
@@ -66,7 +66,7 @@ function ProfilePage() {
             (user.lastName && user.lastName) != "" ? user.lastName : "-",
           Mobile: (user.mobile && user.mobile) != "" ? user.mobile : "-",
           Email: (user.email && user.email) != "" ? user.email : "-",
-          "Id proof Number":
+          "Id Proof Number":
             (user.idProofNo && user.idProofNo) != "" ? user.idProofNo : "-",
           "Pan Number":
             (user.pancardNo && user.pancardNo) != "" ? user.pancardNo : "-",

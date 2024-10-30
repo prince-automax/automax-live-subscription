@@ -29,6 +29,13 @@ const offices = [
 export default function Contact() {
   const formikRef = useRef(null);
 
+  const validationSchema = Yup.object({
+   
+    phone: Yup.string().required("Phone number is required"),
+    message: Yup.string().required("Message is required"),
+    state: Yup.string().required("State is required"),
+  });
+
   const callCreateContactus =
     useCreateEnquiryMutation<CreateEnquiryMutationVariables>(graphQLClient());
 
@@ -237,8 +244,8 @@ export default function Contact() {
                     Contact information
                   </h3>
                   <p className="mt-6 text-base text-indigo-50 max-w-3xl">
-                    Live support is available Mon-Saturday 10am-5pm contact us
-                    in the given numbers, or write to us.
+                    Live support is available Monday-Saturday 10am-5pm contact
+                    us in the given numbers, or write to us.
                   </p>
                   <dl className="mt-8 space-y-6">
                     <dt>
@@ -287,13 +294,14 @@ export default function Contact() {
                     initialValues={{
                       firstname: "",
                       lastname: "",
-                      states: "",
+                      state: "", // Corrected key name here
                       phone: "",
-
                       message: "",
                     }}
+                    
                     onSubmit={onSubmitData}
                     innerRef={formikRef}
+                    validationSchema={validationSchema}
                   >
                     {({ isSubmitting }) => (
                       <Form className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
@@ -313,6 +321,8 @@ export default function Contact() {
                               autoComplete="given-name"
                               className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
                             />
+                                {/* <ErrorMessage name="firstname" component="div" className="text-red-500 text-sm" /> */}
+
                           </div>
                         </div>
                         <div>
@@ -330,6 +340,8 @@ export default function Contact() {
                               autoComplete="family-name"
                               className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
                             />
+                                                            {/* <ErrorMessage name="lastname" component="div" className="text-red-500 text-sm" /> */}
+
                           </div>
                         </div>
 
@@ -343,7 +355,6 @@ export default function Contact() {
                           <div className="mt-1">
                             <Field
                               as="select"
-                              required
                               id="state"
                               name="state"
                               autoComplete="state"
@@ -356,6 +367,8 @@ export default function Contact() {
                                 </option>
                               ))}
                             </Field>
+                            <ErrorMessage name="state" component="div" className="text-red-500 text-sm" />
+
                           </div>
                         </div>
 
@@ -367,16 +380,16 @@ export default function Contact() {
                             >
                               Phone
                             </label>
-                            <span
+                            {/* <span
                               id="phone-optional"
                               className="text-sm text-gray-500"
                             >
                               Optional
-                            </span>
+                            </span> */}
                           </div>
                           <div className="mt-1">
                             <Field
-                              required
+                              
                               type="number"
                               name="phone"
                               id="phone"
@@ -384,6 +397,8 @@ export default function Contact() {
                               className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
                               aria-describedby="phone-optional"
                             />
+                            <ErrorMessage name="phone" component="div" className="text-red-500 text-sm" />
+
                           </div>
                         </div>
                         {/* <div className="sm:col-span-2">
@@ -428,6 +443,8 @@ export default function Contact() {
                               aria-describedby="message-max"
                               // defaultValue={""}
                             />
+                                                        <ErrorMessage name="message" component="div" className="text-red-500 text-sm" />
+
                           </div>
                         </div>
                         <div className="sm:col-span-2 sm:flex sm:justify-end">
