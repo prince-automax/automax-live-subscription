@@ -1609,13 +1609,13 @@ export type CreateEnquiryMutationVariables = Exact<{
 export type CreateEnquiryMutation = { __typename?: 'Mutation', createEnquiry: { __typename?: 'Enquiry', firstName: string, lastName: string, message: string, mobile: string, state: string, status: string } };
 
 export type LiveEventsQueryVariables = Exact<{
-  orderBy?: InputMaybe<Array<VehicleOrderByInput> | VehicleOrderByInput>;
+  orderBy?: InputMaybe<Array<EventOrderByInput> | EventOrderByInput>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type LiveEventsQuery = { __typename?: 'Query', liveEvents?: Array<{ __typename?: 'Event', bidLock?: string | null, createdAt?: any | null, createdById?: string | null, vehiclesCount?: number | null, downloadableFile_filename?: string | null, endDate: any, eventCategory: string, eventNo: number, extraTime?: number | null, extraTimeTrigerIn?: number | null, firstVehicleEndDate: any, gapInBetweenVehicles?: number | null, id: string, noOfBids: number, pauseDate?: any | null, pausedTotalTime?: number | null, startDate: any, status?: string | null, termsAndConditions: string, updatedAt?: any | null, vehicleLiveTimeIn?: number | null, location?: { __typename?: 'Location', name: string, id: string } | null, seller?: { __typename?: 'Seller', name: string, mobile: string } | null, vehicleCategory?: { __typename?: 'VehicleCategory', name: string } | null, vehicles?: Array<{ __typename?: 'Vehicle', YOM?: number | null }> | null }> | null };
+export type LiveEventsQuery = { __typename?: 'Query', liveEvents?: Array<{ __typename?: 'Event', bidLock?: string | null, createdAt?: any | null, createdById?: string | null, vehiclesCount?: number | null, downloadableFile_filename?: string | null, endDate: any, eventCategory: string, eventNo: number, extraTime?: number | null, extraTimeTrigerIn?: number | null, firstVehicleEndDate: any, gapInBetweenVehicles?: number | null, id: string, noOfBids: number, pauseDate?: any | null, pausedTotalTime?: number | null, startDate: any, status?: string | null, termsAndConditions: string, updatedAt?: any | null, vehicleLiveTimeIn?: number | null, location?: { __typename?: 'Location', name: string, id: string } | null, seller?: { __typename?: 'Seller', name: string, mobile: string } | null, vehicleCategory?: { __typename?: 'VehicleCategory', name: string } | null }> | null };
 
 export type UpcomingEventsQueryVariables = Exact<{
   take?: InputMaybe<Scalars['Int']>;
@@ -1841,8 +1841,8 @@ export const useCreateEnquiryMutation = <
       options
     );
 export const LiveEventsDocument = `
-    query LiveEvents($orderBy: [VehicleOrderByInput!], $take: Int, $skip: Int) {
-  liveEvents {
+    query LiveEvents($orderBy: [EventOrderByInput!], $take: Int, $skip: Int) {
+  liveEvents(orderBy: $orderBy, take: $take, skip: $skip) {
     bidLock
     createdAt
     createdById
@@ -1875,9 +1875,6 @@ export const LiveEventsDocument = `
       name
     }
     vehicleLiveTimeIn
-    vehicles(orderBy: $orderBy, take: $take, skip: $skip) {
-      YOM
-    }
   }
 }
     `;
