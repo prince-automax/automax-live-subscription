@@ -138,7 +138,7 @@ export default function PaymentsTable() {
                         <div className="mt-2">
                          {
                           item?.image && ( <Image
-                            src={item?.image && item?.image }
+                            src={item?.image && item?.image.trim() }
                             alt="payment Image"
                             width={250}
                             height={128}
