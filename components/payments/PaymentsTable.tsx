@@ -137,7 +137,7 @@ console.log('process.env.BASE_URL',process.env.BASE_URL);
                         </div> */}
                         <div className="mt-2">
                           {item?.image ? (
-                            <Image
+                            <img
                               src={item.image.trim()}
                               alt={item.image}
                               width={250}
