@@ -116,10 +116,8 @@ function Events() {
   const vehicleUpdate = useVehicleUpdateSubscription();
   const BidUpdate = useBidCreationSubscription();
 
-  console.log('bid',BidUpdate?.data);
-  console.log('vehicle',vehicleUpdate);
-  
-  
+  console.log("bid", BidUpdate?.data);
+  console.log("vehicle", vehicleUpdate);
 
   // const { data:result, loading } = useVehicleUpdateSubscription();
 
@@ -234,110 +232,104 @@ function Events() {
     return true;
   }
 
- 
- 
-    // async function CallBid(amount, vehicleId) {
-    //   const confirmed = await Swal.fire({
-    //     text: `Are you sure to bid for Rs. ${amount}?`,
-    //     title: "BID CONFIRMATION",
-    //     icon: "question",
-    //     showCancelButton: true,
-    //     confirmButtonColor: "#3085d6",
-    //     cancelButtonColor: "#d33",
-    //     confirmButtonText: "Yes, bid for it!",
-    //     customClass: {
-    //       popup: "animated bounceInDown",
-    //       container: "custom-swal-container",
-    //     },
-    //   });
+  // async function CallBid(amount, vehicleId) {
+  //   const confirmed = await Swal.fire({
+  //     text: `Are you sure to bid for Rs. ${amount}?`,
+  //     title: "BID CONFIRMATION",
+  //     icon: "question",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "Yes, bid for it!",
+  //     customClass: {
+  //       popup: "animated bounceInDown",
+  //       container: "custom-swal-container",
+  //     },
+  //   });
 
-    //   if (confirmed.isConfirmed) {
-    //     try {
-    //       const result = await callCreateBid.mutateAsync({
-    //         bidVehicleId: vehicleId,
-    //         createBidInput: {
-    //           amount: Number(amount), // Ensure amount is a number
-    //         },
-    //       });
-    //       // console.log("Bid", result);
-    //       Swal.fire("Success!", "Your bid has been submitted.", "success");
-    //     } catch (e) {
-    //       // Handle different types of errors
-    //       let errorMessage = "An error occurred. Please try again.";
+  //   if (confirmed.isConfirmed) {
+  //     try {
+  //       const result = await callCreateBid.mutateAsync({
+  //         bidVehicleId: vehicleId,
+  //         createBidInput: {
+  //           amount: Number(amount), // Ensure amount is a number
+  //         },
+  //       });
+  //       // console.log("Bid", result);
+  //       Swal.fire("Success!", "Your bid has been submitted.", "success");
+  //     } catch (e) {
+  //       // Handle different types of errors
+  //       let errorMessage = "An error occurred. Please try again.";
 
-    //       if (e.response) {
-    //         // Check for specific error messages
-    //         const errorMessages = e.response.errors || [];
-    //         if (errorMessages.length > 0) {
-    //           errorMessage = errorMessages.map((err) => err.message).join(", ");
-    //         }
-    //       } else if (e.message) {
-    //         // Fallback for general errors
-    //         errorMessage = e.message;
-    //       }
+  //       if (e.response) {
+  //         // Check for specific error messages
+  //         const errorMessages = e.response.errors || [];
+  //         if (errorMessages.length > 0) {
+  //           errorMessage = errorMessages.map((err) => err.message).join(", ");
+  //         }
+  //       } else if (e.message) {
+  //         // Fallback for general errors
+  //         errorMessage = e.message;
+  //       }
 
-    //       // Display the error message to the user
-    //       Swal.fire("Error!", errorMessage, "error");
-    //     }
-    //   }
-    // }
+  //       // Display the error message to the user
+  //       Swal.fire("Error!", errorMessage, "error");
+  //     }
+  //   }
+  // }
 
-    async function CallBid(amount, vehicleId) {
-      const confirmed = await Swal.fire({
-        text: `Are you sure to bid for Rs. ${amount}?`,
-        title: "BID CONFIRMATION",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, bid for it!",
-        customClass: {
-          popup: "animated bounceInDown",
-        },
-        didOpen: () => {
-          const swalContainer = Swal.getContainer();
-    
-          // Styling the container to cover the full screen with a blurred overlay
-          swalContainer.style.position = "fixed";
-          swalContainer.style.top = "0";
-          swalContainer.style.left = "0";
-          swalContainer.style.width = "100vw";
-          swalContainer.style.height = "100vh";
-          swalContainer.style.background = "rgba(0, 0, 0, 0.5)"; // Dark semi-transparent background
-          swalContainer.style.backdropFilter = "blur(0.5px)"; // Apply a blur effect
-          swalContainer.style.zIndex = "1050";
-        },
-      });
-    
-      if (confirmed.isConfirmed) {
-        try {
-          const result = await callCreateBid.mutateAsync({
-            bidVehicleId: vehicleId,
-            createBidInput: {
-              amount: Number(amount),
-            },
-          });
-          Swal.fire("Success!", "Your bid has been submitted.", "success");
-        } catch (e) {
-          let errorMessage = "An error occurred. Please try again.";
-    
-          if (e.response) {
-            const errorMessages = e.response.errors || [];
-            if (errorMessages.length > 0) {
-              errorMessage = errorMessages.map((err) => err.message).join(", ");
-            }
-          } else if (e.message) {
-            errorMessage = e.message;
+  async function CallBid(amount, vehicleId) {
+    const confirmed = await Swal.fire({
+      text: `Are you sure to bid for Rs. ${amount}?`,
+      title: "BID CONFIRMATION",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, bid for it!",
+      customClass: {
+        popup: "animated bounceInDown",
+      },
+      didOpen: () => {
+        const swalContainer = Swal.getContainer();
+
+        // Styling the container to cover the full screen with a blurred overlay
+        swalContainer.style.position = "fixed";
+        swalContainer.style.top = "0";
+        swalContainer.style.left = "0";
+        swalContainer.style.width = "100vw";
+        swalContainer.style.height = "100vh";
+        swalContainer.style.background = "rgba(0, 0, 0, 0.5)"; // Dark semi-transparent background
+        swalContainer.style.backdropFilter = "blur(0.5px)"; // Apply a blur effect
+        swalContainer.style.zIndex = "1050";
+      },
+    });
+
+    if (confirmed.isConfirmed) {
+      try {
+        const result = await callCreateBid.mutateAsync({
+          bidVehicleId: vehicleId,
+          createBidInput: {
+            amount: Number(amount),
+          },
+        });
+        Swal.fire("Success!", "Your bid has been submitted.", "success");
+      } catch (e) {
+        let errorMessage = "An error occurred. Please try again.";
+
+        if (e.response) {
+          const errorMessages = e.response.errors || [];
+          if (errorMessages.length > 0) {
+            errorMessage = errorMessages.map((err) => err.message).join(", ");
           }
-    
-          Swal.fire( errorMessage, );
+        } else if (e.message) {
+          errorMessage = e.message;
         }
-      }
-    }   
-    
-                    
 
-  
+        Swal.fire(errorMessage);
+      }
+    }
+  }
 
   return (
     // <>
@@ -376,8 +368,13 @@ function Events() {
             // );
 
             // console.log('item',item);
-            
-            console.log("biddssss", item?.registrationNumber ,data?.event?.noOfBids,item?.userVehicleBidsCount)            
+
+            console.log(
+              "biddssss",
+              item?.registrationNumber,
+              data?.event?.noOfBids,
+              item?.userVehicleBidsCount
+            );
 
             return (
               <>
@@ -448,7 +445,6 @@ function Events() {
 
                     <div className=" mt-4 pb-3 border-b-2 border-zinc-200">
                       <dl className="grid grid-cols-3 gap-x-2 gap-y-4 sm:gap-x-4 sm:gap-y-3">
-
                         <div className=" flex flex-col items-center justify-between sm:block">
                           <dt className="text-sm font-bold sm:font-medium text-gray-500">
                             Odometer
@@ -501,7 +497,6 @@ function Events() {
                             Bids Remaining
                           </dt>
                           <dd className="text-sm font-medium sm:font-normal text-gray-900">
-                           
                             {data?.event?.noOfBids - item?.userVehicleBidsCount}
                           </dd>
                         </div>
@@ -553,19 +548,17 @@ function Events() {
                               className=" flex items-center justify-between text-sm font-roboto font-medium text-blue-800 "
                               onClick={() => setShowInspectionReportModal(true)}
                             >
-                              {
-                                item?.inspectionLink !== "" && item?.inspectionLink !==null && (
+                              {item?.inspectionLink !== "" &&
+                                item?.inspectionLink !== null && (
                                   <Link href={item?.inspectionLink}>
-                                  <a
-                                    target="_blank"
-                                    className="flex items-center text-sm font-roboto font-medium text-[#2563EB]"
-                                  >
-                                    Inspection Report
-                                  </a>
-                                </Link>
-                                )
-                              }
-                             
+                                    <a
+                                      target="_blank"
+                                      className="flex items-center text-sm font-roboto font-medium text-[#2563EB]"
+                                    >
+                                      Inspection Report
+                                    </a>
+                                  </Link>
+                                )}
 
                               <FontAwesomeIcon icon={faCircleInfo} />
                             </div>
@@ -1008,21 +1001,21 @@ function Events() {
                             />
                             Inspection Report
                              */}
-                             { item?.inspectionLink !== "" && item?.inspectionLink !==null && (
-                               <Link href={item?.inspectionLink}>
-                               <a
-                                 target="_blank"
-                                 className="flex items-center text-xs sm:text-sm  text-blue-800"
-                               >
-                                 <DocumentReportIcon
-                                   className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
-                                   aria-hidden="true"
-                                 />
-                                 Inspection Report
-                               </a>
-                             </Link>
-                             )}
-                           
+                            {item?.inspectionLink !== "" &&
+                              item?.inspectionLink !== null && (
+                                <Link href={item?.inspectionLink}>
+                                  <a
+                                    target="_blank"
+                                    className="flex items-center text-xs sm:text-sm  text-blue-800"
+                                  >
+                                    <DocumentReportIcon
+                                      className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
+                                      aria-hidden="true"
+                                    />
+                                    Inspection Report
+                                  </a>
+                                </Link>
+                              )}
                           </div>
                           <div className="mt-2">
                             <Link href={`/vehicle/${item.id}`}>
@@ -1235,7 +1228,9 @@ const EnterBid = ({ row, call, event }) => {
             Swal.fire({
               title: "Bid amount should be greater than last bid",
               confirmButtonText: "OK",
-              position: "top",
+              icon: "warning", // You can use 'success', 'error', 'info', or 'question' as well
+
+              position: "center",
             });
           } else if (parseInt(bidAmount) % row.quoteIncreament !== 0) {
             let value = parseInt(bidAmount) % row.quoteIncreament;
@@ -1245,19 +1240,25 @@ const EnterBid = ({ row, call, event }) => {
               title:
                 "Bid amount should be greater than minimum quote increment.",
               confirmButtonText: "OK",
-              position: "top",
+              icon: "warning", // You can use 'success', 'error', 'info', or 'question' as well
+
+              position: "center",
             });
           } else if (row.startPrice > parseInt(bidAmount)) {
             Swal.fire({
               title: "Bid amount should be greater than start price.",
               confirmButtonText: "OK",
-              position: "top",
+              icon: "warning", // You can use 'success', 'error', 'info', or 'question' as well
+
+              position: "center",
             });
           } else if (parseInt(bidAmount) > 2147483647) {
             Swal.fire({
               title: "Bid amount exceeded the limit.",
               confirmButtonText: "OK",
-              position: "top",
+              icon: "warning", // You can use 'success', 'error', 'info', or 'question' as well
+
+              position: "center",
             });
           } else {
             call(bidAmount, row.id);

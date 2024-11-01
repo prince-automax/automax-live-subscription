@@ -157,7 +157,7 @@ function Vehicle() {
     const confirmed = await Swal.fire({
       text: `Are you sure to bid for Rs. ${amount}?`,
       title: "BID CONFIRMATION",
-      icon: "warning",
+      icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
@@ -543,7 +543,8 @@ function Vehicle() {
                       Swal.fire({
                         title: "Bid amount should be multiple of 100",
                         confirmButtonText: "OK",
-                        position: "top",
+                        icon: "warning", //
+                        position: "center",
                       });
                     } else if (
                       vehicle?.event?.bidLock === "locked" &&
@@ -552,7 +553,8 @@ function Vehicle() {
                       Swal.fire({
                         title: "Bid amount should be greater than last bid",
                         confirmButtonText: "OK",
-                        position: "top",
+                        icon: "warning", //
+                        position: "center",
                       });
                     } else if (
                       vehicle?.event?.bidLock != "locked" &&
@@ -562,7 +564,8 @@ function Vehicle() {
                       Swal.fire({
                         title: "Bid amount should be greater than last bid",
                         confirmButtonText: "OK",
-                        position: "top",
+                        position: "center",
+                        icon: "warning", //
                       });
                     } else if (
                       vehicle?.event?.bidLock === "locked" &&
@@ -572,7 +575,8 @@ function Vehicle() {
                         title:
                           "Bid amount should be greater than minimum quote increment.",
                         confirmButtonText: "OK",
-                        position: "top",
+                        icon: "warning", //
+                        position: "center",
                       });
                     } else if (
                       vehicle?.event?.bidLock != "locked" &&
@@ -584,19 +588,22 @@ function Vehicle() {
                         title:
                           "Bid amount should be greater than minimum quote increment.",
                         confirmButtonText: "OK",
-                        position: "top",
+                        position: "center",
+                        icon: "warning", //
                       });
                     } else if (vehicle?.startPrice > parseInt(bidAmount)) {
                       Swal.fire({
                         title: "Bid amount should be greater than start price.",
                         confirmButtonText: "OK",
-                        position: "top",
+                        position: "center",
+                        icon: "warning", //
                       });
                     } else if (parseInt(bidAmount) > 2147483647) {
                       Swal.fire({
                         title: "Bid amount exceeded the limit.",
                         confirmButtonText: "OK",
-                        position: "top",
+                        position: "center",
+                        icon: "warning", //
                       });
                     } else {
                       CallBid(bidAmount, vehicle?.id);

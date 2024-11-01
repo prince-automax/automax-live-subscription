@@ -51,12 +51,10 @@ console.log('process.env.BASE_URL',process.env.BASE_URL);
 
   // console.log("userPayments", data?.user?.payments);
 
-
-  data?.user?.["payments"].map((item, index) => {
-    console.log("image", item?.image);
-    console.log("trimmed image", item?.image?.trim());
-  });
-  
+  console.log("data", data);
+  data?.user?.["payments"].map((item, index) =>
+    console.log("imaegge", item?.image)
+  );
 
   const renderPaymentFor = (paymentFor) => {
     switch (paymentFor) {
@@ -80,10 +78,7 @@ console.log('process.env.BASE_URL',process.env.BASE_URL);
         <div className="space-y-6 mt-8">
           {data &&
             data?.user &&
-            data?.user?.["payments"].map((item, index) => {
-              const image=item?.image
-              return(
-
+            data?.user?.["payments"].map((item, index) => (
               <div
                 key={`d${index}`}
                 className="sm:flex font-sans border border-gray-200 rounded bg-gray-100"
@@ -144,8 +139,8 @@ console.log('process.env.BASE_URL',process.env.BASE_URL);
                           {item?.image ? (
                             <Image
                             key={item.image}
-                            src={image}
-                            alt={item.image}
+                            src={item.image.trim()}
+                            alt="Payment screenshot"
                             width={250}
                             height={200}
                             className="mt-2 object-cover rounded-lg"
@@ -166,9 +161,7 @@ console.log('process.env.BASE_URL',process.env.BASE_URL);
                   </div>
                 </div>
               </div>
-                )    }
-            
-            )}
+            ))}
         </div>
       </div>
     </div>
