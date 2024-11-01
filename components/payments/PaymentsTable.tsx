@@ -54,7 +54,7 @@ console.log('process.env.BASE_URL',process.env.BASE_URL);
 
   data?.user?.["payments"].map((item, index) => {
     console.log("image", item?.image);
-    console.log("trimmed image", `${process.env.BASE_URL}${item?.image?.trim()}`);
+    console.log("trimmed image", item?.image?.trim());
   });
   
 
@@ -80,7 +80,10 @@ console.log('process.env.BASE_URL',process.env.BASE_URL);
         <div className="space-y-6 mt-8">
           {data &&
             data?.user &&
-            data?.user?.["payments"].map((item, index) => (
+            data?.user?.["payments"].map((item, index) => {
+              const image=item?.image
+              return(
+
               <div
                 key={`d${index}`}
                 className="sm:flex font-sans border border-gray-200 rounded bg-gray-100"
@@ -141,7 +144,7 @@ console.log('process.env.BASE_URL',process.env.BASE_URL);
                           {item?.image ? (
                             <Image
                             key={item.image}
-                            src={`${process.env.NEXT_PUBLIC_BASE_URL}${item.image.trim()}`}
+                            src={image}
                             alt={item.image}
                             width={250}
                             height={200}
@@ -163,7 +166,9 @@ console.log('process.env.BASE_URL',process.env.BASE_URL);
                   </div>
                 </div>
               </div>
-            ))}
+                )    }
+            
+            )}
         </div>
       </div>
     </div>
