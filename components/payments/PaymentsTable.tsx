@@ -138,13 +138,13 @@ console.log('process.env.BASE_URL',process.env.BASE_URL);
                         <div className="mt-2">
                           {item?.image ? (
                             <Image
-                              src={item.image.trim()}
+                              src="https://autobseimagesandexcel-dev.s3.ap-south-1.amazonaws.com/275e9f66-b59c-470f-95c1-83d5f6be509a"
                               alt={item.image}
                               width={250}
                               height={200}
-                              onError={(e) => {
-                                e.currentTarget.src = "../"; // Replace with an accessible local fallback image
-                              }}
+                              // onError={(e) => {
+                              //   e.currentTarget.src = "../"; // Replace with an accessible local fallback image
+                              // }}
                               className="mt-2 object-cover rounded-lg"
                             />
                           ) : (
