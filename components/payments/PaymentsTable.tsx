@@ -132,11 +132,11 @@ export default function PaymentsTable() {
                         </div> */}
                         <div className="mt-2">
                           {item?.image && item?.image !== " " && (
-                            <img
+                            <Image
                               src={item?.image && item?.image?.trim()}
                               alt={item?.image}
                               width={250}
-                              height={128}
+                              height={200}
                               className="mt-2 object-cover rounded-lg"
                             />
                           )}
@@ -150,6 +150,9 @@ export default function PaymentsTable() {
                       </div>
                     </div>
                   </div>
+
+
+
                 </div>
               </div>
             ))}

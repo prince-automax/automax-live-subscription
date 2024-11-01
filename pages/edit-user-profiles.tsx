@@ -458,7 +458,7 @@ function ProfileUpdate() {
                         <FormField
                           field="input"
                           required
-                          disabled
+                          
                           name="mobile"
                           label="Mobile Number"
                           width="w-full"
