@@ -139,7 +139,7 @@ console.log('process.env.BASE_URL',process.env.BASE_URL);
                           {item?.image ? (
                             <Image
                             key={item.image}
-                            src={item.image.trim()}
+                            src="https://autobseimagesandexcel-dev.s3.ap-south-1.amazonaws.com/4665bf20-50e5-4d65-8b91-01b4afeb7401"
                             alt={item.image}
                             width={250}
                             height={200}
