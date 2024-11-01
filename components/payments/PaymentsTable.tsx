@@ -3,6 +3,8 @@ import Image from "next/image";
 import PostThumb1 from "@assets/receipt.jpeg";
 import Button from "@components/ui/Button";
 import Badge from "@components/ui/Badge";
+import placeholder from "@assets/noImage.jpeg";
+
 import {
   CalendarIcon,
   CheckCircleIcon,
@@ -27,6 +29,9 @@ export default function PaymentsTable() {
       setAccessToken(token);
     }
   }, []);
+
+console.log('process.env.BASE_URL',process.env.BASE_URL);
+
 
   const { data, isLoading } = useFindUserPaymentsQuery<FindUserPaymentsQuery>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
@@ -131,14 +136,19 @@ export default function PaymentsTable() {
                             : ""}
                         </div> */}
                         <div className="mt-2">
-                          {item?.image && item?.image !== " " && (
+                          {item?.image ? (
                             <Image
-                              src={item?.image && item?.image?.trim()}
-                              alt={item?.image}
+                              src={item.image.trim()}
+                              alt={item.image}
                               width={250}
                               height={200}
+                              onError={(e) => {
+                                e.currentTarget.src = "../"; // Replace with an accessible local fallback image
+                              }}
                               className="mt-2 object-cover rounded-lg"
                             />
+                          ) : (
+                            <p>No image available</p>
                           )}
                         </div>
                         <div className="mt-2 flex items-center text-sm text-gray-500">
@@ -150,9 +160,6 @@ export default function PaymentsTable() {
                       </div>
                     </div>
                   </div>
-
-
-
                 </div>
               </div>
             ))}
