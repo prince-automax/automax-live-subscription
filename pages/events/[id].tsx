@@ -447,7 +447,8 @@ function Events() {
                     {/* vehicle information starts here */}
 
                     <div className=" mt-4 pb-3 border-b-2 border-zinc-200">
-                      <dl className="grid grid-cols-3 gap-x-2 gap-y-4 sm:gap-x-4 sm:gap-y-3  ">
+                      <dl className="grid grid-cols-3 gap-x-2 gap-y-4 sm:gap-x-4 sm:gap-y-3">
+
                         <div className=" flex flex-col items-center justify-between sm:block">
                           <dt className="text-sm font-bold sm:font-medium text-gray-500">
                             Odometer
@@ -456,7 +457,8 @@ function Events() {
                             {item?.kmReading ?? "N/A"} km
                           </dd>
                         </div>
-                        <div className=" sm:col-span-1 flex items-center justify-between sm:block">
+
+                        <div className=" flex flex-col items-center justify-between sm:block">
                           <dt className="text-sm font-bold sm:font-medium text-gray-500">
                             Ownership
                           </dt>
@@ -464,6 +466,7 @@ function Events() {
                             {item?.ownership}
                           </dd>
                         </div>
+
                         <div className=" flex flex-col items-center justify-between sm:block">
                           <dt className="text-sm font-bold sm:font-medium text-gray-500">
                             RC Book
@@ -472,6 +475,7 @@ function Events() {
                             {item?.rcStatus}
                           </dd>
                         </div>
+
                         <div className=" flex flex-col items-center justify-between sm:block">
                           <dt className="text-sm font-bold sm:font-medium text-gray-500">
                             Repo date
@@ -482,6 +486,7 @@ function Events() {
                               : "N/A"}
                           </dd>
                         </div>
+
                         <div className=" flex flex-col items-center justify-between sm:block">
                           <dt className="text-sm font-bold sm:font-medium text-gray-500">
                             Total Bids
@@ -490,6 +495,7 @@ function Events() {
                             {item?.userVehicleBidsCount}
                           </dd>
                         </div>
+
                         <div className=" flex flex-col items-center justify-between sm:block">
                           <dt className="text-sm font-bold sm:font-medium text-gray-500">
                             Bids Remaining
@@ -499,6 +505,7 @@ function Events() {
                             {data?.event?.noOfBids - item?.userVehicleBidsCount}
                           </dd>
                         </div>
+
                         <div className=" flex flex-col items-center justify-between sm:block">
                           <dt className="text-sm font-bold sm:font-medium text-gray-500">
                             Rank
@@ -508,7 +515,7 @@ function Events() {
                           </dd>
                         </div>
 
-                        <div className=" col-span-3 sm:col-span-1 flex max-sm:flex-col items-center justify-between sm:block  ">
+                        <div className=" flex flex-col items-center justify-between sm:block">
                           {data.event.bidLock === "locked" ? (
                             <>
                               <dt className="text-sm font-bold sm:font-medium text-gray-500">

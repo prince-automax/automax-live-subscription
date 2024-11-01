@@ -433,7 +433,7 @@ function ProfileUpdate() {
                     <div className="col-span-6 sm:col-span-3">
                       <FormField
                         field="input"
-                        required
+                        
                         name="firstName"
                         label="First Name"
                         width="w-full"
@@ -446,7 +446,7 @@ function ProfileUpdate() {
                       <FormField
                         field="input"
                         name="lastName"
-                        required
+                        
                         label="Last Name"
                         width="w-full"
                         placeholder="Last Name"
@@ -457,7 +457,7 @@ function ProfileUpdate() {
                     <div className="col-span-6  sm:col-span-3">
                       <FormField
                         field="input"
-                        required
+                        
                         name="email"
                         label="Email Address"
                         width="w-full"
@@ -530,7 +530,7 @@ function ProfileUpdate() {
                         name="idProofNo"
                         label="Aadhar Card Number"
                         placeholder="Enter your Aadhar Card Number"
-                        required
+                        
                         width="w-full"
                       />
                     </div>
