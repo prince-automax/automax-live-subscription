@@ -54,7 +54,7 @@ console.log('process.env.BASE_URL',process.env.BASE_URL);
 
   data?.user?.["payments"].map((item, index) => {
     console.log("image", item?.image);
-    console.log("trimmed image", `${process.env.NEXT_PUBLIC_BASE_URL}${item?.image?.trim()}`);
+    console.log("trimmed image", `${process.env.BASE_URL}${item?.image?.trim()}`);
   });
   
 
