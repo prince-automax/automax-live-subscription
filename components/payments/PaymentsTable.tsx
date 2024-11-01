@@ -51,10 +51,12 @@ console.log('process.env.BASE_URL',process.env.BASE_URL);
 
   // console.log("userPayments", data?.user?.payments);
 
-  console.log("data", data);
-  data?.user?.["payments"].map((item, index) =>
-    console.log("imaegge", item?.image)
-  );
+
+  data?.user?.["payments"].map((item, index) => {
+    console.log("image", item?.image);
+    console.log("trimmed image", item?.image?.trim());
+  });
+  
 
   const renderPaymentFor = (paymentFor) => {
     switch (paymentFor) {
