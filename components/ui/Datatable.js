@@ -82,7 +82,7 @@ function Datatable(props) {
       )}
 
       {!alternateLayout ? (
-        <div className="mt-2 ring-1 ring-gray-300 rounded-lg overflow-auto max-sm:overflow-scroll max-sm:h-[450px]  md:max-w-4xl lg:max-w-2xl xl:max-w-6xl">
+        <div className="mt-2 ring-1 ring-gray-300 rounded-lg overflow-auto max-sm:overflow-scroll max-sm:h-[450px] lg:max-w-2xl  xl:max-w-[1115px] scrollbar-hide">
           <table
             {...getTableProps()}
             className="min-w-full divide-y divide-gray-300 relative max-sm:uppercase"
