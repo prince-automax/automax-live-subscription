@@ -25,6 +25,7 @@ export type Scalars = {
 export type Bid = {
   __typename?: 'Bid';
   amount: Scalars['Float'];
+  bidVehicle?: Maybe<Vehicle>;
   bidVehicleId: Scalars['String'];
   createdAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['String'];
@@ -35,6 +36,7 @@ export type Bid = {
 };
 
 export type BidWhereUniqueInput = {
+  bidVehicleId?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
 };
 
@@ -285,6 +287,7 @@ export type Event = {
   vehiclesCount?: Maybe<Scalars['Int']>;
   vehiclesLive: Array<Vehicle>;
   vehiclesTemp: Array<Vehicle>;
+  watchedBy?: Maybe<Array<User>>;
 };
 
 
@@ -873,6 +876,11 @@ export type QueryBidArgs = {
 };
 
 
+export type QueryBidsArgs = {
+  where: BidWhereUniqueInput;
+};
+
+
 export type QueryEnquiryArgs = {
   where: EnquiryWhereUniqueInput;
 };
@@ -1346,6 +1354,7 @@ export type User = {
   BalanceEMDAmount?: Maybe<Scalars['Float']>;
   aadharcard_back_image?: Maybe<Scalars['String']>;
   aadharcard_front_image?: Maybe<Scalars['String']>;
+  activeBids?: Maybe<Array<Vehicle>>;
   bid?: Maybe<Array<Bid>>;
   businessName: Scalars['String'];
   city: Scalars['String'];
@@ -1367,6 +1376,7 @@ export type User = {
   pancard_image?: Maybe<Scalars['String']>;
   payments?: Maybe<Array<Payment>>;
   paymentsCount?: Maybe<Scalars['Int']>;
+  removeWatchlist: Array<User>;
   role: Scalars['String'];
   state: Scalars['String'];
   states?: Maybe<Array<State>>;
@@ -1376,6 +1386,25 @@ export type User = {
   userCategory: Scalars['String'];
   username: Scalars['String'];
   vehicleBuyingLimit?: Maybe<Scalars['Int']>;
+  watchList?: Maybe<Array<Vehicle>>;
+  watchListTemp: Array<User>;
+};
+
+
+export type UserRemoveWatchlistArgs = {
+  vehicleUniqueInput: VehicleWhereUniqueInput;
+};
+
+
+export type UserWatchListArgs = {
+  vehicleUniqueInput: VehicleWhereUniqueInput;
+};
+
+
+export type UserWatchListTempArgs = {
+  orderBy?: InputMaybe<Array<UserOrderByInput>>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 export enum UserIdProofTypeType {
@@ -1490,6 +1519,7 @@ export type Vehicle = {
   vehicleIndexNo: Scalars['Float'];
   vehicleRemarks?: Maybe<Scalars['String']>;
   veicleLocation?: Maybe<Scalars['String']>;
+  watchedBy?: Maybe<Array<User>>;
   yardLocation?: Maybe<Scalars['String']>;
 };
 
@@ -1633,7 +1663,7 @@ export type GetEventsQueryVariables = Exact<{
 }>;
 
 
-export type GetEventsQuery = { __typename?: 'Query', event: { __typename?: 'Event', bidLock?: string | null, createdAt?: any | null, vehiclesCount?: number | null, createdById?: string | null, downloadableFile_filename?: string | null, endDate: any, eventCategory: string, eventNo: number, extraTime?: number | null, extraTimeTrigerIn?: number | null, firstVehicleEndDate: any, gapInBetweenVehicles?: number | null, id: string, noOfBids: number, pauseDate?: any | null, pausedTotalTime?: number | null, startDate: any, status?: string | null, termsAndConditions: string, vehicleLiveTimeIn?: number | null, location?: { __typename?: 'Location', name: string, id: string } | null, seller?: { __typename?: 'Seller', mobile: string, name: string, nationalHead: string, id: string, contactPerson?: string | null } | null, vehicleCategory?: { __typename?: 'VehicleCategory', name: string } | null, vehiclesTemp: Array<{ __typename?: 'Vehicle', YOM?: number | null, additionalRemarks?: string | null, approxParkingCharges?: string | null, area?: string | null, auctionManager?: string | null, autobseContact?: string | null, autobse_contact_person?: string | null, bidAmountUpdate?: number | null, bidStartTime: any, bidTimeExpire: any, buyerFees?: string | null, category?: string | null, chassisNo?: string | null, city?: string | null, clientContactNo?: string | null, clientContactPerson?: string | null, climateControl?: string | null, color?: string | null, createdAt?: any | null, createdById?: string | null, currentBidAmount?: number | null, dateOfRegistration?: string | null, doorCount?: number | null, engineNo?: string | null, fitness?: string | null, fuel?: string | null, gearBox?: string | null, hypothication?: string | null, id: string, image?: string | null, inspectionLink?: string | null, insurance?: string | null, insuranceStatus?: string | null, insuranceValidTill?: string | null, kmReading?: number | null, loanAgreementNo: string, lotNumber?: number | null, make?: string | null, mileage?: number | null, model?: string | null, ownership?: number | null, parkingCharges?: string | null, parkingRate?: string | null, paymentTerms?: string | null, permit?: string | null, powerSteering?: string | null, quoteIncreament?: number | null, rcStatus?: string | null, registeredOwnerName?: string | null, registrationNumber: string, repoDt?: string | null, reservePrice?: number | null, rtoFine?: string | null, shape?: string | null, startPrice?: number | null, startBidAmount?: number | null, updatedAt?: any | null, varient?: string | null, vehicleCondition?: string | null, vehicleIndexNo: number, vehicleRemarks?: string | null, veicleLocation?: string | null, yardLocation?: string | null, userVehicleBidsCount?: number | null, totalBids?: number | null, myBidRank?: number | null, userVehicleBids?: Array<{ __typename?: 'Bid', amount: number, userId: string, id: string, name: string, bidVehicleId: string }> | null }> } };
+export type GetEventsQuery = { __typename?: 'Query', event: { __typename?: 'Event', bidLock?: string | null, createdAt?: any | null, vehiclesCount?: number | null, createdById?: string | null, downloadableFile_filename?: string | null, endDate: any, eventCategory: string, eventNo: number, extraTime?: number | null, extraTimeTrigerIn?: number | null, firstVehicleEndDate: any, gapInBetweenVehicles?: number | null, id: string, noOfBids: number, pauseDate?: any | null, pausedTotalTime?: number | null, startDate: any, status?: string | null, termsAndConditions: string, vehicleLiveTimeIn?: number | null, location?: { __typename?: 'Location', name: string, id: string } | null, seller?: { __typename?: 'Seller', mobile: string, name: string, nationalHead: string, id: string, contactPerson?: string | null } | null, vehicleCategory?: { __typename?: 'VehicleCategory', name: string } | null, vehiclesTemp: Array<{ __typename?: 'Vehicle', YOM?: number | null, additionalRemarks?: string | null, approxParkingCharges?: string | null, area?: string | null, auctionManager?: string | null, autobseContact?: string | null, autobse_contact_person?: string | null, bidAmountUpdate?: number | null, bidStartTime: any, bidTimeExpire: any, buyerFees?: string | null, category?: string | null, chassisNo?: string | null, city?: string | null, clientContactNo?: string | null, clientContactPerson?: string | null, climateControl?: string | null, color?: string | null, createdAt?: any | null, createdById?: string | null, currentBidAmount?: number | null, dateOfRegistration?: string | null, doorCount?: number | null, engineNo?: string | null, fitness?: string | null, fuel?: string | null, gearBox?: string | null, hypothication?: string | null, id: string, image?: string | null, inspectionLink?: string | null, insurance?: string | null, insuranceStatus?: string | null, insuranceValidTill?: string | null, kmReading?: number | null, loanAgreementNo: string, lotNumber?: number | null, make?: string | null, mileage?: number | null, model?: string | null, ownership?: number | null, parkingCharges?: string | null, parkingRate?: string | null, paymentTerms?: string | null, permit?: string | null, powerSteering?: string | null, quoteIncreament?: number | null, rcStatus?: string | null, registeredOwnerName?: string | null, registrationNumber: string, repoDt?: string | null, reservePrice?: number | null, rtoFine?: string | null, shape?: string | null, startPrice?: number | null, startBidAmount?: number | null, updatedAt?: any | null, varient?: string | null, vehicleCondition?: string | null, vehicleIndexNo: number, vehicleRemarks?: string | null, veicleLocation?: string | null, yardLocation?: string | null, userVehicleBidsCount?: number | null, totalBids?: number | null, myBidRank?: number | null, userVehicleBids?: Array<{ __typename?: 'Bid', amount: number, userId: string, id: string, name: string, bidVehicleId: string }> | null, watchedBy?: Array<{ __typename?: 'User', id: string }> | null }> } };
 
 export type TimeQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1690,6 +1720,24 @@ export type GetVehicleQueryVariables = Exact<{
 
 
 export type GetVehicleQuery = { __typename?: 'Query', vehicle: { __typename?: 'Vehicle', YOM?: number | null, additionalRemarks?: string | null, approxParkingCharges?: string | null, area?: string | null, auctionManager?: string | null, autobseContact?: string | null, autobse_contact_person?: string | null, bidAmountUpdate?: number | null, bidStartTime: any, bidTimeExpire: any, buyerFees?: string | null, category?: string | null, chassisNo?: string | null, city?: string | null, clientContactNo?: string | null, clientContactPerson?: string | null, climateControl?: string | null, color?: string | null, createdAt?: any | null, createdById?: string | null, currentBidAmount?: number | null, dateOfRegistration?: string | null, doorCount?: number | null, engineNo?: string | null, fitness?: string | null, fuel?: string | null, gearBox?: string | null, hypothication?: string | null, id: string, image?: string | null, inspectionLink?: string | null, insurance?: string | null, insuranceStatus?: string | null, insuranceValidTill?: string | null, kmReading?: number | null, loanAgreementNo: string, lotNumber?: number | null, make?: string | null, mileage?: number | null, model?: string | null, ownership?: number | null, parkingCharges?: string | null, parkingRate?: string | null, paymentTerms?: string | null, permit?: string | null, powerSteering?: string | null, quoteIncreament?: number | null, rcStatus?: string | null, registeredOwnerName?: string | null, registrationNumber: string, repoDt?: string | null, reservePrice?: number | null, rtoFine?: string | null, shape?: string | null, startPrice?: number | null, startBidAmount?: number | null, updatedAt?: any | null, varient?: string | null, vehicleCondition?: string | null, vehicleIndexNo: number, vehicleRemarks?: string | null, veicleLocation?: string | null, yardLocation?: string | null, userVehicleBidsCount?: number | null, totalBids?: number | null, myBidRank?: number | null, userVehicleBids?: Array<{ __typename?: 'Bid', amount: number, userId: string, id: string, name: string, bidVehicleId: string }> | null, event?: { __typename?: 'Event', startDate: any, noOfBids: number, gapInBetweenVehicles?: number | null, bidLock?: string | null, endDate: any, status?: string | null, eventNo: number, seller?: { __typename?: 'Seller', name: string, contactPerson?: string | null } | null } | null } };
+
+export type AddToWatchlistMutationVariables = Exact<{
+  data: UpdateUserInput;
+  where: UserWhereUniqueInput;
+  watchListVehicleUniqueInput2: VehicleWhereUniqueInput;
+}>;
+
+
+export type AddToWatchlistMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, watchList?: Array<{ __typename?: 'Vehicle', id: string }> | null } };
+
+export type RemoveFromWatchlistMutationVariables = Exact<{
+  data: UpdateUserInput;
+  where: UserWhereUniqueInput;
+  vehicleUniqueInput: VehicleWhereUniqueInput;
+}>;
+
+
+export type RemoveFromWatchlistMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, removeWatchlist: Array<{ __typename?: 'User', id: string }> } };
 
 
 export const LoginUsingPasswordDocument = `
@@ -2050,6 +2098,9 @@ export const GetEventsDocument = `
       vehicleIndexNo
       vehicleRemarks
       veicleLocation
+      watchedBy {
+        id
+      }
       yardLocation
       userVehicleBidsCount
       totalBids
@@ -2383,5 +2434,51 @@ export const useGetVehicleQuery = <
     useQuery<GetVehicleQuery, TError, TData>(
       ['GetVehicle', variables],
       fetcher<GetVehicleQuery, GetVehicleQueryVariables>(client, GetVehicleDocument, variables, headers),
+      options
+    );
+export const AddToWatchlistDocument = `
+    mutation AddToWatchlist($data: UpdateUserInput!, $where: UserWhereUniqueInput!, $watchListVehicleUniqueInput2: VehicleWhereUniqueInput!) {
+  updateUser(data: $data, where: $where) {
+    id
+    watchList(vehicleUniqueInput: $watchListVehicleUniqueInput2) {
+      id
+    }
+  }
+}
+    `;
+export const useAddToWatchlistMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<AddToWatchlistMutation, TError, AddToWatchlistMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<AddToWatchlistMutation, TError, AddToWatchlistMutationVariables, TContext>(
+      ['AddToWatchlist'],
+      (variables?: AddToWatchlistMutationVariables) => fetcher<AddToWatchlistMutation, AddToWatchlistMutationVariables>(client, AddToWatchlistDocument, variables, headers)(),
+      options
+    );
+export const RemoveFromWatchlistDocument = `
+    mutation RemoveFromWatchlist($data: UpdateUserInput!, $where: UserWhereUniqueInput!, $vehicleUniqueInput: VehicleWhereUniqueInput!) {
+  updateUser(data: $data, where: $where) {
+    id
+    removeWatchlist(vehicleUniqueInput: $vehicleUniqueInput) {
+      id
+    }
+  }
+}
+    `;
+export const useRemoveFromWatchlistMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<RemoveFromWatchlistMutation, TError, RemoveFromWatchlistMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<RemoveFromWatchlistMutation, TError, RemoveFromWatchlistMutationVariables, TContext>(
+      ['RemoveFromWatchlist'],
+      (variables?: RemoveFromWatchlistMutationVariables) => fetcher<RemoveFromWatchlistMutation, RemoveFromWatchlistMutationVariables>(client, RemoveFromWatchlistDocument, variables, headers)(),
       options
     );

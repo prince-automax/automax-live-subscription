@@ -528,6 +528,10 @@ query GetEvents(
       vehicleIndexNo
       vehicleRemarks
       veicleLocation
+       watchedBy {
+        id
+        
+      }
       yardLocation
       userVehicleBidsCount
       totalBids

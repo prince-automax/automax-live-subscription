@@ -9,7 +9,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 function Dashboard() {
-  let [tabs] = useState({ Live: [], Completed: [] });
+  let [tabs] = useState({ Live: [], });
   return (
     <DashboardTemplate
       heading="Live Events"

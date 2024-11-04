@@ -3,8 +3,29 @@
 #     watchList(where: $watchListWhere2) {
 #   id
 #   registrationNumber
-  
 
 # }
 # }
 # }
+
+mutation AddToWatchlist(
+  $data: UpdateUserInput!
+  $where: UserWhereUniqueInput!
+  $watchListVehicleUniqueInput2: VehicleWhereUniqueInput!
+) {
+  updateUser(data: $data, where: $where) {
+    id
+    watchList(vehicleUniqueInput: $watchListVehicleUniqueInput2) {
+      id
+    }
+  }
+}
+
+mutation RemoveFromWatchlist($data: UpdateUserInput!, $where: UserWhereUniqueInput!, $vehicleUniqueInput: VehicleWhereUniqueInput!) {
+ updateUser(data: $data, where: $where) {
+  id
+  removeWatchlist(vehicleUniqueInput: $vehicleUniqueInput) {
+    id
+  }
+ }
+}
