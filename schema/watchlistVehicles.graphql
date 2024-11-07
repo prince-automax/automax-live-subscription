@@ -11,21 +11,100 @@
 mutation AddToWatchlist(
   $data: UpdateUserInput!
   $where: UserWhereUniqueInput!
-  $watchListVehicleUniqueInput2: VehicleWhereUniqueInput!
 ) {
   updateUser(data: $data, where: $where) {
     id
-    watchList(vehicleUniqueInput: $watchListVehicleUniqueInput2) {
+    watchList {
       id
     }
   }
 }
 
-mutation RemoveFromWatchlist($data: UpdateUserInput!, $where: UserWhereUniqueInput!, $vehicleUniqueInput: VehicleWhereUniqueInput!) {
- updateUser(data: $data, where: $where) {
-  id
-  removeWatchlist(vehicleUniqueInput: $vehicleUniqueInput) {
+mutation RemoveFromWatchlist(
+  $data: UpdateUserInput!
+  $where: UserWhereUniqueInput!
+) {
+  updateUser(data: $data, where: $where) {
     id
+    watchList {
+      id
+    }
+  }
+}
+
+query UserWatchlist($where: UserWhereUniqueInput!) {
+ user(where: $where) {
+  id
+  watchList {
+    id
+   image
+   YOM
+  watchedByCount
+    autobse_contact_person
+    autobseContact
+    userVehicleBidsCount
+    bidAmountUpdate
+    bidStartTime
+    bidStatus
+    bidTimeExpire
+  watchedBy {
+    id
+  }
+  reservePrice
+  currentBidAmount
+currentBidUser {
+  id
+}
+dateOfRegistration
+doorCount
+engineNo
+event {
+  bidLock
+  id
+  noOfBids
+  startDate
+  seller {
+    name
+  }
+}
+fitness
+fuel
+gearBox
+hypothication
+id
+image
+    inspectionLink
+    
+    kmReading
+    loanAgreementNo
+    lotNumber
+    make
+    
+    model
+    myBidRank
+ownership
+   
+    quoteIncreament
+    rcStatus
+    registrationNumber
+    
+    repoDt
+    startBidAmount
+    startPrice
+    state
+    totalBids
+    userVehicleBids {
+      amount
+      bidVehicle {
+      currentBidAmount  
+      }
+      name
+      bidVehicleId
+      userId
+    }
+    userVehicleBidsCount
+    varient
+    vehicleCondition
   }
  }
 }

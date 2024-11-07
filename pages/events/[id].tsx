@@ -19,6 +19,11 @@ import {
   // useUserWorkBookQuery,
   // UserWorkBookQueryVariables,
   // useFindAuctionsQuery,
+  useAddToWatchlistMutation,
+  AddToWatchlistMutationVariables,
+  useRemoveFromWatchlistMutation,
+  RemoveFromWatchlistMutationVariables,
+  useUserWatchlistQuery,
   useGetEventsQuery,
   GetEventsQuery,
   useCreateBidMutation,
@@ -33,6 +38,8 @@ import {
   useVehicleUpdateSubscription,
   VehicleUpdateSubscriptionVariables,
   useBidCreationSubscription,
+  useUpdateUserMutation,
+  UpdateUserMutationVariables
 } from "@utils/apollo";
 import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
@@ -67,7 +74,7 @@ function Events() {
   const { id, type } = router.query;
   const [accessToken, setAccessToken] = useState("");
   const [userId, setUserId] = useState("");
-  const [usrid, setUsrid] = useState("");
+  // const [usrid, setUsrid] = useState("");
   const [interval, setAPIInterval] = useState(2000);
   const queryClient = useQueryClient();
   const [tick, setTick] = useState(0);
@@ -101,7 +108,7 @@ function Events() {
   const { data: timeData } = useTimeQueryQuery<TimeQueryQueryVariables>(
     graphQLClient(),
     {},
-    { refetchInterval: 60000 }
+    // { refetchInterval: 60000 }
   );
 
   useEffect(() => {
@@ -115,9 +122,10 @@ function Events() {
 
   const vehicleUpdate = useVehicleUpdateSubscription();
   const BidUpdate = useBidCreationSubscription();
+  const UserUpdate= useUpdateUserMutation()
 
-  console.log("bid", BidUpdate?.data);
-  console.log("vehicle", vehicleUpdate);
+  // console.log("bid", BidUpdate?.data);
+  // console.log("vehicle", vehicleUpdate);
 
   // const { data:result, loading } = useVehicleUpdateSubscription();
 
@@ -136,7 +144,7 @@ function Events() {
       const id = localStorage.getItem("id");
       setAccessToken(token);
       setUserId(id);
-      setUsrid(id);
+      // setUsrid(id);
     }
   }, []);
 
@@ -161,23 +169,11 @@ function Events() {
     }
   );
 
-  console.log("data", data);
+  // console.log("data", data);
 
   useEffect(() => {
     refetch();
-  }, [vehicleUpdate, BidUpdate]);
-
-  // const {
-  //   data: workbook,
-  //   isLoading: workbookLoading,
-  //   refetch,
-  // } = useUserWorkBookQuery<UserWorkBookQueryVariables>(
-  //   graphQLClient({ Authorization: `Bearer ${accessToken}` })
-  // );
-
-  // useEffect(() => {
-  //   refetch();
-  // }, [workbook]);
+  }, [vehicleUpdate, BidUpdate,UserUpdate]);
 
   const callCreateBid = useCreateBidMutation<CreateBidMutationVariables>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` })
@@ -232,52 +228,6 @@ function Events() {
     return true;
   }
 
-  // async function CallBid(amount, vehicleId) {
-  //   const confirmed = await Swal.fire({
-  //     text: `Are you sure to bid for Rs. ${amount}?`,
-  //     title: "BID CONFIRMATION",
-  //     icon: "question",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#3085d6",
-  //     cancelButtonColor: "#d33",
-  //     confirmButtonText: "Yes, bid for it!",
-  //     customClass: {
-  //       popup: "animated bounceInDown",
-  //       container: "custom-swal-container",
-  //     },
-  //   });
-
-  //   if (confirmed.isConfirmed) {
-  //     try {
-  //       const result = await callCreateBid.mutateAsync({
-  //         bidVehicleId: vehicleId,
-  //         createBidInput: {
-  //           amount: Number(amount), // Ensure amount is a number
-  //         },
-  //       });
-  //       // console.log("Bid", result);
-  //       Swal.fire("Success!", "Your bid has been submitted.", "success");
-  //     } catch (e) {
-  //       // Handle different types of errors
-  //       let errorMessage = "An error occurred. Please try again.";
-
-  //       if (e.response) {
-  //         // Check for specific error messages
-  //         const errorMessages = e.response.errors || [];
-  //         if (errorMessages.length > 0) {
-  //           errorMessage = errorMessages.map((err) => err.message).join(", ");
-  //         }
-  //       } else if (e.message) {
-  //         // Fallback for general errors
-  //         errorMessage = e.message;
-  //       }
-
-  //       // Display the error message to the user
-  //       Swal.fire("Error!", errorMessage, "error");
-  //     }
-  //   }
-  // }
-
   async function CallBid(amount, vehicleId) {
     const confirmed = await Swal.fire({
       text: `Are you sure to bid for Rs. ${amount}?`,
@@ -331,6 +281,61 @@ function Events() {
     }
   }
 
+  const AddToWatchlist = useAddToWatchlistMutation(
+    graphQLClient({ Authorization: `Bearer ${accessToken}` })
+  );
+  const RemoveFromWatchlist = useRemoveFromWatchlistMutation(
+    graphQLClient({ Authorization: `Bearer ${accessToken}` })
+  );
+
+  const AddWatchlist = async (id: string) => {
+    try {
+      const result = await AddToWatchlist.mutateAsync({
+        data: {
+          watchList: {
+            connect: [
+              {
+                id: id,
+              },
+            ],
+          },
+        },
+        where: {
+          id: userId,
+        },
+      });
+
+      console.log("add watchlist result", result);
+    } catch (error) {
+      console.log(" Add watchlist error", error);
+    }
+  };
+
+  const RemoveWathclist = async (id: string) => {
+    try {
+      const result = await RemoveFromWatchlist.mutateAsync({
+        data: {
+          watchList: {
+            disconnect: [
+              {
+                id: id
+              }
+            ]
+          }
+        },
+        where: {
+          id: userId
+        }
+      });
+
+      console.log('result remove watchlist',result);
+      
+    } catch (error) {
+      console.log("remove watchlsit error",error);
+      
+    }
+  };
+
   return (
     // <>
     // </>
@@ -369,12 +374,12 @@ function Events() {
 
             // console.log('item',item);
 
-            console.log(
-              "biddssss",
-              item?.registrationNumber,
-              data?.event?.noOfBids,
-              item?.userVehicleBidsCount
-            );
+            // console.log(
+            //   "biddssss",
+            //   item?.registrationNumber,
+            //   data?.event?.noOfBids,
+            //   item?.userVehicleBidsCount
+            // );
 
             return (
               <>
@@ -395,7 +400,7 @@ function Events() {
                   {/* workbook, title, image, vehic info, add to watch, more details , inspection report */}
                   <div className="flex-auto p-3 space-y-5  ">
                     {/* workbook matched button */}
-                    {/* <div className="m-2">
+                    {/* <div className="m-2"> 
                           {find?.length > 0 && (
                             <Link href={`/workbook/${find[0].id}`}>
                               <a
@@ -582,42 +587,41 @@ function Events() {
                           </div>
                         </div>
                         {/* Add and Remove from watchlist starts here  */}
-                        {/* <>
-                              {IsCompleted(item) && (
-                                <div className="mt-4flex items-center text-sm text-gray-500 p-2">
-                                  {item?.watchedBy?.filter(
-                                    (watchlistUser) =>
-                                      watchlistUser?.id === userId
-                                  ).length > 0 ? (
-                                    <button
-                                      type="button"
-                                      className="inline-flex items-center px-14 py-4 border border-[#536DD9] shadow-sm text-sm font-roboto  leading-4 font-bold rounded-md text-[#536DD9]   "
-                                      onClick={() =>
-                                        removeFromWatchList(item.id)
-                                      }
-                                    >
-                                    
-                                      <FontAwesomeIcon 
-                                       className="-ml-0.5 mr-2 h-4 w-4"
-                                      icon={faSquareMinus} />
-                                      Remove from watchlist
-                                    </button>
-                                  ) : (
-                                    <button
-                                      type="button"
-                                      className="inline-flex items-center px-14 py-4 border border-[#536DD9] shadow-sm text-sm font-roboto  leading-4 font-bold rounded-md text-[#536DD9]   "
-                                      onClick={() => addToWatchList(item.id)}
-                                    >
-                                    
-                                      <FontAwesomeIcon
-                                       className="-ml-0.5 mr-2 h-4 w-4"
-                                      icon={faSquarePlus} />
-                                      Add to watchlist
-                                    </button>
-                                  )}
-                                </div>
+                        <>
+                          {IsCompleted(item) && (
+                            <div className="mt-4flex items-center text-sm text-gray-500 p-2">
+                              {item?.watchedBy?.filter(
+                                (watchlistUser) => watchlistUser?.id === userId
+                              ).length > 0 ? (
+                                <button
+                                  type="button"
+                                  className="inline-flex items-center px-14 py-4 border border-[#536DD9] shadow-sm text-sm font-roboto  leading-4 font-bold rounded-md text-[#536DD9]   "
+                                  // onClick={() =>
+                                  //   removeFromWatchList(item.id)
+                                  // }
+                                >
+                                  <FontAwesomeIcon
+                                    className="-ml-0.5 mr-2 h-4 w-4"
+                                    icon={faSquareMinus}
+                                  />
+                                  Remove from watchlist
+                                </button>
+                              ) : (
+                                <button
+                                  type="button"
+                                  className="inline-flex items-center px-14 py-4 border border-[#536DD9] shadow-sm text-sm font-roboto  leading-4 font-bold rounded-md text-[#536DD9]   "
+                                  onClick={() => AddWatchlist(item.id)}
+                                >
+                                  <FontAwesomeIcon
+                                    className="-ml-0.5 mr-2 h-4 w-4"
+                                    icon={faSquarePlus}
+                                  />
+                                  Add to watchlist
+                                </button>
                               )}
-                            </> */}
+                            </div>
+                          )}
+                        </>
                         {/* Add and Remove from watchlist ends here */}
                       </div>
                     </div>
@@ -925,40 +929,39 @@ function Events() {
                     <div className="flex  space-x-4 mt-6 pt-4 text-sm font-medium border-t  border-slate-300">
                       <div className="flex-auto flex space-x-4">
                         <div className="mt-1 flex flex-row sm:flex-wrap sm:mt-0 space-x-2 sm:space-x-6 justify-around w-full  sm:max-md:justify-around sm:max-md:w-full ">
-                          {/* {IsCompleted(item) && (
-                                <div className="mt-2 flex items-center text-sm text-gray-500">
-                                  {item?.watchedBy?.filter(
-                                    (watchlistUser) =>
-                                      watchlistUser?.id === userId
-                                  ).length > 0 ? (
-                                    <button
-                                      type="button"
-                                      className="inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-xs sm:text-sm  leading-4 font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                      onClick={() =>
-                                        removeFromWatchList(item.id)
-                                      }
-                                    >
-                                      <MinusIcon
-                                        className="-ml-0.5 mr-2 h-4 w-4"
-                                        aria-hidden="true"
-                                      />
-                                      from watchlist
-                                    </button>
-                                  ) : (
-                                    <button
-                                      type="button"
-                                      className="inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-xs sm:text-sm leading-4 font-medium rounded text-white bg-blue-800 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                      onClick={() => addToWatchList(item.id)}
-                                    >
-                                      <PlusIcon
-                                        className="-ml-0.5 mr-2 h-4 w-4"
-                                        aria-hidden="true"
-                                      />
-                                      Add to watchlist
-                                    </button>
-                                  )}
-                                </div>
-                              )} */}
+                          {IsCompleted(item) && (
+                            <div className="mt-2 flex items-center text-sm text-gray-500">
+                              {item?.watchedBy?.filter(
+                                (watchlistUser) => watchlistUser?.id === userId
+                              ).length > 0 ? (
+                                <button
+                                  type="button"
+                                  className="inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-xs sm:text-sm  leading-4 font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                  onClick={() =>
+                                    RemoveWathclist(item.id)
+                                  }
+                                >
+                                  <MinusIcon
+                                    className="-ml-0.5 mr-2 h-4 w-4"
+                                    aria-hidden="true"
+                                  />
+                                  from watchlist
+                                </button>
+                              ) : (
+                                <button
+                                  type="button"
+                                  className="inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-xs sm:text-sm leading-4 font-medium rounded text-white bg-blue-800 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                  onClick={() => AddWatchlist(item.id)}
+                                >
+                                  <PlusIcon
+                                    className="-ml-0.5 mr-2 h-4 w-4"
+                                    aria-hidden="true"
+                                  />
+                                  Add to watchlist
+                                </button>
+                              )}
+                            </div>
+                          )}
 
                           {/* {IsCompleted(item) && (
                             <div className="mt-2 flex items-center text-sm text-gray-500">

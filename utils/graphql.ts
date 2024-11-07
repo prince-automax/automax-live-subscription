@@ -1276,6 +1276,7 @@ export type UpdateUserInput = {
   tempToken?: InputMaybe<Scalars['Float']>;
   userCategory?: InputMaybe<Scalars['String']>;
   username?: InputMaybe<Scalars['String']>;
+  watchList?: InputMaybe<WatchListUpdateInput>;
 };
 
 export type UpdateVehicleInput = {
@@ -1306,6 +1307,7 @@ export type UpdateVehicleInput = {
   fuel?: InputMaybe<Scalars['String']>;
   gearBox?: InputMaybe<Scalars['String']>;
   hypothication?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
   inspectionLink?: InputMaybe<Scalars['String']>;
   insurance?: InputMaybe<Scalars['String']>;
@@ -1376,7 +1378,6 @@ export type User = {
   pancard_image?: Maybe<Scalars['String']>;
   payments?: Maybe<Array<Payment>>;
   paymentsCount?: Maybe<Scalars['Int']>;
-  removeWatchlist: Array<User>;
   role: Scalars['String'];
   state: Scalars['String'];
   states?: Maybe<Array<State>>;
@@ -1387,24 +1388,6 @@ export type User = {
   username: Scalars['String'];
   vehicleBuyingLimit?: Maybe<Scalars['Int']>;
   watchList?: Maybe<Array<Vehicle>>;
-  watchListTemp: Array<User>;
-};
-
-
-export type UserRemoveWatchlistArgs = {
-  vehicleUniqueInput: VehicleWhereUniqueInput;
-};
-
-
-export type UserWatchListArgs = {
-  vehicleUniqueInput: VehicleWhereUniqueInput;
-};
-
-
-export type UserWatchListTempArgs = {
-  orderBy?: InputMaybe<Array<UserOrderByInput>>;
-  skip?: InputMaybe<Scalars['Int']>;
-  take?: InputMaybe<Scalars['Int']>;
 };
 
 export enum UserIdProofTypeType {
@@ -1520,6 +1503,7 @@ export type Vehicle = {
   vehicleRemarks?: Maybe<Scalars['String']>;
   veicleLocation?: Maybe<Scalars['String']>;
   watchedBy?: Maybe<Array<User>>;
+  watchedByCount?: Maybe<Scalars['Int']>;
   yardLocation?: Maybe<Scalars['String']>;
 };
 
@@ -1567,6 +1551,11 @@ export type VerifyOtpResponse = {
   __typename?: 'VerifyOtpResponse';
   access_token: Scalars['String'];
   user: User;
+};
+
+export type WatchListUpdateInput = {
+  connect?: InputMaybe<Array<VehicleWhereUniqueInput>>;
+  disconnect?: InputMaybe<Array<VehicleWhereUniqueInput>>;
 };
 
 export enum EventBidLockType {
@@ -1724,7 +1713,6 @@ export type GetVehicleQuery = { __typename?: 'Query', vehicle: { __typename?: 'V
 export type AddToWatchlistMutationVariables = Exact<{
   data: UpdateUserInput;
   where: UserWhereUniqueInput;
-  watchListVehicleUniqueInput2: VehicleWhereUniqueInput;
 }>;
 
 
@@ -1733,11 +1721,17 @@ export type AddToWatchlistMutation = { __typename?: 'Mutation', updateUser: { __
 export type RemoveFromWatchlistMutationVariables = Exact<{
   data: UpdateUserInput;
   where: UserWhereUniqueInput;
-  vehicleUniqueInput: VehicleWhereUniqueInput;
 }>;
 
 
-export type RemoveFromWatchlistMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, removeWatchlist: Array<{ __typename?: 'User', id: string }> } };
+export type RemoveFromWatchlistMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, watchList?: Array<{ __typename?: 'Vehicle', id: string }> | null } };
+
+export type UserWatchlistQueryVariables = Exact<{
+  where: UserWhereUniqueInput;
+}>;
+
+
+export type UserWatchlistQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, watchList?: Array<{ __typename?: 'Vehicle', id: string, image?: string | null, YOM?: number | null, watchedByCount?: number | null, autobse_contact_person?: string | null, autobseContact?: string | null, userVehicleBidsCount?: number | null, bidAmountUpdate?: number | null, bidStartTime: any, bidStatus?: string | null, bidTimeExpire: any, reservePrice?: number | null, currentBidAmount?: number | null, dateOfRegistration?: string | null, doorCount?: number | null, engineNo?: string | null, fitness?: string | null, fuel?: string | null, gearBox?: string | null, hypothication?: string | null, inspectionLink?: string | null, kmReading?: number | null, loanAgreementNo: string, lotNumber?: number | null, make?: string | null, model?: string | null, myBidRank?: number | null, ownership?: number | null, quoteIncreament?: number | null, rcStatus?: string | null, registrationNumber: string, repoDt?: string | null, startBidAmount?: number | null, startPrice?: number | null, state?: string | null, totalBids?: number | null, varient?: string | null, vehicleCondition?: string | null, watchedBy?: Array<{ __typename?: 'User', id: string }> | null, currentBidUser?: { __typename?: 'User', id: string } | null, event?: { __typename?: 'Event', bidLock?: string | null, id: string, noOfBids: number, startDate: any, seller?: { __typename?: 'Seller', name: string } | null } | null, userVehicleBids?: Array<{ __typename?: 'Bid', amount: number, name: string, bidVehicleId: string, userId: string, bidVehicle?: { __typename?: 'Vehicle', currentBidAmount?: number | null } | null }> | null }> | null } | null };
 
 
 export const LoginUsingPasswordDocument = `
@@ -2437,10 +2431,10 @@ export const useGetVehicleQuery = <
       options
     );
 export const AddToWatchlistDocument = `
-    mutation AddToWatchlist($data: UpdateUserInput!, $where: UserWhereUniqueInput!, $watchListVehicleUniqueInput2: VehicleWhereUniqueInput!) {
+    mutation AddToWatchlist($data: UpdateUserInput!, $where: UserWhereUniqueInput!) {
   updateUser(data: $data, where: $where) {
     id
-    watchList(vehicleUniqueInput: $watchListVehicleUniqueInput2) {
+    watchList {
       id
     }
   }
@@ -2460,10 +2454,10 @@ export const useAddToWatchlistMutation = <
       options
     );
 export const RemoveFromWatchlistDocument = `
-    mutation RemoveFromWatchlist($data: UpdateUserInput!, $where: UserWhereUniqueInput!, $vehicleUniqueInput: VehicleWhereUniqueInput!) {
+    mutation RemoveFromWatchlist($data: UpdateUserInput!, $where: UserWhereUniqueInput!) {
   updateUser(data: $data, where: $where) {
     id
-    removeWatchlist(vehicleUniqueInput: $vehicleUniqueInput) {
+    watchList {
       id
     }
   }
@@ -2480,5 +2474,93 @@ export const useRemoveFromWatchlistMutation = <
     useMutation<RemoveFromWatchlistMutation, TError, RemoveFromWatchlistMutationVariables, TContext>(
       ['RemoveFromWatchlist'],
       (variables?: RemoveFromWatchlistMutationVariables) => fetcher<RemoveFromWatchlistMutation, RemoveFromWatchlistMutationVariables>(client, RemoveFromWatchlistDocument, variables, headers)(),
+      options
+    );
+export const UserWatchlistDocument = `
+    query UserWatchlist($where: UserWhereUniqueInput!) {
+  user(where: $where) {
+    id
+    watchList {
+      id
+      image
+      YOM
+      watchedByCount
+      autobse_contact_person
+      autobseContact
+      userVehicleBidsCount
+      bidAmountUpdate
+      bidStartTime
+      bidStatus
+      bidTimeExpire
+      watchedBy {
+        id
+      }
+      reservePrice
+      currentBidAmount
+      currentBidUser {
+        id
+      }
+      dateOfRegistration
+      doorCount
+      engineNo
+      event {
+        bidLock
+        id
+        noOfBids
+        startDate
+        seller {
+          name
+        }
+      }
+      fitness
+      fuel
+      gearBox
+      hypothication
+      id
+      image
+      inspectionLink
+      kmReading
+      loanAgreementNo
+      lotNumber
+      make
+      model
+      myBidRank
+      ownership
+      quoteIncreament
+      rcStatus
+      registrationNumber
+      repoDt
+      startBidAmount
+      startPrice
+      state
+      totalBids
+      userVehicleBids {
+        amount
+        bidVehicle {
+          currentBidAmount
+        }
+        name
+        bidVehicleId
+        userId
+      }
+      userVehicleBidsCount
+      varient
+      vehicleCondition
+    }
+  }
+}
+    `;
+export const useUserWatchlistQuery = <
+      TData = UserWatchlistQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: UserWatchlistQueryVariables,
+      options?: UseQueryOptions<UserWatchlistQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<UserWatchlistQuery, TError, TData>(
+      ['UserWatchlist', variables],
+      fetcher<UserWatchlistQuery, UserWatchlistQueryVariables>(client, UserWatchlistDocument, variables, headers),
       options
     );

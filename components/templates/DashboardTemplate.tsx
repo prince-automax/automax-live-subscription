@@ -93,7 +93,7 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
     
   },[data])
 
-  console.log('liveOnline',liveOnline);
+  // console.log('liveOnline',liveOnline);
   
 
   // Inside DashboardTemplate

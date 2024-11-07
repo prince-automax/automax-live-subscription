@@ -11,3 +11,10 @@ subscription BidCreation {
   id  
   }
 }
+
+subscription UserUpdationMutation {
+  subscriptionUserUpdates {
+  id
+  name  
+  }
+}
