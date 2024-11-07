@@ -40,6 +40,7 @@ import {
   useVehicleUpdateSubscription,
   VehicleUpdateSubscriptionVariables,
   useBidCreationSubscription,
+  useUpdateUserMutation
 } from "@utils/apollo";
 
 import graphQLClient from "@utils/useGQLQuery";
@@ -81,7 +82,7 @@ function Vehicle() {
   const { data: timeData } = useTimeQueryQuery<TimeQueryQueryVariables>(
     graphQLClient(),
     {},
-    { refetchInterval: 300000 }
+    // { refetchInterval: 300000 }
   );
 
   useEffect(() => {
@@ -98,6 +99,7 @@ function Vehicle() {
   const vehicleUpdate = useVehicleUpdateSubscription();
 
   // console.log('vehicle update subscription',vehicleUpdate);
+  const UserUpdate= useUpdateUserMutation()
 
   const BidUpdate = useBidCreationSubscription();
 
@@ -120,7 +122,7 @@ function Vehicle() {
 
   useEffect(() => {
     refetch();
-  }, [vehicleUpdate, BidUpdate]);
+  }, [vehicleUpdate, BidUpdate,UserUpdate]);
 
   // console.log("data",data);
 

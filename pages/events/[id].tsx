@@ -311,7 +311,7 @@ function Events() {
     }
   };
 
-  const RemoveWathclist = async (id: string) => {
+  const RemoveWatchlist = async (id: string) => {
     try {
       const result = await RemoveFromWatchlist.mutateAsync({
         data: {
@@ -596,9 +596,9 @@ function Events() {
                                 <button
                                   type="button"
                                   className="inline-flex items-center px-14 py-4 border border-[#536DD9] shadow-sm text-sm font-roboto  leading-4 font-bold rounded-md text-[#536DD9]   "
-                                  // onClick={() =>
-                                  //   removeFromWatchList(item.id)
-                                  // }
+                                  onClick={() =>
+                                    RemoveWatchlist(item.id)
+                                  }
                                 >
                                   <FontAwesomeIcon
                                     className="-ml-0.5 mr-2 h-4 w-4"
@@ -938,7 +938,7 @@ function Events() {
                                   type="button"
                                   className="inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-xs sm:text-sm  leading-4 font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                   onClick={() =>
-                                    RemoveWathclist(item.id)
+                                    RemoveWatchlist(item.id)
                                   }
                                 >
                                   <MinusIcon
@@ -969,7 +969,7 @@ function Events() {
                                 <button
                                   type="button"
                                   className="inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded text-white bg-blue-800 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                  onClick={() => addToWatchList(item.id)}
+                                  onClick={() => AddWatchlist(item.id)}
                                 >
                                   <PlusIcon
                                     className="-ml-0.5 mr-2 h-4 w-4"
@@ -981,7 +981,7 @@ function Events() {
                                 <button
                                   type="button"
                                   className="inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                  onClick={() => removeFromWatchList(item.id)}
+                                  onClick={() => RemoveWatchlist(item.id)}
                                 >
                                   <MinusIcon
                                     className="-ml-0.5 mr-2 h-4 w-4"
