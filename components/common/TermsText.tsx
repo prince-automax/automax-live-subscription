@@ -1,11 +1,4 @@
 import React, { useState, useEffect } from "react";
-// import {
-//   useQueryQuery,
-//   QueryQueryVariables,
-//   GetEventQuery,
-//   useGetEventQuery,
-//   OrderDirection,
-// } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
 import router from "next/router";
@@ -63,18 +56,8 @@ export default function TermsText(props) {
       <p className="text-base font-bold">Terms & Conditions</p>
       <div className="text-xs font-semibold leading-6">
         {props.data}
-        {/* 1. Sample Terms and conditions Text. */}
-        {/* {data?.event?.termsAndConditions.document.getItem("")} */}
-        {/* {serverTime
-                    ? moment(serverTime).add(tick, "seconds").format("MMMM Do, YYYY")
-                    : "-"}
-                {" "}
-                {serverTime
-                    ? moment(serverTime).add(tick, "seconds").format("h:mm:ss a")
-                    : "-"} */}
-      </div>
-      {/* <div className="text-xs">2. Sample Terms and conditions Text.</div>
-      <div className="text-xs">3. Sample Terms and conditions Text.</div> */}
+        </div>
+    
     </div>
   );
 }

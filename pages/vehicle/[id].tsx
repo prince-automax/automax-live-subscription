@@ -121,7 +121,9 @@ function Vehicle() {
   console.log("data", data);
 
   useEffect(() => {
-    refetch();
+    if (accessToken) {
+      refetch(); // Ensure `refetch()` is only called when necessary.
+    }
   }, [vehicleUpdate, BidUpdate,]);
 
   // console.log("data",data);

@@ -2,7 +2,7 @@ import DashboardTemplate from "../components/templates/DashboardTemplate"
 import LiveEventsTable from "../components/tables/LiveEventsTable"
 import CompletedEventsTable from "../components/tables/CompletedEventsTable";
 import withPrivateRoute from "../utils/withPrivateRoute";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Tab } from "@headlessui/react";
 
 function classNames(...classes) {
@@ -10,6 +10,17 @@ function classNames(...classes) {
 }
 function Dashboard() {
   let [tabs] = useState({ Live: [], });
+
+  useEffect(() => {
+    // Code in this section runs on mount
+    console.log("Component mounted in dashboard in ");
+
+    // Return a function to run when the component unmounts
+    return () => {
+      console.log("Component unmounted in dashboard");
+    };
+  }, []); // Empty dependency array means this runs only once on mount and unmount
+
   return (
     <DashboardTemplate
       heading="Live Events"

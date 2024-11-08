@@ -35,10 +35,21 @@ export default function Navbar() {
     setToken: (token) => state.setToken(token),
   }));
 
+  
+  useEffect(() => {
+    // Code in this section runs on mount
+    console.log("Component mountedm in navbar");
+
+    // Return a function to run when the component unmounts
+    return () => {
+      console.log("Component unmounted in navbar");
+    };
+  }, []); // Empty dependency array means this runs only once on mount and unmount
+
+
   const logout = () => {
     setToken(null);
-    // localStorage.removeItem("id");
-    // localStorage.removeItem("token");
+    
     localStorage.clear();
     router.push(`/`);
   };

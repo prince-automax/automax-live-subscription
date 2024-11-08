@@ -15,6 +15,8 @@ function TopBar() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
+      const username = localStorage.getItem("username");
+      setUserName(username);
       setAccessToken(token);
     }
   }, []);
@@ -28,25 +30,30 @@ function TopBar() {
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     { where: { id } },
     {
-      enabled: accessToken !== "",
+      enabled: !!accessToken ,
     }
   );
 
-  // console.log('data',data);
+  useEffect(() => {
+    // Code in this section runs on mount
+    console.log("Component mountedm in topbar");
+
+    // Return a function to run when the component unmounts
+    return () => {
+      console.log("Component unmounted in topbar");
+    };
+  }, []); // Empty dependency array means this runs only once on mount and unmount
+
   
 
 useEffect(()=>{
+  // let res=result.variables
+  // console.log('res',res);
+  
 refetch()
 },[result?.data])  
 
 
-  useEffect(() => {
-    const username = localStorage.getItem("username");
-    setUserName(username);
-  }, [data]);
-
-  // console.log("#999",username);
-  
 
   return (
     <div className="bg-primary text-white font-light">

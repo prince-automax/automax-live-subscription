@@ -69,18 +69,23 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
 
   const { data, isLoading, refetch } = useEventsCountQuery(
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    undefined, // No variables for this query
-    queryOptions
+    {},
+    { enabled: !!accessToken }
   );
   
   
   
+  useEffect(() => {
+    // Code in this section runs on mount
+    console.log("Component mountedm in dashboardTemplate");
 
-  // console.log('Events count ', data?.events?.liveEventCount);
-    
-  // const {data:upcoming}=useUpcomingEventsCountsQuery(
-  //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-  // )
+    // Return a function to run when the component unmounts
+    return () => {
+      console.log("Component unmounted in dashboardTemplate");
+    };
+  }, []); // Empty dependency array means this runs only once on mount and unmount
+
+
 
   useEffect(()=>{
     if(data?.events?.liveEventCount){
@@ -91,12 +96,9 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
       setUpcoming(upcomingEventsCount)
     }
     
-  },[data])
+  },[data?.events])
 
-  // console.log('liveOnline',liveOnline);
-  
-
-  // Inside DashboardTemplate
+ 
 
   const setNavigationLink = (href) => {
     router.push(href);
@@ -228,13 +230,7 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
         <div className="lg:flex max-md:w-full ">
           {showSidebar && (
             <aside className=" max-md:w-full relative py-6 sm:py-0 px-2 sm:px-6  flex-none lg:border-r border-gray-200">
-              {/* <button className="absolute 0 right-0 top-0 -mr-3 mt-4 sm:max-lg:mt-0 h-6 w-6 rounded-full flex items-center justify-center ring-2 ring-gray-300 hover:ring-gray-400">
-                <ChevronLeftIcon
-                  className=" h-4 w-4 top-text-gray-400 animate-pulse  animation-duration-500"
-                  onClick={toggleSidebar}
-                />
-              </button> */}
-              {/* <Welcome /> */}
+             
               <nav className="mt-1 sm:max-lg:mt-8 space-y-4 max-md:w-full  ">
                 <div className=" text-black bg-white lg:hidden flex w-full space-x-4  overflow-x-scroll scrollbar-hide ">
                   {mobileNavigation.map((item, index) => (

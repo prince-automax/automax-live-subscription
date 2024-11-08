@@ -6,19 +6,6 @@ import {
 } from "@heroicons/react/outline";
 
 import {
-  // CreateBidMutationVariables,
-  // GetEventQuery,
-  // LiveWatchListItemQueryVariables,
-  // OrderDirection,
-  // QueryQueryVariables,
-  // useAddToWatchListMutation,
-  // useCreateBidMutation,
-  // useGetEventQuery,
-  // useLiveWatchListItemQuery,
-  // useQueryQuery,
-  // useUserWorkBookQuery,
-  // UserWorkBookQueryVariables,
-  // useFindAuctionsQuery,
   useAddToWatchlistMutation,
   AddToWatchlistMutationVariables,
   useRemoveFromWatchlistMutation,
@@ -39,14 +26,14 @@ import {
   VehicleUpdateSubscriptionVariables,
   useBidCreationSubscription,
   useUpdateUserMutation,
-  UpdateUserMutationVariables
+  UpdateUserMutationVariables,
 } from "@utils/apollo";
 import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import DashboardTemplate from "../../components/templates/DashboardTemplate";
 import Loader from "../../components/ui/Loader";
 import withPrivateRoute from "../../utils/withPrivateRoute";
@@ -58,7 +45,6 @@ import ImageCarouselModal from "@components/modals/ImageCarouselModal";
 import Swal from "sweetalert2";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import TermsAndCondtionsModal from  "@components/modals/TermsAndConditionModal"
 import {
   faThumbsUp,
   faThumbsDown,
@@ -75,7 +61,7 @@ function Events() {
   const [accessToken, setAccessToken] = useState("");
   const [userId, setUserId] = useState("");
   // const [usrid, setUsrid] = useState("");
-  const [interval, setAPIInterval] = useState(2000);
+  // const [interval, setAPIInterval] = useState(2000);
   const queryClient = useQueryClient();
   const [tick, setTick] = useState(0);
   const [serverTime, setserverTime] = useState(null);
@@ -84,16 +70,26 @@ function Events() {
   const [showImageCarouselModal, setShowImageCarouselModal] = useState(false);
   const [images, setImages] = useState([]);
   const [showCode, setShowCode] = useState(false);
-  const [isNotInWatchlist, setIsNotInWatchlist] = useState(true);
-  const [wathclistVehicls, setWatchlistvehicls] = useState([]);
-  const [demo, setDemo] = useState([]);
 
-  // useEffect(()=>{
-  //   TermsAndCondtionsModal()
-  // },[])
-  const token = useStore((state) => state.token); // Access the token from the store
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      const id = localStorage.getItem("id");
+      setAccessToken(token );
+      setUserId(id );
+    }
+  }, []);
 
-  // console.log('token from store',token);
+  useEffect(() => {
+    // Code in this section runs on mount
+    console.log("Component mountedm in event");
+
+    // Return a function to run when the component unmounts
+    return () => {
+      console.log("Component unmounted in event");
+    };
+  }, []); // Empty dependency array means this runs only once on mount and unmount
+
 
   const handleClick = () => {
     setShowCode(!showCode);
@@ -108,7 +104,7 @@ function Events() {
   const { data: timeData } = useTimeQueryQuery<TimeQueryQueryVariables>(
     graphQLClient(),
     {},
-    // { refetchInterval: 60000 }
+    { refetchInterval: false } // Avoid unnecessary polling
   );
 
   useEffect(() => {
@@ -117,63 +113,29 @@ function Events() {
       setserverTime(timeData.time);
     }
   }, [timeData]);
-
-  // console.log('timedata',timeData);
 
   const vehicleUpdate = useVehicleUpdateSubscription();
   const BidUpdate = useBidCreationSubscription();
-  const UserUpdate= useUpdateUserMutation()
+  // const UserUpdate = useUpdateUserMutation();
 
-  // console.log("bid", BidUpdate?.data);
-  // console.log("vehicle", vehicleUpdate);
-
-  // const { data:result, loading } = useVehicleUpdateSubscription();
-
-  // console.log('sub',result?.data);
-
-  useEffect(() => {
-    if (timeData && timeData.time) {
-      setTick(0);
-      setserverTime(timeData.time);
-    }
-  }, [timeData]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
-      const id = localStorage.getItem("id");
-      setAccessToken(token);
-      setUserId(id);
-      // setUsrid(id);
-    }
-  }, []);
-
-  // useGetEventsQuery,
-  // GetEventsQuery
-
-  const { data, isLoading, refetch } = useGetEventsQuery<GetEventsQuery>(
+  const {  data, isLoading, isError, error, refetch } = useGetEventsQuery<GetEventsQuery>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     {
       where: { id: id as string },
-      orderBy: [
-        {
-          bidTimeExpire: OrderDirection.Asc,
-        },
-      ],
+      orderBy: [{ bidTimeExpire: OrderDirection.Asc }],
       take: 1000,
       skip: 0,
-      // userVehicleBidsOrderBy2: [{ amount: OrderDirection.Desc }],
     },
-    {
-      enabled: accessToken !== "",
-    }
+    { enabled: !!accessToken }
   );
-
   // console.log("data", data);
 
   useEffect(() => {
-    refetch();
-  }, [vehicleUpdate, BidUpdate,]);
+    if (vehicleUpdate.data || BidUpdate.data) {
+      // vehicleUpdate.
+      refetch();
+    }
+  }, [vehicleUpdate.data, BidUpdate.data, refetch]);
 
   const callCreateBid = useCreateBidMutation<CreateBidMutationVariables>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` })
@@ -228,58 +190,46 @@ function Events() {
     return true;
   }
 
-  async function CallBid(amount, vehicleId) {
-    const confirmed = await Swal.fire({
-      text: `Are you sure to bid for Rs. ${amount}?`,
-      title: "BID CONFIRMATION",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, bid for it!",
-      customClass: {
-        popup: "animated bounceInDown",
-      },
-      didOpen: () => {
-        const swalContainer = Swal.getContainer();
+  const handleBidSubmission = useCallback(
+    async (amount, vehicleId) => {
+      const confirmed = await Swal.fire({
+        text: `Are you sure to bid for Rs. ${amount}?`,
+        title: "BID CONFIRMATION",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, bid for it!",
+        customClass: { popup: "animated bounceInDown" },
+        didOpen: () => {
+          const swalContainer = Swal.getContainer();
+          swalContainer.style.position = "fixed";
+          swalContainer.style.top = "0";
+          swalContainer.style.left = "0";
+          swalContainer.style.width = "100vw";
+          swalContainer.style.height = "100vh";
+          swalContainer.style.background = "rgba(0, 0, 0, 0.5)";
+          swalContainer.style.backdropFilter = "blur(0.5px)";
+          swalContainer.style.zIndex = "1050";
+        },
+      });
 
-        // Styling the container to cover the full screen with a blurred overlay
-        swalContainer.style.position = "fixed";
-        swalContainer.style.top = "0";
-        swalContainer.style.left = "0";
-        swalContainer.style.width = "100vw";
-        swalContainer.style.height = "100vh";
-        swalContainer.style.background = "rgba(0, 0, 0, 0.5)"; // Dark semi-transparent background
-        swalContainer.style.backdropFilter = "blur(0.5px)"; // Apply a blur effect
-        swalContainer.style.zIndex = "1050";
-      },
-    });
-
-    if (confirmed.isConfirmed) {
-      try {
-        const result = await callCreateBid.mutateAsync({
-          bidVehicleId: vehicleId,
-          createBidInput: {
-            amount: Number(amount),
-          },
-        });
-        Swal.fire("Success!", "Your bid has been submitted.", "success");
-      } catch (e) {
-        let errorMessage = "An error occurred. Please try again.";
-
-        if (e.response) {
-          const errorMessages = e.response.errors || [];
-          if (errorMessages.length > 0) {
-            errorMessage = errorMessages.map((err) => err.message).join(", ");
-          }
-        } else if (e.message) {
-          errorMessage = e.message;
+      if (confirmed.isConfirmed) {
+        try {
+          await callCreateBid.mutateAsync({
+            bidVehicleId: vehicleId,
+            createBidInput: { amount: Number(amount) },
+          });
+          Swal.fire("Success!", "Your bid has been submitted.", "success");
+        } catch (e) {
+          const errorMessage =
+            e.response?.errors?.map((err) => err.message).join(", ") ||
+            e.message ||
+            "An error occurred. Please try again.";
+          Swal.fire(errorMessage);
         }
-
-        Swal.fire(errorMessage);
       }
-    }
-  }
+    },
+    [callCreateBid]
+  );
 
   const AddToWatchlist = useAddToWatchlistMutation(
     graphQLClient({ Authorization: `Bearer ${accessToken}` })
@@ -288,53 +238,52 @@ function Events() {
     graphQLClient({ Authorization: `Bearer ${accessToken}` })
   );
 
-  const AddWatchlist = async (id: string) => {
-    try {
-      const result = await AddToWatchlist.mutateAsync({
-        data: {
-          watchList: {
-            connect: [
-              {
-                id: id,
-              },
-            ],
+  const AddWatchlist = useCallback(
+    async (id: string) => {
+      try {
+        await AddToWatchlist.mutateAsync({
+          data: {
+            watchList: {
+              connect: [{ id }],
+            },
           },
-        },
-        where: {
-          id: userId,
-        },
-      });
+          where: { id: userId },
+        });
+      } catch (error) {
+        console.error("Add watchlist error", error);
+      }
+    },
+    [AddToWatchlist, userId]
+  );
 
-      console.log("add watchlist result", result);
-    } catch (error) {
-      console.log(" Add watchlist error", error);
-    }
-  };
+  const RemoveWatchlist = useCallback(
+    async (id: string) => {
+      try {
+        await RemoveFromWatchlist.mutateAsync({
+          data: {
+            watchList: {
+              disconnect: [{ id }],
+            },
+          },
+          where: { id: userId },
+        });
+      } catch (error) {
+        console.error("Remove watchlist error", error);
+      }
+    },
+    [RemoveFromWatchlist, userId]
+  );
 
-  const RemoveWatchlist = async (id: string) => {
-    try {
-      const result = await RemoveFromWatchlist.mutateAsync({
-        data: {
-          watchList: {
-            disconnect: [
-              {
-                id: id
-              }
-            ]
-          }
-        },
-        where: {
-          id: userId
-        }
-      });
+// if (isError) {
+//   // Handle error - could show a message, retry logic, etc.
+//   return (
+//     <div>
+//       <p>Error: { "An unknown error occurred"}</p>
+//       <button onClick={() => refetch()}>Retry</button>
+//     </div>
+//   );
+// }
 
-      console.log('result remove watchlist',result);
-      
-    } catch (error) {
-      console.log("remove watchlsit error",error);
-      
-    }
-  };
 
   return (
     // <>
@@ -596,9 +545,7 @@ function Events() {
                                 <button
                                   type="button"
                                   className="inline-flex items-center px-14 py-4 border border-[#536DD9] shadow-sm text-sm font-roboto  leading-4 font-bold rounded-md text-[#536DD9]   "
-                                  onClick={() =>
-                                    RemoveWatchlist(item.id)
-                                  }
+                                  onClick={() => RemoveWatchlist(item.id)}
                                 >
                                   <FontAwesomeIcon
                                     className="-ml-0.5 mr-2 h-4 w-4"
@@ -745,7 +692,7 @@ function Events() {
                         {IsCompleted(item) && (
                           <EnterBid
                             row={item}
-                            call={CallBid}
+                            call={handleBidSubmission}
                             event={data["event"]}
                           />
                         )}
@@ -937,9 +884,7 @@ function Events() {
                                 <button
                                   type="button"
                                   className="inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-xs sm:text-sm  leading-4 font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                  onClick={() =>
-                                    RemoveWatchlist(item.id)
-                                  }
+                                  onClick={() => RemoveWatchlist(item.id)}
                                 >
                                   <MinusIcon
                                     className="-ml-0.5 mr-2 h-4 w-4"
@@ -1123,7 +1068,7 @@ function Events() {
                           {IsCompleted(item) && (
                             <EnterBid
                               row={item}
-                              call={CallBid}
+                              call={handleBidSubmission}
                               event={data["event"]}
                             />
                           )}

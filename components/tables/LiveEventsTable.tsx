@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import Datatable from "../ui/Datatable";
 import Loader from "../ui/Loader";
 import moment from "moment";
@@ -22,28 +22,37 @@ import Link from "next/link";
 import DataTableUILoggedIn from "../ui/DataTableUILoggedIn";
 import toast from "react-hot-toast";
 import { OrderDirection } from "@utils/apollo";
-export default function EventsTable({
+ function EventsTable({
   showHeadings,
   hideSearch,
   allowDownload,
   eventCategory = "online",
 }) {
   const [accessToken, setAccessToken] = useState("");
+  const [id,setUserId]=useState("")
   const [registered, setRegistered] = useState(false);
   const [registeredStatus, setRegisteredStatus] = useState("");
-  const [showText, setShowText] = useState(false);
+  
 
-  const id = localStorage.getItem("id");
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
+      const id=localStorage.getItem("id")
       setAccessToken(token);
+      setUserId(id)
     }
   }, []);
 
-  // console.log("access token", accessToken);
+  // const renderCount = useRef(0);
+  // renderCount.current += 1;
+  // console.log('Render count:', renderCount.current);
 
-  const variables = {
+  useEffect(() => {
+    console.log('Component re-rendered due to props or state change');
+  }, [/* dependencies like props or state */]);
+  
+  
+  const variables = useMemo(() => ({
     skip: 0,
     take: 10,
     orderBy: [
@@ -51,33 +60,29 @@ export default function EventsTable({
         endDate: OrderDirection.Desc,
       },
     ],
-    // where: {
-    //   eventCategory: {
-    //     equals: eventCategory,
-    //   },
-    // },
-  };
+  }), []);
+  
 
   const { data, isLoading, refetch, isFetching } =
     useLiveEventsQuery<LiveEventsQuery>(
       graphQLClient({ Authorization: `Bearer ${accessToken}` }),
       variables,
-      // {},
-      { enabled: accessToken != "", refetchOnWindowFocus: false }
-    );
+      { enabled: !!accessToken }
+
+    );  
 
   console.log("Live event table", data);
 
   useEffect(() => {
-    refetch();
-  }, [data]);
-
+    if (accessToken) {
+      refetch();
+    }
+  }, [accessToken]); // Depend only on `accessToken`, not `data`
+  
   const { data: userData, isLoading: loading } = useGetUserQuery<GetUserQuery>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     { where: { id } },
-    {
-      enabled: accessToken !== "",
-    }
+    { enabled: !!accessToken }
   );
 
   const payment = userData ? userData["user"]?.payments : "";
@@ -270,6 +275,9 @@ export default function EventsTable({
   );
 }
 
+export default React.memo(EventsTable);
+
+
 EventsTable.defaultProps = {
   hideSearch: false,
   allowDownload: false,
@@ -368,7 +376,7 @@ function EndDate(value) {
 }
 
 function DownloadButton({ file, allowDownload }) {
-  console.log("file", file);
+  // console.log("file", file);
 
   const [showAlert, setShowAlert] = useState(false);
 
