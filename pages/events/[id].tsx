@@ -173,7 +173,7 @@ function Events() {
 
   useEffect(() => {
     refetch();
-  }, [vehicleUpdate, BidUpdate,UserUpdate]);
+  }, [vehicleUpdate, BidUpdate,]);
 
   const callCreateBid = useCreateBidMutation<CreateBidMutationVariables>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` })

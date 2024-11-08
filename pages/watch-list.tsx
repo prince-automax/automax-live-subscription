@@ -142,7 +142,7 @@ function WatchList() {
 
   useEffect(() => {
     refetch();
-  }, [vehicleUpdate, BidUpdate,UserUpdate]);
+  }, [vehicleUpdate, BidUpdate,]);
 
 
   const { data, isLoading ,refetch} =

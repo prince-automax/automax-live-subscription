@@ -122,7 +122,7 @@ function Vehicle() {
 
   useEffect(() => {
     refetch();
-  }, [vehicleUpdate, BidUpdate,UserUpdate]);
+  }, [vehicleUpdate, BidUpdate,]);
 
   // console.log("data",data);
 
