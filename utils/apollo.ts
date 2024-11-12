@@ -1164,7 +1164,7 @@ export type StatusWhereUniqueInput = {
 export type Subscription = {
   __typename?: 'Subscription';
   subscriptionBidCreation: Bid;
-  subscriptionUserUpdates: Bid;
+  subscriptionUserUpdates: User;
   subscriptionVehicleUpdates: Vehicle;
 };
 
@@ -1684,10 +1684,10 @@ export type BidCreationSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 export type BidCreationSubscription = { __typename?: 'Subscription', subscriptionBidCreation: { __typename?: 'Bid', id: string } };
 
-export type UserUpdationMutationSubscriptionVariables = Exact<{ [key: string]: never; }>;
+export type UserUpdateSubscriptionSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserUpdationMutationSubscription = { __typename?: 'Subscription', subscriptionUserUpdates: { __typename?: 'Bid', id: string, name: string } };
+export type UserUpdateSubscriptionSubscription = { __typename?: 'Subscription', subscriptionUserUpdates: { __typename?: 'User', id: string } };
 
 export type UpdateUserMutationVariables = Exact<{
   data: UpdateUserInput;
@@ -2489,36 +2489,35 @@ export function useBidCreationSubscription(baseOptions?: Apollo.SubscriptionHook
       }
 export type BidCreationSubscriptionHookResult = ReturnType<typeof useBidCreationSubscription>;
 export type BidCreationSubscriptionResult = Apollo.SubscriptionResult<BidCreationSubscription>;
-export const UserUpdationMutationDocument = gql`
-    subscription UserUpdationMutation {
+export const UserUpdateSubscriptionDocument = gql`
+    subscription UserUpdateSubscription {
   subscriptionUserUpdates {
     id
-    name
   }
 }
     `;
 
 /**
- * __useUserUpdationMutationSubscription__
+ * __useUserUpdateSubscriptionSubscription__
  *
- * To run a query within a React component, call `useUserUpdationMutationSubscription` and pass it any options that fit your needs.
- * When your component renders, `useUserUpdationMutationSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useUserUpdateSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useUserUpdateSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUserUpdationMutationSubscription({
+ * const { data, loading, error } = useUserUpdateSubscriptionSubscription({
  *   variables: {
  *   },
  * });
  */
-export function useUserUpdationMutationSubscription(baseOptions?: Apollo.SubscriptionHookOptions<UserUpdationMutationSubscription, UserUpdationMutationSubscriptionVariables>) {
+export function useUserUpdateSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<UserUpdateSubscriptionSubscription, UserUpdateSubscriptionSubscriptionVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<UserUpdationMutationSubscription, UserUpdationMutationSubscriptionVariables>(UserUpdationMutationDocument, options);
+        return Apollo.useSubscription<UserUpdateSubscriptionSubscription, UserUpdateSubscriptionSubscriptionVariables>(UserUpdateSubscriptionDocument, options);
       }
-export type UserUpdationMutationSubscriptionHookResult = ReturnType<typeof useUserUpdationMutationSubscription>;
-export type UserUpdationMutationSubscriptionResult = Apollo.SubscriptionResult<UserUpdationMutationSubscription>;
+export type UserUpdateSubscriptionSubscriptionHookResult = ReturnType<typeof useUserUpdateSubscriptionSubscription>;
+export type UserUpdateSubscriptionSubscriptionResult = Apollo.SubscriptionResult<UserUpdateSubscriptionSubscription>;
 export const UpdateUserDocument = gql`
     mutation UpdateUser($data: UpdateUserInput!, $where: UserWhereUniqueInput!) {
   updateUser(data: $data, where: $where) {

@@ -12,9 +12,9 @@ subscription BidCreation {
   }
 }
 
-subscription UserUpdationMutation {
+subscription UserUpdateSubscription {
   subscriptionUserUpdates {
   id
-  name  
+    
   }
 }

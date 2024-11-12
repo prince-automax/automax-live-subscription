@@ -25,15 +25,14 @@ import {
   useVehicleUpdateSubscription,
   VehicleUpdateSubscriptionVariables,
   useBidCreationSubscription,
-  useUpdateUserMutation,
-  UpdateUserMutationVariables,
+  useUserUpdateSubscriptionSubscription
 } from "@utils/apollo";
 import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import DashboardTemplate from "../../components/templates/DashboardTemplate";
 import Loader from "../../components/ui/Loader";
 import withPrivateRoute from "../../utils/withPrivateRoute";
@@ -60,8 +59,7 @@ function Events() {
   const { id, type } = router.query;
   const [accessToken, setAccessToken] = useState("");
   const [userId, setUserId] = useState("");
-  // const [usrid, setUsrid] = useState("");
-  // const [interval, setAPIInterval] = useState(2000);
+//  const [id,setEventId]=useS
   const queryClient = useQueryClient();
   const [tick, setTick] = useState(0);
   const [serverTime, setserverTime] = useState(null);
@@ -70,15 +68,29 @@ function Events() {
   const [showImageCarouselModal, setShowImageCarouselModal] = useState(false);
   const [images, setImages] = useState([]);
   const [showCode, setShowCode] = useState(false);
-
+  const [isReady, setIsReady] = useState(false); 
+  
   useEffect(() => {
     if (typeof window !== "undefined") {
+      const { eventid, type } = router.query;
       const token = localStorage.getItem("token");
       const id = localStorage.getItem("id");
       setAccessToken(token );
       setUserId(id );
+      setIsReady(true);
+
+      console.log('SAMPLE ID',eventid);
+      
     }
   }, []);
+
+console.log('EVENT ID',id);
+
+  const client = React.useMemo(
+    () => graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+    [accessToken]
+  );
+
 
   useEffect(() => {
     // Code in this section runs on mount
@@ -102,11 +114,17 @@ function Events() {
   }, []);
 
   const { data: timeData } = useTimeQueryQuery<TimeQueryQueryVariables>(
-    graphQLClient(),
+    client,
     {},
-    { refetchInterval: false } // Avoid unnecessary polling
+    {
+      enabled: !!accessToken && !!id,                // Enable query only when `isReady` is true
+      refetchOnWindowFocus: false,  
+      refetchInterval:false  ,  // Do not refetch on window focus
+      refetchOnMount: false,            // Prevent refetch on component mount
+      // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
+    }
   );
-
+ 
   useEffect(() => {
     if (timeData && timeData.time) {
       setTick(0);
@@ -116,29 +134,39 @@ function Events() {
 
   const vehicleUpdate = useVehicleUpdateSubscription();
   const BidUpdate = useBidCreationSubscription();
-  // const UserUpdate = useUpdateUserMutation();
+  const UserUpdate = useUserUpdateSubscriptionSubscription();
+
+  console.log('UserUpdate',UserUpdate);
+  console.log('BidUpdate',BidUpdate);
+  
+
 
   const {  data, isLoading, isError, error, refetch } = useGetEventsQuery<GetEventsQuery>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+    client,
     {
       where: { id: id as string },
       orderBy: [{ bidTimeExpire: OrderDirection.Asc }],
       take: 1000,
       skip: 0,
     },
-    { enabled: !!accessToken }
+    {
+      enabled: !!accessToken && !!id,            
+      refetchOnWindowFocus: false,      
+      refetchOnMount: false,            
+      // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
+    }
   );
   // console.log("data", data);
 
   useEffect(() => {
-    if (vehicleUpdate.data || BidUpdate.data) {
-      // vehicleUpdate.
+    if (vehicleUpdate.data || BidUpdate.data|| UserUpdate?.data ) {
+     
       refetch();
     }
-  }, [vehicleUpdate.data, BidUpdate.data, refetch]);
+  }, [vehicleUpdate.data, BidUpdate.data,UserUpdate?.data, refetch]);
 
   const callCreateBid = useCreateBidMutation<CreateBidMutationVariables>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` })
+    client
   );
 
   function SecondsLeft(item) {
@@ -232,10 +260,10 @@ function Events() {
   );
 
   const AddToWatchlist = useAddToWatchlistMutation(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` })
+    client
   );
   const RemoveFromWatchlist = useRemoveFromWatchlistMutation(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` })
+    client
   );
 
   const AddWatchlist = useCallback(
@@ -274,15 +302,6 @@ function Events() {
     [RemoveFromWatchlist, userId]
   );
 
-// if (isError) {
-//   // Handle error - could show a message, retry logic, etc.
-//   return (
-//     <div>
-//       <p>Error: { "An unknown error occurred"}</p>
-//       <button onClick={() => refetch()}>Retry</button>
-//     </div>
-//   );
-// }
 
 
   return (

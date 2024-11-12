@@ -1,88 +1,76 @@
-import React, { useState, useEffect } from "react";
-import {
-  useTimeQueryQuery,
-  TimeQueryQueryVariables,
-  GetUserQueryVariables,
-  useGetUserQuery,
-  GetUserQuery,
-} from "@utils/graphql";
+import React, { useState, useEffect, useMemo } from "react";
+import { useTimeQueryQuery, TimeQueryQueryVariables } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
-export default function Welcome() {
+
+const Welcome = React.memo(() => {
   const [name, setName] = useState("");
   const [tick, setTick] = useState(0);
-  const [serverTime, setserverTime] = useState(null);
-  const [id, setId] = useState("");
+  const [serverTime, setServerTime] = useState(null);
   const [accessToken, setAccessToken] = useState("");
+  const [isReady, setIsReady] = useState(false);
+  const [currentTime, setCurrentTime] = useState(moment());
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const name = localStorage.getItem("name");
-      const token = localStorage.getItem("token");
-      const id = localStorage.getItem("id");
-      setAccessToken(token);
-      setName(name);
-      setId(id);
+      setName(localStorage.getItem("name") || "");
+      setAccessToken(localStorage.getItem("token") || "");
     }
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTick((tic) => tic + 1);
-    }, 1000);
+    const timer = setInterval(() => setTick((prev) => prev + 1), 1000);
     return () => clearInterval(timer);
   }, []);
-  const { data } = useTimeQueryQuery<TimeQueryQueryVariables>(
-    graphQLClient(),
-    {}
-    // { refetchInterval: 300000 }
-  );
 
   useEffect(() => {
-    if (data && data.time) {
-      setTick(0);
-      setserverTime(data.time);
-    }
-  }, [data]);
+    setCurrentTime(moment());
+  }, [tick]);
 
+  const client = useMemo(() => graphQLClient({ Authorization: `Bearer ${accessToken}` }), [accessToken]);
 
-  const { data: userData, isLoading } = useGetUserQuery<GetUserQuery>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    { where: { id } },
-    {
-      enabled: !!accessToken,
-    }
-  );
+  // const { data } = useTimeQueryQuery<TimeQueryQueryVariables>(
+  //   client,
+  //   {},
+  //   {
+  //     enabled: isReady,
+  //     refetchOnWindowFocus: false,
+  //     refetchInterval: false,
+  //     refetchOnMount: false,
+  //   }
+  // );
 
-  const username = userData ? userData["user"]?.username : "";
-
-  // console.log("username",username);
-
-  if (userData?.user?.username) {
-    localStorage.setItem("username", username);
-  }
-
+  // useEffect(() => {
+  //   if (data?.time) {
+  //     setTick(0);
+  //     setServerTime(data.time);
+  //   }
+  // }, [data]);
 
   return (
     <div className="flex flex-col space-y-1 sm:space-y-0">
       <p className="text-sm sm:text-base">
-        <span className="font-normal">Welcome</span> {name}!{" "}
+        <span className="font-normal">Welcome</span> {name}!
       </p>
-
       <div className="text-xs">
-        <p>
-          {" "}
+        <p className="text-sm sm:text-base">
+          {currentTime.format("MMMM Do, YYYY, h:mm:ss a")}
+        </p>
+        {/* <p>
           {serverTime
             ? moment(serverTime).add(tick, "seconds").format("MMMM Do, YYYY")
-            : "-"}{" "}
+            : "-"}
         </p>
         <p className="hidden md:block">
-          {" "}
           {serverTime
             ? moment(serverTime).add(tick, "seconds").format("h:mm:ss a")
             : "-"}
-        </p>
+        </p> */}
       </div>
     </div>
   );
-}
+});
+
+Welcome.displayName = "Welcome";
+
+export default Welcome;

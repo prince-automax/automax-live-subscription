@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import TopBar from "./TopBar";
 import {
   ArrowCircleLeftIcon,
@@ -39,6 +39,8 @@ import { useEventsCountQuery,EventsCountQueryVariables} from "@utils/graphql";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
+const MemoizedTopBar = React.memo(TopBar);
+
 
 export default function DashboardTemplate({ children, heading, subHeading }) {
   const router = useRouter();
@@ -50,6 +52,7 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
   const [liveOpen, setLiveOpen] = useState(0);
   const [liveOnline, setLiveOnline] = useState(0);
   const [Upcoming, setUpcoming] = useState(0);
+  const [isReady, setIsReady] = useState(false); // New flag to enable query
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -58,20 +61,27 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
     }
   }, []);
 
-  // const { data, isLoading, refetch } = useEventsCountQuery(
-  //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-  //   {
+  const client = React.useMemo(
+    () => graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+    [accessToken]
+  );
 
-  //     enabled: accessToken !== ""
-  //   }l
-  // );
-  const queryOptions = accessToken ? { enabled: true } : { enabled: false };
+ 
+
+  
 
   const { data, isLoading, refetch } = useEventsCountQuery(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+    client,
     {},
-    { enabled: !!accessToken }
+    {
+      enabled: isReady,                // Enable query only when `isReady` is true
+      refetchOnWindowFocus: false,  
+      refetchInterval:false    // Do not refetch on window focus
+      // refetchOnMount: false,            // Prevent refetch on component mount
+      // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
+    }   
   );
+  
   
   
   
@@ -225,7 +235,7 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
 
   return (
     <>
-      <TopBar />
+      <MemoizedTopBar />
       <main className="max-w-7xl mx-auto pb-10 py-1   ">
         <div className="lg:flex max-md:w-full ">
           {showSidebar && (

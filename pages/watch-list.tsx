@@ -20,13 +20,13 @@ import {
   useVehicleUpdateSubscription,
   VehicleUpdateSubscriptionVariables,
   useBidCreationSubscription,
-  useUpdateUserMutation,
+ useUserUpdateSubscriptionSubscription
 } from "@utils/apollo";
 import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/splide/dist/css/themes/splide-default.min.css";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import DashboardTemplate from "../components/templates/DashboardTemplate";
 import withPrivateRoute from "../utils/withPrivateRoute";
 import Image from "next/image";
@@ -55,6 +55,7 @@ function WatchList() {
   const [images, setImages] = useState([]);
   const [showImageCarouselModal, setShowImageCarouselModal] = useState(false);
   const [showChild, setShowChild] = useState(true);
+  const [isReady, setIsReady] = useState(false); 
 
   useEffect(() => {
     const handleScroll = () => {
@@ -79,6 +80,23 @@ function WatchList() {
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      const id = localStorage.getItem("id");
+      setAccessToken(token);
+      setUserId(id);
+      setIsReady(true);
+
+    }
+  }, []);
+
+  const client = React.useMemo(
+    () => graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+    [accessToken]
+  );
+
+
   const options = {
     rewind: true,
     gap: 1, // Adjust gap as needed
@@ -97,9 +115,15 @@ function WatchList() {
   }, []);
 
   const { data: timeData } = useTimeQueryQuery<TimeQueryQueryVariables>(
-    graphQLClient(),
+    client,
     {},
-    { refetchInterval: false }
+    {
+      enabled: isReady,                // Enable query only when `isReady` is true
+      refetchOnWindowFocus: false,  
+      refetchInterval:false  ,  // Do not refetch on window focus
+      refetchOnMount: false,            // Prevent refetch on component mount
+      // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
+    }
   );
 
   useEffect(() => {
@@ -109,18 +133,11 @@ function WatchList() {
     }
   }, [timeData]);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
-      const id = localStorage.getItem("id");
-      setAccessToken(token);
-      setUserId(id);
-    }
-  }, []);
+
 
   const vehicleUpdate = useVehicleUpdateSubscription();
   const BidUpdate = useBidCreationSubscription();
-  const UserUpdate = useUpdateUserMutation();
+  const UserUpdate = useUserUpdateSubscriptionSubscription();
 
   // useEffect(() => {
   //   const subscription = vehicleUpdate.subscribe();
@@ -138,22 +155,32 @@ function WatchList() {
   }, []); // Empty dependency array means this runs only once on mount and unmount
 
   useEffect(() => {
-    refetch();
-  }, [vehicleUpdate, BidUpdate]);
+    if(isReady){
+      refetch();      
+    }
+    
+  }, [vehicleUpdate, BidUpdate,UserUpdate]);
 
   const { data, isLoading, refetch } =
     useUserWatchlistQuery<UserWatchlistQuery>(
-      graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+     client,
       {
         where: {
           id: userId,
         },
+      },
+      {
+        enabled: isReady,                // Enable query only when `isReady` is true
+        refetchOnWindowFocus: false,  
+        // refetchInterval:false  ,  // Do not refetch on window focus
+        refetchOnMount: false,            // Prevent refetch on component mount
+        // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
       }
     );
   // console.log("data", data);
 
   const RemoveFromWatchlist = useRemoveFromWatchlistMutation(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` })
+   client
   );
 
   const RemoveWathclist = async (id: string) => {
@@ -213,7 +240,7 @@ function WatchList() {
 
 
   const callCreateBid = useCreateBidMutation<CreateBidMutationVariables>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` })
+    client
   );
 
   async function CallBid(amount, vehicleId) {

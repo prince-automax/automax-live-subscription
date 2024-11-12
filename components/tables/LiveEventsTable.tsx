@@ -46,10 +46,16 @@ import { OrderDirection } from "@utils/apollo";
   // const renderCount = useRef(0);
   // renderCount.current += 1;
   // console.log('Render count:', renderCount.current);
+  
+  const client = React.useMemo(
+    () => graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+    [accessToken]
+  );
 
-  useEffect(() => {
-    console.log('Component re-rendered due to props or state change');
-  }, [/* dependencies like props or state */]);
+
+  // useEffect(() => {
+  //   console.log('Component re-rendered due to props or state change');
+  // }, [/* dependencies like props or state */]);
   
   
   const variables = useMemo(() => ({
@@ -65,13 +71,18 @@ import { OrderDirection } from "@utils/apollo";
 
   const { data, isLoading, refetch, isFetching } =
     useLiveEventsQuery<LiveEventsQuery>(
-      graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+      client,
       variables,
-      { enabled: !!accessToken }
+      {
+        enabled: !!accessToken ,            
+        refetchOnWindowFocus: false,      
+        refetchOnMount: false,            
+        // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
+      }
 
     );  
 
-  console.log("Live event table", data);
+  // console.log("Live event table", data);
 
   useEffect(() => {
     if (accessToken) {
@@ -80,9 +91,10 @@ import { OrderDirection } from "@utils/apollo";
   }, [accessToken]); // Depend only on `accessToken`, not `data`
   
   const { data: userData, isLoading: loading } = useGetUserQuery<GetUserQuery>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+    client,
     { where: { id } },
-    { enabled: !!accessToken }
+    { enabled: !!accessToken && !!id ,refetchOnWindowFocus: false,
+      refetchInterval: false,}
   );
 
   const payment = userData ? userData["user"]?.payments : "";

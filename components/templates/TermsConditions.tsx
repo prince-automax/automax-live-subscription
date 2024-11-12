@@ -14,13 +14,7 @@ function TermsConditions(props) {
       setAccessToken(token);
     }
   }, []);
-  const { data } = useGetUserQuery<GetUserQuery>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    { where: { id } },
-    {
-      enabled: accessToken !== "",
-    }
-  );
+
   return (
     <section className="flex mt-10">
       <div className="bg-gray-200 py-1 w-full rounded border-b-4 border-orange-400 ...">
