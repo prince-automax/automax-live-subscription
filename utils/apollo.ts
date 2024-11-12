@@ -454,6 +454,7 @@ export type MutationDeleteUserHardDeleteArgs = {
 export type MutationCreateBidArgs = {
   bidVehicleId: Scalars['String'];
   createBidInput: CreateBidInput;
+  userUniqueInput?: InputMaybe<UserWhereUniqueInput>;
 };
 
 
@@ -1164,6 +1165,7 @@ export type StatusWhereUniqueInput = {
 export type Subscription = {
   __typename?: 'Subscription';
   subscriptionBidCreation: Bid;
+  subscriptionEventUpdates: Event;
   subscriptionUserUpdates: User;
   subscriptionVehicleUpdates: Vehicle;
 };
@@ -1688,6 +1690,11 @@ export type UserUpdateSubscriptionSubscriptionVariables = Exact<{ [key: string]:
 
 
 export type UserUpdateSubscriptionSubscription = { __typename?: 'Subscription', subscriptionUserUpdates: { __typename?: 'User', id: string } };
+
+export type EventsSubscriptionSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type EventsSubscriptionSubscription = { __typename?: 'Subscription', subscriptionEventUpdates: { __typename?: 'Event', id: string } };
 
 export type UpdateUserMutationVariables = Exact<{
   data: UpdateUserInput;
@@ -2518,6 +2525,35 @@ export function useUserUpdateSubscriptionSubscription(baseOptions?: Apollo.Subsc
       }
 export type UserUpdateSubscriptionSubscriptionHookResult = ReturnType<typeof useUserUpdateSubscriptionSubscription>;
 export type UserUpdateSubscriptionSubscriptionResult = Apollo.SubscriptionResult<UserUpdateSubscriptionSubscription>;
+export const EventsSubscriptionDocument = gql`
+    subscription EventsSubscription {
+  subscriptionEventUpdates {
+    id
+  }
+}
+    `;
+
+/**
+ * __useEventsSubscriptionSubscription__
+ *
+ * To run a query within a React component, call `useEventsSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useEventsSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEventsSubscriptionSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useEventsSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<EventsSubscriptionSubscription, EventsSubscriptionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<EventsSubscriptionSubscription, EventsSubscriptionSubscriptionVariables>(EventsSubscriptionDocument, options);
+      }
+export type EventsSubscriptionSubscriptionHookResult = ReturnType<typeof useEventsSubscriptionSubscription>;
+export type EventsSubscriptionSubscriptionResult = Apollo.SubscriptionResult<EventsSubscriptionSubscription>;
 export const UpdateUserDocument = gql`
     mutation UpdateUser($data: UpdateUserInput!, $where: UserWhereUniqueInput!) {
   updateUser(data: $data, where: $where) {

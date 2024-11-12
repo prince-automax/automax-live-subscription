@@ -18,3 +18,9 @@ subscription UserUpdateSubscription {
     
   }
 }
+
+subscription EventsSubscription {
+  subscriptionEventUpdates {
+  id  
+  }
+}

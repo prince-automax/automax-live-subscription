@@ -16,85 +16,83 @@ import {
   GetUserQueryVariables,
   GetUserQuery,
 } from "@utils/graphql";
+import { useEventsSubscriptionSubscription } from "@utils/apollo";
 import graphQLClient from "@utils/useGQLQuery";
 import Router from "next/router";
 import Link from "next/link";
 import DataTableUILoggedIn from "../ui/DataTableUILoggedIn";
 import toast from "react-hot-toast";
 import { OrderDirection } from "@utils/apollo";
- function EventsTable({
+
+const EventsTable = ({
   showHeadings,
   hideSearch,
   allowDownload,
   eventCategory = "online",
-}) {
+}) => {
   const [accessToken, setAccessToken] = useState("");
-  const [id,setUserId]=useState("")
+  const [id, setUserId] = useState("");
   const [registered, setRegistered] = useState(false);
   const [registeredStatus, setRegisteredStatus] = useState("");
-  
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
-      const id=localStorage.getItem("id")
+      const id = localStorage.getItem("id");
       setAccessToken(token);
-      setUserId(id)
+      setUserId(id);
     }
   }, []);
 
-  // const renderCount = useRef(0);
-  // renderCount.current += 1;
-  // console.log('Render count:', renderCount.current);
-  
+
+
   const client = React.useMemo(
     () => graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     [accessToken]
   );
 
+  const LiveEventSubscription = useEventsSubscriptionSubscription();
 
-  // useEffect(() => {
-  //   console.log('Component re-rendered due to props or state change');
-  // }, [/* dependencies like props or state */]);
-  
-  
-  const variables = useMemo(() => ({
-    skip: 0,
-    take: 10,
-    orderBy: [
-      {
-        endDate: OrderDirection.Desc,
-      },
-    ],
-  }), []);
-  
+
+
+  const variables = useMemo(
+    () => ({
+      skip: 0,
+      take: 10,
+      orderBy: [
+        {
+          endDate: OrderDirection.Desc,
+        },
+      ],
+    }),
+    []
+  );
 
   const { data, isLoading, refetch, isFetching } =
-    useLiveEventsQuery<LiveEventsQuery>(
-      client,
-      variables,
-      {
-        enabled: !!accessToken ,            
-        refetchOnWindowFocus: false,      
-        refetchOnMount: false,            
-        // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
-      }
+    useLiveEventsQuery<LiveEventsQuery>(client, variables, {
+      enabled: !!accessToken,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
+    });
 
-    );  
-
-  // console.log("Live event table", data);
 
   useEffect(() => {
-    if (accessToken) {
+    if (LiveEventSubscription?.data) {
       refetch();
     }
-  }, [accessToken]); // Depend only on `accessToken`, not `data`
-  
+  }, [LiveEventSubscription?.data,refetch]);
+
+
+
   const { data: userData, isLoading: loading } = useGetUserQuery<GetUserQuery>(
     client,
     { where: { id } },
-    { enabled: !!accessToken && !!id ,refetchOnWindowFocus: false,
-      refetchInterval: false,}
+    {
+      enabled: !!accessToken && !!id,
+      refetchOnWindowFocus: false,
+      refetchInterval: false,
+    }
   );
 
   const payment = userData ? userData["user"]?.payments : "";
@@ -285,10 +283,9 @@ import { OrderDirection } from "@utils/apollo";
       </div>
     </>
   );
-}
+};
 
-export default React.memo(EventsTable);
-
+export default EventsTable;
 
 EventsTable.defaultProps = {
   hideSearch: false,
