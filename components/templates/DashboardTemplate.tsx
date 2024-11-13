@@ -58,6 +58,7 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
       setAccessToken(token);
+      setIsReady(true)
     }
   }, []);
 
@@ -68,7 +69,7 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
 
  
 
-  
+    
 
   const { data, isLoading, refetch } = useEventsCountQuery(
     client,
@@ -82,6 +83,7 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
     }   
   );
   
+  console.log('datan on count',data);
   
   
   
