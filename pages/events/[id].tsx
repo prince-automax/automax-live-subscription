@@ -113,7 +113,7 @@ console.log('EVENT ID',id);
     return () => clearInterval(timer);
   }, []);
 
-  const { data: timeData } = useTimeQueryQuery<TimeQueryQueryVariables>(
+  const { data: timeData } = useTimeQueryQuery<TimeQueryQueryVariables>(  
     client,
     {},
     {

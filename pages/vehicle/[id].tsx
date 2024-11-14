@@ -8,27 +8,16 @@ import {
   faThumbsDown,
   faUserSlash,
 } from "@fortawesome/free-solid-svg-icons";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import PostThumb1 from "@assets/blog/C1.jpg";
 import PostThumb2 from "@assets/blog/C2.jpg";
 import PostThumb3 from "@assets/blog/C3.jpg";
 import { useRouter } from "next/router";
 import { Tab } from "@headlessui/react";
 import { MinusIcon, PlusIcon } from "@heroicons/react/outline";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useQueryClient } from "react-query";
 import {
-  // CreateBidMutationVariables,
-  // GetEventQuery,
-  OrderDirection,
-  // useCreateBidMutation,
-  // useGetEventQuery,
-  // useVehiclesQuery,
-  // VehiclesQuery,
-  // QueryQueryVariables,
-  // useQueryQuery,
   useGetVehicleQuery,
   GetVehicleQuery,
   useTimeQueryQuery,
@@ -40,12 +29,12 @@ import {
   useVehicleUpdateSubscription,
   VehicleUpdateSubscriptionVariables,
   useBidCreationSubscription,
-  useUpdateUserMutation
+  useUpdateUserMutation,
 } from "@utils/apollo";
-
 import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
 import Swal from "sweetalert2";
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -63,6 +52,11 @@ function Vehicle() {
   const [tick, setTick] = useState(0);
   const [serverTime, setserverTime] = useState(null);
 
+  const client = React.useMemo(
+    () => graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+    [accessToken]
+  );
+  
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
@@ -80,9 +74,15 @@ function Vehicle() {
   }, []);
 
   const { data: timeData } = useTimeQueryQuery<TimeQueryQueryVariables>(
-    graphQLClient(),
+    client,
     {},
-    // { refetchInterval: 300000 }
+    {
+      enabled: !!accessToken && !!id,                // Enable query only when `isReady` is true
+      refetchOnWindowFocus: false,  
+      refetchInterval:false  ,  // Do not refetch on window focus
+      refetchOnMount: false,            // Prevent refetch on component mount
+      // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
+    }
   );
 
   useEffect(() => {
@@ -97,36 +97,30 @@ function Vehicle() {
   );
 
   const vehicleUpdate = useVehicleUpdateSubscription();
-
-  // console.log('vehicle update subscription',vehicleUpdate);
-  const UserUpdate= useUpdateUserMutation()
-
+  const UserUpdate = useUpdateUserMutation();
   const BidUpdate = useBidCreationSubscription();
-
-  // console.log('Bid update subscription',BidUpdate);
 
   const { data, isLoading, refetch } = useGetVehicleQuery<GetVehicleQuery>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     {
       where: { id: id as string },
-      // take: 1,
-      // skip: 0,
-      // userVehicleBidsOrderBy2: [{ amount: OrderDirection.Desc }],
     },
+
     {
-      enabled: accessToken !== "" && id !== "",
+      enabled: !!accessToken && !!id,
+      refetchOnWindowFocus: false,
+      refetchInterval: false,
+      refetchOnMount: false,
     }
   );
 
   console.log("data", data);
 
   useEffect(() => {
-    if (accessToken) {
-      refetch(); // Ensure `refetch()` is only called when necessary.
+    if (vehicleUpdate?.data || BidUpdate?.data) {
+      refetch();
     }
-  }, [vehicleUpdate, BidUpdate,]);
-
-  // console.log("data",data);
+  }, [vehicleUpdate, BidUpdate, refetch]);
 
   const options = {
     rewind: true,
@@ -148,8 +142,6 @@ function Vehicle() {
   useEffect(() => {
     setVehicle(data && data.vehicle ? data.vehicle : null);
   }, [data]);
-
-  // console.log('vehicles',vehicle);
 
   useEffect(() => {
     setImages(vehicle?.image?.split(","));
@@ -208,7 +200,7 @@ function Vehicle() {
         }
 
         // Display the error message to the user
-        Swal.fire( errorMessage, );
+        Swal.fire(errorMessage);
       }
     }
   }
@@ -663,8 +655,6 @@ function Vehicle() {
 export default withPrivateRoute(Vehicle);
 
 function GeneralDetailsTab(props) {
-  // console.log("props form GeneralDetailsTab", props);
-
   return (
     <div className="border border-gray-200 px-4 py-5 sm:p-0 rounded">
       <dl className="sm:divide-y sm:divide-gray-200">
