@@ -69,6 +69,9 @@ function Events() {
   const [images, setImages] = useState([]);
   const [showCode, setShowCode] = useState(false);
   const [isReady, setIsReady] = useState(false); 
+
+  console.log('type',type);
+  
   
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -348,6 +351,9 @@ console.log('EVENT ID',id);
             //   data?.event?.noOfBids,
             //   item?.userVehicleBidsCount
             // );
+            if ((diff > 0 && type == "l") || type == "c") {
+
+            
 
             return (
               <>
@@ -1099,9 +1105,9 @@ console.log('EVENT ID',id);
                 </div>
               </>
             );
-            // } else {
-            //   return "something wnet";
-            // }
+            } else {
+              return null;
+            }
           })}
         </div>
       )}
