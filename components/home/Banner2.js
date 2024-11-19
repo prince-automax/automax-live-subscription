@@ -22,14 +22,16 @@ export default function Banner2() {
                         </p>
                         <div className="mt-5 pb-3 sm:flex sm:justify-center lg:justify-start">
                             <div className="rounded-md shadow ">
+                            <Link href="/about">
                                 <a
-                                    href="#"
+                                    href=""
                                     className="btn-secondary px-6 py-3 md:py-2 md:text-lg md:px-5"
                                 >
                                     Learn More
                                 </a>
+                                </Link>
                             </div>
-                          
+                            
                             <div className="mt-3     rounded-md shadow sm:mt-0  sm:ml-3 ">
                             <Link href="/register">
                                 <a

@@ -76,6 +76,8 @@ const EventsTable = ({
       // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
     });
 
+    console.log('Event', data);
+    
 
   useEffect(() => {
     if (LiveEventSubscription?.data) {
@@ -150,8 +152,13 @@ const EventsTable = ({
       });
     }
   }, [payment]);
-
+  // eventNo
   const columns = [
+    {
+      Header: " No",
+      accessor: "eventNo",
+      // Cell: ({ cell: { value } }) => StartDate(value),
+    },
     {
       Header: "Event Date",
       accessor: "startDate",
@@ -161,7 +168,7 @@ const EventsTable = ({
       Header: "Seller",
       accessor: "seller.name",
     },
-    { Header: "Event Type", accessor: "eventCategory" },
+    { Header: "Type", accessor: "eventCategory" },
 
     {
       Header: "Vehicle",
@@ -190,7 +197,7 @@ const EventsTable = ({
           View(value, eventCategory)
         ) : (
           <button
-            className=" bg-primary-hover font-semibold border text-white py-1 w-full rounded-lg px-6 whitespace-nowrap"
+            className=" bg-primary-hover font-semibold border text-white py-1 w-full rounded-lg  "
             onClick={PaymentStatus}
           >
             BID NOW
@@ -310,7 +317,7 @@ function View(value, eventCategory) {
       >
         <a target="_blank">
           <div>
-            <span className=" bg-primary-hover font-semibold border text-white py-1 w-full px-6 rounded-lg whitespace-nowrap">
+            <span className=" bg-primary-hover font-semibold border text-white py-1 w-full  px-2 rounded-md whitespace-nowrap">
               BID NOW{" "}
             </span>
           </div>

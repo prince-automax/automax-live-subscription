@@ -98,7 +98,7 @@ export function LiveEventHomePage({
     },
     {
       Header: "Closing Date",
-      accessor: "firstVehicleBidTimeExpire",
+      accessor: "firstVehicleEndDate",
       Cell: ({ cell: { value } }) => EndDate(value),
     },
   ];

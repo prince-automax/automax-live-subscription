@@ -214,7 +214,8 @@ const MyQuotes = () => {
             Category
           </dt>
           <dd className="whitespace-nowrap mt-1 text-xs text-gray-900 sm:mt-0 sm:col-span-2">
-            {row?.eventType?.name}
+            {row?.vehicleCategory
+?.name}
           </dd>
         </div>
         <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-4">

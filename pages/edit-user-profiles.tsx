@@ -197,11 +197,11 @@ function ProfileUpdate() {
 
   const validationSchema = Yup.object({
     id: Yup.string().required(),
-    firstName: Yup.string().required("First name is required"),
-    lastName: Yup.string().required("Last name is required"),
-    email: Yup.string()
-      .required("Email is required")
-      .email("Invalid email address"),
+    // firstName: Yup.string().required("First name is required"),
+    // lastName: Yup.string().required("Last name is required"),
+    // email: Yup.string()
+      // .required("Email is required")
+      // .email("Invalid email address"),
     // password: Yup.string()
     //   .required("Password is required")
     //   .matches(/^(?=.{6,})/, "Password must contain at least 8 characters"),
@@ -240,38 +240,43 @@ function ProfileUpdate() {
     //     SUPPORTED_FORMATS.join(", "),
     //   (value) => value && SUPPORTED_FORMATS.includes(value.type)
     // ),
-    mobile: Yup.string().required("Mobile number is required"),
-    city: Yup.string().required("City is required"),
-    state: Yup.string().required("State is required"),
-    country: Yup.string().required("Country is required"),
+    // mobile: Yup.string().required("Mobile number is required"),
+    // city: Yup.string().required("City is required"),
+    // state: Yup.string().required("State is required"),
+    // country: Yup.string().required("Country is required"),
   });
 
   const onSubmit = async (values) => {
-    const result = await callUpdateUserMutation.mutateAsync({
-      data: {
-        firstName: values.firstName,
-        lastName: values.lastName,
-        email: values.email,
-        city: values.city,
-        state: values.state,
-        country: values.country,
-      
-        pancardNo: values.pancardNo,
-     
-        status: UserStatusType.Active,
-      },
-      where: { id: values.id },
-    });
-    localStorage.setItem("status", "active");
-    localStorage.setItem("name", `${values.firstName}`);
-    // localStorage.setItem("username", `${values.firstName}`);
-    let name = values.firstName;
+    try {
+      const result = await callUpdateUserMutation.mutateAsync({
+        data: {
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          city: values.city,
+          state: values.state,
+          country: values.country,
+          pancardNo: values.pancardNo,
+          status: UserStatusType.Active,
+        },
+        where: { id: values.id },
+      });
+      console.log('result',result);
+      // Save information to localStorage on successful mutation
+      localStorage.setItem("status", "active");
+      localStorage.setItem("name", `${values.firstName}`);
+      let name = values.firstName;
 
-    // welcomeMessage(name)
-    Router.push("/dashboard");
-    toast.success(`Welcome ${name}`);
+  
+      // Display success message
+      toast.success(` Profile Updated`);
+    } catch (error) {
+      // Handle errors gracefully
+      console.error("Error updating user:", error);
+      toast.error("Failed to update user. Please try again.");
+    }
   };
-
+  
   const getIdProofPlaceholder = (idProofSelected) => {
     switch (idProofSelected) {
       case "aadhar":
@@ -357,7 +362,7 @@ function ProfileUpdate() {
         localStorage.setItem("status", "active");
         localStorage.setItem("name", `${data?.res.firstName}`);
         let name = data?.res.firstName;
-        Router.push("/dashboard");
+        // Router.push("/dashboard");
         toast.success(`Welcome ${name}`);
       }
       console.log("Success:", data);
@@ -419,7 +424,7 @@ function ProfileUpdate() {
                       <div className="col-span-6 sm:col-span-3">
                         <FormField
                           field="input"
-                          required
+                          
                           name="firstName"
                           label="First Name"
                           width="w-full"
@@ -431,7 +436,7 @@ function ProfileUpdate() {
                         <FormField
                           field="input"
                           name="lastName"
-                          required
+                          
                           label="Last Name"
                           width="w-full"
                           placeholder="Last Name"
@@ -441,7 +446,7 @@ function ProfileUpdate() {
                       <div className="col-span-6  sm:col-span-3">
                         <FormField
                           field="input"
-                          required
+                          
                           name="email"
                           label="Email Address"
                           width="w-full"
@@ -457,7 +462,7 @@ function ProfileUpdate() {
                       <div className="col-span-6  sm:col-span-3">
                         <FormField
                           field="input"
-                          required
+                          
                           
                           name="mobile"
                           label="Mobile Number"
@@ -469,7 +474,7 @@ function ProfileUpdate() {
                         
                         <FormField
                           field="select"
-                          required
+                          
                           name="country"
                           label="Country"
                           width="w-full"
@@ -485,7 +490,7 @@ function ProfileUpdate() {
                       <div className="col-span-6 sm:col-span-3">
                         <FormField
                           field="select"
-                          required
+                          
                           name="state"
                           label="State"
                           width="w-full"
@@ -502,7 +507,7 @@ function ProfileUpdate() {
                       <div className="col-span-6 sm:col-span-3">
                         <FormField
                           field="select"
-                          required
+                          
                           name="city"
                           label="City"
                           width="w-full"

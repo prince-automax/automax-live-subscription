@@ -210,7 +210,7 @@ export default function PaymentForm() {
                 htmlFor="image"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
               >
-                Upload image{" "}
+                Upload image{" "}    <span className="text-red-500 text-xs">*</span>
                 <span className="text-blue-600">(Payment Receipt)</span>
               </label>
               <input
