@@ -430,7 +430,7 @@ console.log('grahqlError',graphqlError);
                     htmlFor="mobile"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Mobile Number
+                    Mobile Number <span className="text-red-500 text-xs">*</span>
                   </label>
                   <input
                     type="text"

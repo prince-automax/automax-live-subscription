@@ -242,7 +242,7 @@ export default function Contact() {
                     </svg>
                   </div>
                   <h3 className="text-lg font-medium text-white">
-                    Contact information
+                    Contact Information
                   </h3>
                   <p className="mt-6 text-base text-indigo-50 max-w-3xl">
                     Live support is available Monday-Saturday 10am-5pm contact
@@ -289,7 +289,7 @@ export default function Contact() {
                 {/* Contact form */}
                 <div className="py-10 px-6 sm:px-10 lg:col-span-2 xl:p-12">
                   <h3 className="text-lg font-medium text-gray-900">
-                    Send us a message
+                    Send Us a Message
                   </h3>
                   <Formik
                     initialValues={{
@@ -311,7 +311,7 @@ export default function Contact() {
                             htmlFor="firstname"
                             className="block text-sm font-medium text-gray-900"
                           >
-                            First name
+                            First Name
                           </label>
                           <div className="mt-1">
                             <Field
@@ -331,7 +331,7 @@ export default function Contact() {
                             htmlFor="lastname"
                             className="block text-sm font-medium text-gray-900"
                           >
-                            Last name
+                            Last Name
                           </label>
                           <div className="mt-1">
                             <Field
@@ -351,7 +351,7 @@ export default function Contact() {
                             htmlFor="state"
                             className="block text-sm font-medium text-gray-900"
                           >
-                            State
+                            State <span className="text-red-500 text-xs">*</span>
                           </label>
                           <div className="mt-1">
                             <Field
@@ -379,7 +379,7 @@ export default function Contact() {
                               htmlFor="phone"
                               className="block text-sm font-medium text-gray-900"
                             >
-                              Phone
+                              Phone <span className="text-red-500 text-xs">*</span>
                             </label>
                             {/* <span
                               id="phone-optional"
@@ -425,7 +425,7 @@ export default function Contact() {
                               htmlFor="message"
                               className="block text-sm font-medium text-gray-900"
                             >
-                              Message
+                              Message <span className="text-red-500 text-xs">*</span>
                             </label>
                             <span
                               id="message"
@@ -474,7 +474,7 @@ export default function Contact() {
               id="offices-heading"
               className="text-3xl font-extrabold text-gray-900"
             >
-              Our offices
+              Our Offices
             </h2>
             <p className="mt-6 text-lg text-gray-500 max-w-3xl">
               We are expanding fast across India, let's connect with us through
@@ -486,13 +486,17 @@ export default function Contact() {
                   <h3 className="text-lg font-medium text-gray-900">
                     {office.city}
                   </h3>
-                  <p className="mt-2 text-base text-gray-500">
-                    {office.address.map((line) => (
-                      <span key={line} className="block">
-                        {line}
-                      </span>
-                    ))}
-                  </p>
+                  <p
+  className={`${
+    office?.city === "Mumbai" || office?.city === "Hyderabad" ? "animate-pulse" : ""
+  } mt-2 text-base text-gray-500`}
+>
+  {office?.address.map((line) => (
+    <span key={line} className="block">
+      {line}
+    </span>
+  ))}
+</p>
                 </div>
               ))}
             </div>

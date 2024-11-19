@@ -30,7 +30,7 @@ const TopBar = React.memo(() => {
 
   const result = useBidCreationSubscription();
 
-  console.log("BID SUBSCRIPTION ", result);
+  // console.log("BID SUBSCRIPTION ", result);
 
   const { data, refetch } = useGetUserQuery<GetUserQuery>(
     client,

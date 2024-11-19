@@ -137,9 +137,9 @@ function ProfileUpdate() {
   const validationSchema = Yup.object({
     id: Yup.string().required(),
     firstName: Yup.string().required("First name is required"),
-    lastName: Yup.string().required("Last name is required"),
+    // lastName: Yup.string().required("Last name is required"),
     email: Yup.string()
-      .required("Email is required")
+      // .required("Email is required")
       .email("Invalid email address"),
     password: Yup.string()
       .required("Password is required")
@@ -148,7 +148,7 @@ function ProfileUpdate() {
       .required("Confirm password is required")
       .oneOf([Yup.ref("password"), null], "Passwords must match"),
     // idProofType: Yup.string().required("Id proof type is required"),
-    idProofNo: Yup.string().required("Id proof number is required"),
+    // idProofNo: Yup.string().required("Id proof number is required"),
     pancardNo: Yup.string()
       .required("Pan Card number is required")
       .max(10, "Invalid Pan Card number")
@@ -180,7 +180,7 @@ function ProfileUpdate() {
     mobile: Yup.string()
     .matches(/^[0-9]{10}$/, "Mobile number must be only 10 digits long") // Ensures only 10 digits
     .required("Mobile number is required"),
-    city: Yup.string().required("City is required"),
+    // city: Yup.string().required("City is required"),
     state: Yup.string().required("State is required"),
   });
 
@@ -502,7 +502,6 @@ function ProfileUpdate() {
                     <div className="col-span-6 sm:col-span-3">
                       <FormField
                         field="select"
-                        required
                         name="city"
                         label="City"
                         width="w-full"

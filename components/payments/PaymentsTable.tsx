@@ -21,37 +21,43 @@ import moment from "moment";
 export default function PaymentsTable() {
   const [accessToken, setAccessToken] = useState("");
   const [userId, setUserId] = useState("");
+  const [isReady, setIsReady] = useState(false); 
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
       const userId = localStorage.getItem("id");
       setUserId(userId);
       setAccessToken(token);
+      setIsReady(true);
+
     }
   }, []);
+
+  const client = React.useMemo(
+    () => graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+    [accessToken]
+  );
 
 console.log('process.env.BASE_URL',process.env.BASE_URL);
 
 
-  const { data, isLoading } = useFindUserPaymentsQuery<FindUserPaymentsQuery>(
-    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    {
+  const { data, isLoading,
+    refetch } = useFindUserPaymentsQuery<FindUserPaymentsQuery>(
+    client,    {
       where: { id: userId },
+    },
+    {
+      enabled: isReady,                // Enable query only when `isReady` is true
+      refetchOnWindowFocus: false,  
+      refetchInterval:false  ,  // Do not refetch on window focus
+      refetchOnMount: false,            // Prevent refetch on component mount
+      // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
     }
-    // {
-    //   sortOrder: "Desc"
-
-    //       ,
-
-    // //   skip: 0,
-    // //   take: 5,
-    // },
-    // { refetchInterval: 10000, enabled: accessToken != "" }
   );
-
-  // console.log("userPayments", data?.user?.payments);
-
-  console.log("data", data);
+     
+             
+  console.log("data", data);    
   data?.user?.["payments"].map((item, index) =>
     console.log("imaegge", item?.image)
   );
@@ -102,6 +108,9 @@ console.log('process.env.BASE_URL',process.env.BASE_URL);
                       </h1>
                       <div className="text-sm font-medium text-slate-700">
                         {`Payment For : ${renderPaymentFor(item.paymentFor)}`}
+                      </div>
+                      <div className="text-sm font-medium text-slate-700">
+                        {`Status : ${item.status}`}
                       </div>
                       <div className="text-sm font-medium text-slate-700">
                         {`Description : ${item.description}`}

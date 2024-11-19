@@ -35,9 +35,15 @@ export type Bid = {
   userId: Scalars['String'];
 };
 
+export type BidOrderByInput = {
+  createdAt?: InputMaybe<OrderDirection>;
+  updatedAt?: InputMaybe<OrderDirection>;
+};
+
 export type BidWhereUniqueInput = {
   bidVehicleId?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 export enum ContactUsStatusType {
@@ -362,6 +368,17 @@ export type Excelupload = {
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
+export type IdFilter = {
+  equals?: InputMaybe<Scalars['String']>;
+  gt?: InputMaybe<Scalars['String']>;
+  gte?: InputMaybe<Scalars['String']>;
+  in?: InputMaybe<Array<Scalars['String']>>;
+  lt?: InputMaybe<Scalars['String']>;
+  lte?: InputMaybe<Scalars['String']>;
+  not?: InputMaybe<Scalars['String']>;
+  notIn?: InputMaybe<Array<Scalars['String']>>;
+};
+
 export type Location = {
   __typename?: 'Location';
   country?: Maybe<Scalars['String']>;
@@ -459,6 +476,7 @@ export type MutationDeleteUserHardDeleteArgs = {
 export type MutationCreateBidArgs = {
   bidVehicleId: Scalars['String'];
   createBidInput: CreateBidInput;
+  userUniqueInput?: InputMaybe<UserWhereUniqueInput>;
 };
 
 
@@ -1044,9 +1062,10 @@ export type QueryVehicleCategoryArgs = {
 
 
 export type QueryVehiclesArgs = {
-  orderBy?: InputMaybe<Array<VehicleOrderByInput>>;
+  orderBy?: InputMaybe<Array<BidOrderByInput>>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
+  vehiclesOrderBy?: InputMaybe<Array<VehicleOrderByInput>>;
   where?: InputMaybe<VehicleWhereUniqueInput>;
 };
 
@@ -1169,6 +1188,8 @@ export type StatusWhereUniqueInput = {
 export type Subscription = {
   __typename?: 'Subscription';
   subscriptionBidCreation: Bid;
+  subscriptionEventUpdates: Event;
+  subscriptionUserUpdates: User;
   subscriptionVehicleUpdates: Vehicle;
 };
 
@@ -1536,10 +1557,14 @@ export type VehicleListResponse = {
 
 export type VehicleOrderByInput = {
   bidTimeExpire?: InputMaybe<OrderDirection>;
+  createdAt?: InputMaybe<OrderDirection>;
+  updatedAt?: InputMaybe<OrderDirection>;
 };
 
 export type VehicleWhereUniqueInput = {
+  bidTimeExpire?: InputMaybe<IdFilter>;
   id?: InputMaybe<Scalars['String']>;
+  userVehicleBids?: InputMaybe<BidWhereUniqueInput>;
 };
 
 export type VerfiyOtpDto = {
@@ -1664,6 +1689,23 @@ export type EventsCountQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type EventsCountQuery = { __typename?: 'Query', events?: { __typename?: 'EventListResponse', upcomingEventCount?: number | null, liveEventCount?: number | null, totalEventsCount?: number | null, completedEventCount?: number | null, events?: Array<{ __typename?: 'Event', id: string }> | null } | null };
 
+export type MyQuotesQueryVariables = Exact<{
+  where?: InputMaybe<VehicleWhereUniqueInput>;
+  orderBy?: InputMaybe<Array<BidOrderByInput> | BidOrderByInput>;
+  vehiclesOrderBy?: InputMaybe<Array<VehicleOrderByInput> | VehicleOrderByInput>;
+}>;
+
+
+export type MyQuotesQuery = { __typename?: 'Query', vehicles?: { __typename?: 'VehicleListResponse', vehicles: Array<{ __typename?: 'Vehicle', registrationNumber: string, type?: string | null, category?: string | null, fuel?: string | null, varient?: string | null, make?: string | null, registeredOwnerName?: string | null, model?: string | null, rcStatus?: string | null, bidStatus?: string | null, bidTimeExpire: any, id: string, YOM?: number | null, ownership?: number | null, kmReading?: number | null, insuranceStatus?: string | null, yardLocation?: string | null, engineNo?: string | null, chassisNo?: string | null, event?: { __typename?: 'Event', eventNo: number, eventCategory: string, startDate: any, endDate: any, seller?: { __typename?: 'Seller', name: string } | null, vehicleCategory?: { __typename?: 'VehicleCategory', name: string } | null, location?: { __typename?: 'Location', state?: { __typename?: 'State', name: StateNames } | null } | null } | null, userVehicleBids?: Array<{ __typename?: 'Bid', id: string, amount: number, bidVehicle?: { __typename?: 'Vehicle', id: string, currentBidUser?: { __typename?: 'User', id: string } | null } | null }> | null }> } | null };
+
+export type UpdateVehicleMutationVariables = Exact<{
+  where: VehicleWhereUniqueInput;
+  updateVehicleInput: UpdateVehicleInput;
+}>;
+
+
+export type UpdateVehicleMutation = { __typename?: 'Mutation', updateVehicle: { __typename?: 'Vehicle', id: string } };
+
 export type CreatePaymentMutationVariables = Exact<{
   createPaymentInput: CreatePaymentInput;
 }>;
@@ -1687,6 +1729,16 @@ export type BidCreationSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
 export type BidCreationSubscription = { __typename?: 'Subscription', subscriptionBidCreation: { __typename?: 'Bid', id: string } };
+
+export type UserUpdateSubscriptionSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UserUpdateSubscriptionSubscription = { __typename?: 'Subscription', subscriptionUserUpdates: { __typename?: 'User', id: string } };
+
+export type EventsSubscriptionSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type EventsSubscriptionSubscription = { __typename?: 'Subscription', subscriptionEventUpdates: { __typename?: 'Event', id: string } };
 
 export type UpdateUserMutationVariables = Exact<{
   data: UpdateUserInput;
@@ -2163,6 +2215,94 @@ export const useEventsCountQuery = <
       fetcher<EventsCountQuery, EventsCountQueryVariables>(client, EventsCountDocument, variables, headers),
       options
     );
+export const MyQuotesDocument = `
+    query MyQuotes($where: VehicleWhereUniqueInput, $orderBy: [BidOrderByInput!], $vehiclesOrderBy: [VehicleOrderByInput!]) {
+  vehicles(where: $where, orderBy: $orderBy, vehiclesOrderBy: $vehiclesOrderBy) {
+    vehicles {
+      registrationNumber
+      event {
+        eventNo
+        seller {
+          name
+        }
+        vehicleCategory {
+          name
+        }
+        eventCategory
+        startDate
+        endDate
+        location {
+          state {
+            name
+          }
+        }
+      }
+      type
+      category
+      fuel
+      varient
+      make
+      registeredOwnerName
+      model
+      rcStatus
+      bidStatus
+      bidTimeExpire
+      id
+      YOM
+      ownership
+      kmReading
+      insuranceStatus
+      yardLocation
+      engineNo
+      chassisNo
+      userVehicleBids {
+        id
+        amount
+        bidVehicle {
+          id
+          currentBidUser {
+            id
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+export const useMyQuotesQuery = <
+      TData = MyQuotesQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: MyQuotesQueryVariables,
+      options?: UseQueryOptions<MyQuotesQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<MyQuotesQuery, TError, TData>(
+      variables === undefined ? ['MyQuotes'] : ['MyQuotes', variables],
+      fetcher<MyQuotesQuery, MyQuotesQueryVariables>(client, MyQuotesDocument, variables, headers),
+      options
+    );
+export const UpdateVehicleDocument = `
+    mutation UpdateVehicle($where: VehicleWhereUniqueInput!, $updateVehicleInput: UpdateVehicleInput!) {
+  updateVehicle(where: $where, updateVehicleInput: $updateVehicleInput) {
+    id
+  }
+}
+    `;
+export const useUpdateVehicleMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<UpdateVehicleMutation, TError, UpdateVehicleMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<UpdateVehicleMutation, TError, UpdateVehicleMutationVariables, TContext>(
+      ['UpdateVehicle'],
+      (variables?: UpdateVehicleMutationVariables) => fetcher<UpdateVehicleMutation, UpdateVehicleMutationVariables>(client, UpdateVehicleDocument, variables, headers)(),
+      options
+    );
 export const CreatePaymentDocument = `
     mutation CreatePayment($createPaymentInput: CreatePaymentInput!) {
   createPayment(createPaymentInput: $createPaymentInput) {
@@ -2230,6 +2370,20 @@ export const VehicleUpdateDocument = `
 export const BidCreationDocument = `
     subscription BidCreation {
   subscriptionBidCreation {
+    id
+  }
+}
+    `;
+export const UserUpdateSubscriptionDocument = `
+    subscription UserUpdateSubscription {
+  subscriptionUserUpdates {
+    id
+  }
+}
+    `;
+export const EventsSubscriptionDocument = `
+    subscription EventsSubscription {
+  subscriptionEventUpdates {
     id
   }
 }

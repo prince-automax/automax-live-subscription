@@ -126,7 +126,7 @@ export default function LoginUsingPassword() {
             htmlFor="mobile"
             className="block text-sm font-medium text-gray-700"
           >
-            Mobile Number
+            Mobile Number  <span className="text-red-500 text-xs">*</span>
           </label>
           <div className="mt-1">
             <input
@@ -151,7 +151,7 @@ export default function LoginUsingPassword() {
             htmlFor="password"
             className="block text-sm font-medium text-gray-700"
           >
-            Password
+            Password   <span className="text-red-500 text-xs">*</span>
           </label>
           <div className="mt-1 relative">
             <input

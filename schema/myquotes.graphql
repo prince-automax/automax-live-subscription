@@ -1,0 +1,58 @@
+query MyQuotes($where: VehicleWhereUniqueInput, $orderBy: [BidOrderByInput!], $vehiclesOrderBy: [VehicleOrderByInput!]) {
+ vehicles(where: $where, orderBy: $orderBy, vehiclesOrderBy: $vehiclesOrderBy) {
+  vehicles {
+   registrationNumber
+    event {
+      eventNo
+      seller {
+        name
+      }
+      vehicleCategory {
+        name
+      }
+      eventCategory
+      startDate
+      endDate
+      location {
+        state {
+          name
+        }
+      }
+    }
+    type
+    category
+    fuel
+    varient
+    make
+    registeredOwnerName
+    model
+    rcStatus
+    bidStatus
+    bidTimeExpire
+    id
+    YOM
+    ownership
+    kmReading
+    insuranceStatus
+    yardLocation
+    engineNo
+    chassisNo
+    userVehicleBids {
+      id
+      amount
+      bidVehicle {
+        id
+        currentBidUser {
+          id
+        }
+      }
+    }
+  }
+ }
+}
+
+mutation UpdateVehicle($where: VehicleWhereUniqueInput!, $updateVehicleInput: UpdateVehicleInput!) {
+  updateVehicle(where: $where, updateVehicleInput: $updateVehicleInput) {
+  id  
+  }
+}

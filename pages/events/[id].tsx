@@ -265,6 +265,7 @@ console.log('EVENT ID',id);
   const AddToWatchlist = useAddToWatchlistMutation(
     client
   );
+  
   const RemoveFromWatchlist = useRemoveFromWatchlistMutation(
     client
   );

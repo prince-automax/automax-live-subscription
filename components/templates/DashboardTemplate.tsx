@@ -83,7 +83,7 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
     }   
   );
   
-  console.log('datan on count',data);
+  // console.log('datan on count',data);
   
   
   
