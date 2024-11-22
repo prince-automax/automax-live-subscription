@@ -78,7 +78,7 @@ function Vehicle() {
     {},
     {
       enabled: !!accessToken && !!id,                // Enable query only when `isReady` is true
-      refetchOnWindowFocus: false,  
+      refetchOnWindowFocus: true,  
       refetchInterval:false  ,  // Do not refetch on window focus
       refetchOnMount: false,            // Prevent refetch on component mount
       // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
@@ -469,7 +469,7 @@ function Vehicle() {
                 <div className="flex items-center justify-between">
                   <dt className="text-sm text-gray-200">Start Price</dt>
                   <dd className="text-sm font-medium text-gray-200">
-                    {vehicle?.startPrice}
+                  ₹ {vehicle?.startPrice? vehicle?.startPrice :"0"}
                   </dd>
                 </div>
                 {vehicle?.event?.bidLock === "locked" ? (
@@ -535,15 +535,15 @@ function Vehicle() {
                 <button
                   type="submit"
                   onClick={() => {
-                    if (parseInt(bidAmount) % 100 != 0) {
-                      Swal.fire({
-                        title: "Bid amount should be multiple of 100",
-                        confirmButtonText: "OK",
-                        icon: "warning", //
-                        position: "center",
-                      });
-                    } else if (
-                      vehicle?.event?.bidLock === "locked" &&
+                    // if (parseInt(bidAmount) % 100 != 0) {
+                    //   Swal.fire({
+                    //     title: "Bid amount should be multiple of 100",
+                    //     confirmButtonText: "OK",
+                    //     icon: "warning", //
+                    //     position: "center",
+                    //   });
+                    // }
+                      if (vehicle?.event?.bidLock === "locked" &&
                       vehicle?.currentBidAmount >= parseInt(bidAmount)
                     ) {
                       Swal.fire({
@@ -569,7 +569,7 @@ function Vehicle() {
                     ) {
                       Swal.fire({
                         title:
-                          "Bid amount should be greater than minimum quote increment.",
+                        `Bid amount must be multiple of ${vehicle?.quoteIncreament}`,
                         confirmButtonText: "OK",
                         icon: "warning", //
                         position: "center",
@@ -614,7 +614,7 @@ function Vehicle() {
                 </button>
               )}
               <p className=" text-sm text-indigo-100">
-                {vehicle?.userVehicleBidsCount && vehicle?.myBidRank ? (
+                {/* {vehicle?.userVehicleBidsCount && vehicle?.myBidRank ? (
                   vehicle?.myBidRank == 1 ? (
                     <span style={{ color: "#00CC00" }}>Winning</span>
                   ) : (
@@ -622,7 +622,7 @@ function Vehicle() {
                   )
                 ) : (
                   <span style={{ color: "#CCCC00" }}>Not Enrolled</span>
-                )}
+                )} */}
                 <div className="mt-4 w-full border-white text-center bg-white px-5 py-3 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-700 focus:ring-white rounded-md">
                   {vehicle?.userVehicleBidsCount && vehicle?.myBidRank ? (
                     vehicle?.myBidRank == 1 ? (

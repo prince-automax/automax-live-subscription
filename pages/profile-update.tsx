@@ -80,12 +80,14 @@ function ProfileUpdate() {
         filteredC.map((city, index) => {
           return {
             label: city.city,
-            value: `${city.city}-${city.state}`,
+            value: city.city,
           };
         })
       );
     }
   }, [selectedState]);
+
+
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -137,52 +139,31 @@ function ProfileUpdate() {
   const validationSchema = Yup.object({
     id: Yup.string().required(),
     firstName: Yup.string().required("First name is required"),
-    // lastName: Yup.string().required("Last name is required"),
     email: Yup.string()
-      // .required("Email is required")
       .email("Invalid email address"),
     password: Yup.string()
       .required("Password is required")
-      .matches(/^(?=.{6,})/, "Password must contain at least 8 characters"),
+      .matches(/^(?=.{6,})/, "Password must contain at least 6 characters"),
     passwordConfirmation: Yup.string()
       .required("Confirm password is required")
-      .oneOf([Yup.ref("password"), null], "Passwords must match"),
-    // idProofType: Yup.string().required("Id proof type is required"),
-    // idProofNo: Yup.string().required("Id proof number is required"),
+      .oneOf([Yup.ref("password"), null], "Passwords do not match"),
     pancardNo: Yup.string()
       .required("Pan Card number is required")
       .max(10, "Invalid Pan Card number")
       .min(10, "Invalid Pan Card number"),
-    // pancard: Yup.mixed()
-    //   .required("Pancard is required")
-    //   .test(
-    //     "fileFormat",
-    //     "Unsupported Format. Please upload a file with one of the following formats: " +
-    //       SUPPORTED_FORMATS.join(", "),
-    //     (value) => value && SUPPORTED_FORMATS.includes(value.type)
-    //   ),
-    // idProof: Yup.mixed()
-    //   .required("ID proof is required")
-    //   .test(
-    //     "fileFormat",
-    //     "Unsupported Format. Please upload a file with one of the following formats: " +
-    //       SUPPORTED_FORMATS.join(", "),
-    //     (value) => value && SUPPORTED_FORMATS.includes(value.type)
-    //   ),
-    // idProofBack: Yup.mixed()
-    //   .required("ID proof is required")
-    //   .test(
-    //     "fileFormat",
-    //     "Unsupported Format. Please upload a file with one of the following formats: " +
-    //       SUPPORTED_FORMATS.join(", "),
-    //     (value) => value && SUPPORTED_FORMATS.includes(value.type)
-    //   ),
     mobile: Yup.string()
-    .matches(/^[0-9]{10}$/, "Mobile number must be only 10 digits long") // Ensures only 10 digits
-    .required("Mobile number is required"),
-    // city: Yup.string().required("City is required"),
+      .matches(/^[0-9]{10}$/, "Mobile number must be only 10 digits long")
+      .required("Mobile number is required"),
     state: Yup.string().required("State is required"),
+    // idProofNo: Yup.string()
+    //   // .required("Aadhar number is required")
+    //   .matches(/^[0-9]{12}$/, "Aadhar number must be exactly 12 digits long"), // Ensures 12 digits only
+    idProofNo: Yup.string()
+    // .required("Aadhar number is required")
+    .matches(/^\d+$/, "Aadhar number must contain only digits") // Ensure only digits
+    .length(12, "Aadhar number must be exactly 12 digits long"), // Validate exact length
   });
+  
 
   const onSubmit = async (values) => {
     try {
@@ -200,9 +181,9 @@ function ProfileUpdate() {
           idProofType: values.idProofType || "Aadhar",
           password: values.password,
           pancardNo: values.pancardNo,
-          idProofNo: values.idProofNo,
+          idProofNo: values.idProofNo.toString(),
 
-          role: UserRoleType?.Dealer,
+          // role: UserRoleType?.Dealer,
           status: UserStatusType?.Active,
         },
         where: { id: values.id },
@@ -235,31 +216,6 @@ function ProfileUpdate() {
     }
   };
 
-  const getIdProofPlaceholder = (idProofSelected) => {
-    switch (idProofSelected) {
-      case "aadhar":
-        return "Enter your Aadhar Number";
-      case "passport":
-        return "Enter your Passport Number";
-      case "drivingLicense":
-        return "Enter your Driving License Number";
-      default:
-        return "Enter your Aadhar Number";
-    }
-  };
-
-  const getIdProofLabel = (idProofSelected) => {
-    switch (idProofSelected) {
-      case "aadhar":
-        return "Aadhar ";
-      case "passport":
-        return "Passport ";
-      case "drivingLicense":
-        return "Driving License ";
-      default:
-        return "Aadhar ";
-    }
-  };
 
   // const handleSubmit = (values) => {
   //   console.log('values', values);
@@ -461,7 +417,7 @@ function ProfileUpdate() {
                         name="email"
                         label="Email Address"
                         width="w-full"
-                        placeholder="Please enter email address here"
+                        placeholder="Email Address"
                         custom
                         onBlur={(e) => {
                           setEmailCheckData(e.target.value);
@@ -474,7 +430,7 @@ function ProfileUpdate() {
                       <FormField
                         field="input"
                         required
-                        
+                        placeholder="Mobile Number"
                         name="mobile"
                         label="Mobile Number"
                         width="w-full"
@@ -516,10 +472,10 @@ function ProfileUpdate() {
 
                     <div className="space-y-1 col-span-6 border-t border-gray-200 pt-8">
                       <h3 className="text-lg leading-6 font-medium text-gray-900">
-                        Your Id Proof
+                        Your ID Proof
                       </h3>
                       <p className="max-w-2xl text-sm text-gray-500">
-                        Please enter your Id Proof details.
+                        Please enter your ID Proof details.
                       </p>
                     </div>
 
@@ -528,8 +484,8 @@ function ProfileUpdate() {
                         field="input"
                         name="idProofNo"
                         label="Aadhar Card Number"
-                        placeholder="Enter your Aadhar Card Number"
-                        
+                        placeholder="Aadhar Card Number"
+                        type="number"
                         width="w-full"
                       />
                     </div>
@@ -539,7 +495,7 @@ function ProfileUpdate() {
                         field="input"
                         name="pancardNo"
                         label="Pan Card Number"
-                        placeholder="Enter your PAN Card Number"
+                        placeholder="Pan Card Number"
                         required
                         maxLength="10"
                         width="w-full"

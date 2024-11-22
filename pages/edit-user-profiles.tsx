@@ -22,25 +22,12 @@ import toast from "react-hot-toast";
 import { cities } from "../utils/cities";
 import { states } from "../utils/states";
 import { countries } from "../utils/countries";
-import { useState, useEffect } from "react";
+import { useState, useEffect,useRef } from "react";
 import { ResizeImage } from "../components/image-Resizing/imageProfile";
 import DashboardTemplate from "../components/templates/DashboardTemplate";
 // import {welcomeMessage} from "../components/alerts/welcomeMessage"
 import Swal from "sweetalert2";
 import Image from "next/image";
-
-const userIdProofTypes = [
-  { label: "Aadhar Number", value: "aadhar" },
-  { label: "Passport Number", value: "passport" },
-  { label: "Driving License Number", value: "drivingLicense" },
-];
-
-const renderingCities = cities.map((city, index) => {
-  return {
-    label: city.city,
-    value: `${city.city}-${city.state}`,
-  };
-});
 
 const renderingStates = states.map((state) => {
   return { label: state.state, value: state.state };
@@ -64,6 +51,8 @@ function welcomeMessage(props) {
 
 function ProfileUpdate() {
   const id = localStorage.getItem("id");
+  const fieldRefs = useRef({}); // Store refs for each field
+
 
   // const token = localStorage.getItem("token");
   const [emailCheckData, setEmailCheckData] = useState("");
@@ -78,25 +67,8 @@ function ProfileUpdate() {
     driving_license_back_image: null,
   });
   const [accessToken, setAccessToken] = useState("");
-  const [selectedState, setSelectedState] = useState("Kerala");
+  const [selectedState, setSelectedState] = useState("");
   const [filteredCities, setFilteredCities] = useState([]);
-
-  useEffect(() => {
-    if (selectedState != null && selectedState != "") {
-      // filter cities and fill in cities object
-
-      const filteredC = cities.filter((c) => c.state === selectedState);
-
-      setFilteredCities(
-        filteredC.map((city, index) => {
-          return {
-            label: city.city,
-            value: `${city.city}-${city.state}`,
-          };
-        })
-      );
-    }
-  }, [selectedState]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -110,81 +82,41 @@ function ProfileUpdate() {
       graphQLClient({ Authorization: `Bearer ${accessToken}` }),
       { where: { id } },
       {
-        enabled: accessToken !== "",
+        enabled: !!accessToken && !!id, // Enable query only when `isReady` is true
+        refetchOnWindowFocus: false,
+        refetchInterval: false, // Do not refetch on window focus
+        refetchOnMount: false, // Prevent refetch on component mount
+        // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
       }
     );
 
-  //  useEffect(() => {
-  //   if (data) {
-  //     setImagePreviews({
-  //       pancard_image: data.user?.pancard_image || null,
-  //       aadharcard_front_image: data?.user?.aadharcard_front_image || null,
-  //       aadharcard_back_image: data?.user?.aadharcard_back_image || null,
-  //       driving_license_front_image: data?.user?.driving_license_front_image || null,
-  //       driving_license_back_image: data?.user?.driving_license_back_image || null,
-  //     });
-  //   }
-  // }, [data]);
+  useEffect(() => {
+    if (data?.user?.state) {
+      setSelectedState(data?.user?.state);
+    }
+  }, [data?.user]);
 
-  // console.log("datas", data);
+  useEffect(() => {
+    // if (selectedState != null && selectedState != "") {
+    // filter cities and fill in cities object
+    // console.log("789");
+    const filteredC = cities.filter((c) => c.state === selectedState);
 
-  // const pancard = data ? data["user"]?.pancard?.url : "";
+    setFilteredCities(
+      filteredC.map((city, index) => {
+        return {
+          label: city.city,
+          value: city.city,
+        };
+      })
+    );
+    // }
+  }, [selectedState, data?.user]);
+// 
+  // console.log("filteredCities", filteredCities);
+  // console.log("selected state", selectedState);
 
-  //   const { data: duplicateEmailCheckData } = useDuplicateDataCheckQuery(
-  //     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-  //     {
-  //       where: {
-  //         email: {
-  //           equals: emailCheckData,
-  //         },
-  //         id: {
-  //           not: {
-  //             equals: id,
-  //           },
-  //         },
-  //       },
-  //     },
-  //     {
-  //       enabled: emailEnabled && accessToken != "",
-  //     }
-  //   );
-
-  //   const { data: duplicatePanCheckData } = useDuplicateDataCheckQuery(
-  //     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-  //     {
-  //       where: {
-  //         pancardNo: {
-  //           equals: panCheckData,
-  //         },
-  //         id: {
-  //           not: {
-  //             equals: id,
-  //           },
-  //         },
-  //       },
-  //     },
-  //     {
-  //       enabled: panEnabled && accessToken != "",
-  //     }
-  //   );
-
-  //   useEffect(() => {
-  //     if (duplicateEmailCheckData?.sudoUsersCount > 0 && emailEnabled) {
-  //       alert(
-  //         "The Email you have entered has already been connected with another account."
-  //       );
-  //       setEmailEnabled(false);
-  //     }
-  //   }, [duplicateEmailCheckData, emailEnabled]);
-
-  //   useEffect(() => {
-  //     if (duplicatePanCheckData?.sudoUsersCount > 0 && panEnabled) {
-  //       alert(
-  //         "The Pan you have entered has already been connected with another account."
-  //       );
-  //       setPanEnabled(false);
-  //     }
-  //   }, [duplicatePanCheckData, panEnabled]);
+  // console.log("get user", data);
 
   const callUpdateUserMutation =
     useUpdateUserMutation<UpdateUserMutationVariables>(
@@ -196,57 +128,30 @@ function ProfileUpdate() {
   }
 
   const validationSchema = Yup.object({
-    id: Yup.string().required(),
     // firstName: Yup.string().required("First name is required"),
-    // lastName: Yup.string().required("Last name is required"),
-    // email: Yup.string()
-      // .required("Email is required")
-      // .email("Invalid email address"),
-    // password: Yup.string()
-    //   .required("Password is required")
-    //   .matches(/^(?=.{6,})/, "Password must contain at least 8 characters"),
-    // passwordConfirmation: Yup.string()
-    //   .required("Confirm password is required")
-    //   .oneOf([Yup.ref("password"), null], "Passwords must match"),
-    idProofType: Yup.string(),
-    // .required("Id proof type is required"),
-    idProofNo: Yup.string(),
-    // .required("Id proof number is required"),
-    pancardNo: Yup.string(),
-    // .required("Pan Card number is required")
-    // .max(10, "Invalid Pan Card number")
-    // .min(10, "Invalid Pan Card number"),
-    pancard: Yup.mixed(),
-    // .required("Pancard is required")
-    // .test(
-    //   "fileFormat",
-    //   "Unsupported Format. Please upload a file with one of the following formats: " +
-    //     SUPPORTED_FORMATS.join(", "),
-    //   (value) => value && SUPPORTED_FORMATS.includes(value.type)
-    // ),
-    idProof: Yup.mixed(),
-    // .required("ID proof is required")
-    // .test(
-    //   "fileFormat",
-    //   "Unsupported Format. Please upload a file with one of the following formats: " +
-    //     SUPPORTED_FORMATS.join(", "),
-    //   (value) => value && SUPPORTED_FORMATS.includes(value.type)
-    // ),
-    idProofBack: Yup.mixed(),
-    // .required("ID proof is required")
-    // .test(
-    //   "fileFormat",
-    //   "Unsupported Format. Please upload a file with one of the following formats: " +
-    //     SUPPORTED_FORMATS.join(", "),
-    //   (value) => value && SUPPORTED_FORMATS.includes(value.type)
-    // ),
-    // mobile: Yup.string().required("Mobile number is required"),
-    // city: Yup.string().required("City is required"),
-    // state: Yup.string().required("State is required"),
-    // country: Yup.string().required("Country is required"),
+    email: Yup.string()
+    // .required("Email is required")
+    .email("Invalid email address"), // Built-in email validation
+    city: Yup.string().test(
+        "is-not-placeholder",
+        "Please select a valid City",
+        (value) => value !== "Please Select a City" && value !== ""
+      ),
+      mobile: Yup.string()
+      .matches(/^[0-9]{10}$/, "Mobile number must be only 10 digits long")
+      .required("Mobile number is required"),
+      state: Yup.string()
+      .required("State is required")
+      .test(
+        "is-not-placeholder",
+        "Please select a valid state",
+        (value) => value !== "Please Select State" && value !== ""
+      ),
   });
 
-  const onSubmit = async (values) => {
+  const handleUserDetails = async (values) => {
+    console.log("values of onsubmit", values);
+
     try {
       const result = await callUpdateUserMutation.mutateAsync({
         data: {
@@ -255,19 +160,18 @@ function ProfileUpdate() {
           email: values.email,
           city: values.city,
           state: values.state,
-          country: values.country,
+          country: "India",
           pancardNo: values.pancardNo,
           status: UserStatusType.Active,
         },
         where: { id: values.id },
       });
-      console.log('result',result);
+      console.log("result", result);
       // Save information to localStorage on successful mutation
       localStorage.setItem("status", "active");
       localStorage.setItem("name", `${values.firstName}`);
       let name = values.firstName;
 
-  
       // Display success message
       toast.success(` Profile Updated`);
     } catch (error) {
@@ -276,38 +180,10 @@ function ProfileUpdate() {
       toast.error("Failed to update user. Please try again.");
     }
   };
-  
-  const getIdProofPlaceholder = (idProofSelected) => {
-    switch (idProofSelected) {
-      case "aadhar":
-        return "Enter your Aadhar Number";
-      case "passport":
-        return "Enter your Passport Number";
-      case "drivingLicense":
-        return "Enter your Driving License Number";
-      default:
-        return "Enter your Aadhar Number";
-    }
-  };
 
-  const getIdProofLabel = (idProofSelected) => {
-    switch (idProofSelected) {
-      case "aadhar":
-        return "Aadhar ";
-      case "passport":
-        return "Passport ";
-      case "drivingLicense":
-        return "Driving License ";
-      default:
-        return "Aadhar ";
-    }
-  };
+  const documetSchema = Yup.object({});
 
-  const documetSchema = Yup.object({
-   
-  });
-
-  const handleSubmit = async (values) => {
+  const handleDocumentSubmit = async (values) => {
     // console.log("values", values);
 
     const formData = new FormData();
@@ -370,6 +246,19 @@ function ProfileUpdate() {
       console.error("Error:", error);
     }
   };
+  const scrollToError = (errors) => {
+    console.log("scrollToError",errors);
+    
+    const firstErrorField = Object.keys(errors)[0]; // Find first invalid field
+    if (firstErrorField && fieldRefs.current[firstErrorField]) {
+      fieldRefs.current[firstErrorField].scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+      fieldRefs.current[firstErrorField].focus();
+    }
+  };
+
   return (
     <DashboardTemplate>
       <div className="max-w-full mx-auto my-16 px-4">
@@ -388,28 +277,46 @@ function ProfileUpdate() {
                 firstName: data["user"]["firstName"],
                 lastName: data["user"]["lastName"],
                 email: data["user"]["email"],
-                city: data["user"]["city"]
-                  ? data["user"]["city"]
-                  : "Kochi-Kerala",
-                state: data["user"]["state"] ? data["user"]["state"] : "Kerala",
+                city: data["user"]["city"] ? data["user"]["city"] : "",
+                state: data["user"]["state"] ? data["user"]["state"] : "",
                 country: data["user"]["country"]
                   ? data["user"]["country"]
                   : "India",
-                password: "",
-                passwordConfirmation: "",
+                // password: "",
+                // passwordConfirmation: "",
                 mobile: data["user"]["mobile"],
-                idProofType: "aadhar",
-                idProofNo: data["user"]["idProofNo"],
-                pancardNo: data["user"]["pancardNo"],
-                pancard: null,
-                idProof: null,
-                idProofBack: null,
+                // idProofType: "aadhar",
+                // idProofNo: data["user"]["idProofNo"],
+                // pancardNo: data["user"]["pancardNo"],
+                // pancard: null,
+                // idProof: null,
+                // idProofBack: null,
               }}
               validationSchema={validationSchema}
-              onSubmit={onSubmit}
+              onSubmit={handleUserDetails}
             >
               {(props) => (
-                <Form>
+                <Form
+                // onSubmit={async (e) => {
+                //   console.log('trigrred validated onsubmit ',);
+                      
+                //   e.preventDefault(); // Prevent default form submission
+                //   const validationErrors = await props?.validateForm(); // Trigger validation
+                //   if (Object.keys(validationErrors).length > 0) {
+                //     // If validation fails, scroll to first error
+                //     console.log('validation errors',validationErrors);
+                    
+                //     console.log('error contains in form');
+                          
+                //     scrollToError(validationErrors);
+                //   } else {
+                //     // If validation passes, proceed with submission
+                //     props?.handleSubmit(e);
+                //     console.log('All validation passes',);
+
+                //   }
+                // }}
+                >
                   <div className="space-y-3 mt-4 pb-4">
                     <div className="mt-6 grid grid-cols-6 gap-6">
                       <div className="space-y-1 col-span-6">
@@ -424,11 +331,12 @@ function ProfileUpdate() {
                       <div className="col-span-6 sm:col-span-3">
                         <FormField
                           field="input"
-                          
                           name="firstName"
                           label="First Name"
                           width="w-full"
                           placeholder="First Name"
+                          fieldRef={fieldRefs}
+
                         />
                       </div>
 
@@ -436,22 +344,24 @@ function ProfileUpdate() {
                         <FormField
                           field="input"
                           name="lastName"
-                          
                           label="Last Name"
                           width="w-full"
                           placeholder="Last Name"
+                          fieldRef={fieldRefs}
+
                         />
                       </div>
 
                       <div className="col-span-6  sm:col-span-3">
                         <FormField
                           field="input"
-                          
                           name="email"
                           label="Email Address"
                           width="w-full"
-                          placeholder="Please enter email address here"
+                          placeholder="Email address"
                           custom
+                          fieldRef={fieldRefs}
+
                           onBlur={(e) => {
                             setEmailCheckData(e.target.value);
                             setEmailEnabled(e.target.value != "");
@@ -462,19 +372,18 @@ function ProfileUpdate() {
                       <div className="col-span-6  sm:col-span-3">
                         <FormField
                           field="input"
-                          
-                          
+                          fieldRef={fieldRefs}
+
                           name="mobile"
                           label="Mobile Number"
                           width="w-full"
+                          placeholder="Mobile Number"
                           className="bg-gray-50 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />
                       </div>
-                      <div className="col-span-6 sm:col-span-3">
-                        
+                      {/* <div className="col-span-6 sm:col-span-3">
                         <FormField
                           field="select"
-                          
                           name="country"
                           label="Country"
                           width="w-full"
@@ -486,15 +395,16 @@ function ProfileUpdate() {
                             props.setFieldValue("country", value);
                           }}
                         />
-                      </div>
+                      </div> */}
                       <div className="col-span-6 sm:col-span-3">
                         <FormField
                           field="select"
-                          
+                          fieldRef={fieldRefs}
+
                           name="state"
                           label="State"
                           width="w-full"
-                          placeholder="State"
+                          placeholder="Please Select State"
                           options={renderingStates}
                           onChange={async (e) => {
                             const { value } = e.target;
@@ -507,11 +417,10 @@ function ProfileUpdate() {
                       <div className="col-span-6 sm:col-span-3">
                         <FormField
                           field="select"
-                          
                           name="city"
                           label="City"
                           width="w-full"
-                          placeholder="City"
+                          placeholder="Please Select a City"
                           options={filteredCities}
                           onChange={async (e) => {
                             const { value } = e.target;
@@ -523,7 +432,8 @@ function ProfileUpdate() {
 
                     <div className="my-8 flex justify-center">
                       <ButtonLoading
-                        // loading={callUpdateUserMutation.isLoading ? 1 : 0}
+                        // loading={callUpdateUserMutation.isLoading ? true : false}
+                        
                         type="submit"
                         color="indigo"
                       >
@@ -535,8 +445,6 @@ function ProfileUpdate() {
               )}
             </Formik>
 
-          
-
             <Formik
               initialValues={{
                 documentType: "",
@@ -546,7 +454,7 @@ function ProfileUpdate() {
                 driving_license_front_image: null,
                 driving_license_back_image: null,
               }}
-              onSubmit={handleSubmit}
+              onSubmit={handleDocumentSubmit}
               validationSchema={documetSchema}
             >
               {({ values, setFieldValue }) => (
@@ -831,7 +739,7 @@ function ProfileUpdate() {
                       </div>
 
                       <div className="my-8 flex justify-center">
-                      <ButtonLoading
+                        <ButtonLoading
                           // loading={callUpdateUserMutation.isLoading ? 1 : 0}
                           type="submit"
                           color="indigo"

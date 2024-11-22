@@ -27,16 +27,28 @@ const offices = [
 // console.log("123", states);
 
 export default function Contact() {
-  const formikRef = useRef(null);
+  const fieldRefs = useRef({}); // Store refs for each field
 
   const validationSchema = Yup.object({
    
     phone: Yup.string()
-    .matches(/^[0-9]{10}$/, "Phone number must be only 10 digits long") // Ensures only 10 digits
-    .required("Phone number is required"),    message: Yup.string().required("Message is required"),
+      .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
+      .required("Phone number is required"),
+    message: Yup.string().required("Message is required"),
     state: Yup.string().required("State is required"),
   });
 
+  const scrollToError = (errors) => {
+    const firstErrorField = Object.keys(errors)[0]; // Get the first invalid field
+    if (firstErrorField && fieldRefs.current[firstErrorField]) {
+      fieldRefs.current[firstErrorField].scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      fieldRefs.current[firstErrorField].focus(); // Focus on the first error field
+    }
+  };
+  
   const callCreateContactus =
     useCreateEnquiryMutation<CreateEnquiryMutationVariables>(graphQLClient());
 
@@ -301,11 +313,30 @@ export default function Contact() {
                     }}
                     
                     onSubmit={onSubmitData}
-                    innerRef={formikRef}
                     validationSchema={validationSchema}
                   >
-                    {({ isSubmitting }) => (
-                      <Form className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
+                {({ errors, touched, validateForm, handleSubmit,setTouched,isSubmitting }) => (
+                      <Form 
+                      onSubmit={async (e) => {
+                        setTouched({
+                          firstname: true,
+                          lastname: true,
+                          state: true,
+                          phone: true,
+                          message: true,
+                        });
+            
+                        e.preventDefault(); // Prevent default form submission
+                        const validationErrors = await validateForm(); // Trigger validation manually
+                        if (Object.keys(validationErrors).length > 0) {
+                          // If validation fails, scroll to the first error field
+                          scrollToError(validationErrors);
+                        } else {
+                          // If validation passes, proceed with form submission
+                          handleSubmit(e);
+                        }
+                      }}
+                      className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
                         <div>
                           <label
                             htmlFor="firstname"
@@ -320,6 +351,8 @@ export default function Contact() {
                               name="firstname"
                               id="firstname"
                               autoComplete="given-name"
+                innerRef={(el) => (fieldRefs.current["firstname"] = el)} // Attach refs
+
                               className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
                             />
                                 {/* <ErrorMessage name="firstname" component="div" className="text-red-500 text-sm" /> */}
@@ -339,6 +372,8 @@ export default function Contact() {
                               name="lastname"
                               id="lastname"
                               autoComplete="family-name"
+                              
+                              innerRef={(el) => (fieldRefs.current["lastname"] = el)} // Attach refs
                               className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
                             />
                                                             {/* <ErrorMessage name="lastname" component="div" className="text-red-500 text-sm" /> */}
@@ -359,6 +394,8 @@ export default function Contact() {
                               id="state"
                               name="state"
                               autoComplete="state"
+                              innerRef={(el) => (fieldRefs.current["state"] = el)} // Attach refs
+
                               className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
                             >
                               <option value=""> select a state </option>
@@ -369,6 +406,9 @@ export default function Contact() {
                               ))}
                             </Field>
                             <ErrorMessage name="state" component="div" className="text-red-500 text-sm" />
+                            {/* {errors.firstname && (
+          <div className="error">{errors.firstname}</div>
+        )} */}
 
                           </div>
                         </div>
@@ -390,7 +430,8 @@ export default function Contact() {
                           </div>
                           <div className="mt-1">
                             <Field
-                              
+                                                            innerRef={(el) => (fieldRefs.current["phone"] = el)} // Attach refs
+
                               type="number"
                               name="phone"
                               id="phone"
@@ -436,6 +477,8 @@ export default function Contact() {
                           </div>
                           <div className="mt-1">
                             <Field
+                                 innerRef={(el) => (fieldRefs.current["message"] = el)} // Attach refs
+
                               as="textarea"
                               id="message"
                               name="message"
@@ -452,7 +495,7 @@ export default function Contact() {
                           <button
                             type="submit"
                             className="mt-2 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:w-auto"
-                            disabled={isSubmitting}
+                            // disabled={isSubmitting}
                           >
                             Submit
                           </button>

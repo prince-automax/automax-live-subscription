@@ -22,7 +22,7 @@ function ProfilePage() {
       "Last Name": "-",
       Mobile: "-",
       Email: "-",
-      "Id Proof Number": "-",
+      "ID Proof Number": "-",
       "Pan Number": "-",
       City: "-",
       State: "-",
@@ -66,7 +66,7 @@ function ProfilePage() {
             (user.lastName && user.lastName) != "" ? user.lastName : "-",
           Mobile: (user.mobile && user.mobile) != "" ? user.mobile : "-",
           Email: (user.email && user.email) != "" ? user.email : "-",
-          "Id Proof Number":
+          "ID Proof Number":
             (user.idProofNo && user.idProofNo) != "" ? user.idProofNo : "-",
           "Pan Number":
             (user.pancardNo && user.pancardNo) != "" ? user.pancardNo : "-",
@@ -90,7 +90,7 @@ function ProfilePage() {
         <div className="flex items-start space-x-5">
           <div className="pt-1.5 px-2">
             <span className="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-              Profile Page
+              Profile 
             </span>
             <h1 className="mt-2 text-2xl font-bold text-gray-900">
               {profile.name}
@@ -125,10 +125,10 @@ function ProfilePage() {
    
       <div className="mt-10 max-w-6xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
       {/* Profile Header */}
-      <div className="px-8 py-6  ">
-        <h3 className="text-4xl font-bold">Profile</h3>
+      {/* <div className="px-8 py-6  ">
+        <h3 className="text-2xl font-bold">Basic Details</h3>
         <p className="mt-1 text-lg">My profile details</p>
-      </div>
+      </div> */}
 
       {/* Profile Details */}
       <div className="px-8 py-6 bg-gray-50">

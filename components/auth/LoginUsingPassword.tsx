@@ -120,101 +120,113 @@ export default function LoginUsingPassword() {
 
   return (
     <>
-      <div className="space-y-6 mt-4">
-        <div>
-          <label
-            htmlFor="mobile"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Mobile Number  <span className="text-red-500 text-xs">*</span>
-          </label>
-          <div className="mt-1">
-            <input
-              id="username"
-              name="username"
-              type="text"
-              autoComplete="username"
-              placeholder="Please enter your mobile number"
-              required
-              value={username}
-              onChange={(e) => {
-                setUsername(e.target.value);
-              }}
-              maxLength={10}
-              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-        </div>
+      <div className="max-w-md mx-auto mt-12 bg-white border border-gray-200 rounded-lg shadow-lg p-6">
+  {/* Header */}
+  <div className="text-center">
+    <h2 className="text-xl font-semibold text-gray-800">Welcome Back</h2>
+    <p className="mt-2 text-sm text-gray-600">
+      Sign in to your account to continue.
+    </p>
+  </div>
 
-        <div>
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Password   <span className="text-red-500 text-xs">*</span>
-          </label>
-          <div className="mt-1 relative">
-            <input
-              id="password"
-              name="password"
-              type={inputFieldType}
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-              required
-              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-            <div
-              onClick={handleShowPassword}
-              className="absolute inset-y-0 top-2 right-3"
-            >
-              {!showPassword ? (
-                <EyeOffIcon className="w-5 h-5" />
-              ) : (
-                <EyeIcon className="w-5 h-5 text-gray-600" />
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <input
-              id="remember-me"
-              name="remember-me"
-              type="checkbox"
-              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-            />
-            <label
-              htmlFor="remember-me"
-              className="ml-2 block text-sm text-gray-900"
-            >
-              Remember me
-            </label>
-          </div>
-
-          <div className="text-sm">
-            <Link href="/reset-password">
-              <a className="font-medium text-indigo-600 hover:text-indigo-500">
-                Forgot your password?
-              </a>
-            </Link>
-          </div>
-        </div>
-
-        <div>
-          <Button
-            btnclass="w-full"
-            type="submit"
-            color="indigo"
-            onClick={CallPasswordLogin}
-          >
-            Sign in
-          </Button>
-        </div>
+  {/* Form Fields */}
+  <div className="mt-8 space-y-6">
+    {/* Mobile Number Field */}
+    <div>
+      <label
+        htmlFor="mobile"
+        className="block text-sm font-medium text-gray-700"
+      >
+        Mobile Number <span className="text-red-500 text-xs">*</span>
+      </label>
+      <div className="mt-2">
+        <input
+          id="mobile"
+          name="mobile"
+          type="text"
+          autoComplete="username"
+          placeholder="Enter your mobile number"
+          required
+          maxLength={10}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder-gray-400"
+        />
       </div>
+    </div>
+
+    {/* Password Field */}
+    <div>
+      <label
+        htmlFor="password"
+        className="block text-sm font-medium text-gray-700"
+      >
+        Password <span className="text-red-500 text-xs">*</span>
+      </label>
+      <div className="mt-2 relative">
+        <input
+          id="password"
+          name="password"
+          type={inputFieldType}
+          autoComplete="current-password"
+          required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter your password"
+          className="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder-gray-400"
+        />
+        <button
+          type="button"
+          onClick={handleShowPassword}
+          className="absolute inset-y-0 right-3 flex items-center"
+        >
+          {showPassword ? (
+            <EyeIcon className="w-5 h-5 text-gray-600" />
+          ) : (
+            <EyeOffIcon className="w-5 h-5 text-gray-400" />
+          )}
+        </button>
+      </div>
+    </div>
+
+    {/* Forgot Password Link */}
+    <div className="flex justify-end">
+      <Link href="/reset-password">
+        <a className="text-sm font-medium text-indigo-600 hover:underline">
+          Forgot your password?
+        </a>
+      </Link>
+    </div>
+
+    {/* Sign-In Button */}
+    <div>
+      <Button
+        btnclass="w-full"
+        type="submit"
+        color="indigo"
+        onClick={CallPasswordLogin}
+      >
+        Sign in
+      </Button>
+    </div>
+    <div className=" text-center">
+                    <p className="text-base space-x-1 font-medium text-gray-700 flex justify-center">
+                      New to{" "}
+                      <span className="text-indigo-600 font-bold ml-1">
+                        {" "}
+                        Autobse
+                      </span>
+                      ?{" "}
+                      <Link href="/register">
+                        <p className="text-indigo-500 hover:text-indigo-700 hover:underline hover:border hover:cursor-pointer hover:bg-blue-200 rounded-full px-2 py-px">
+                          Join Now
+                        </p>
+                      </Link>
+                    </p>
+                  </div>
+  </div>
+</div>
+
     </>
   );
 }

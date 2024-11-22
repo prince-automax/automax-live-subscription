@@ -244,6 +244,7 @@ export type Enquiry = {
   __typename?: 'Enquiry';
   createdAt?: Maybe<Scalars['DateTime']>;
   firstName: Scalars['String'];
+  id: Scalars['String'];
   lastName: Scalars['String'];
   message: Scalars['String'];
   mobile: Scalars['String'];
@@ -264,6 +265,7 @@ export type Event = {
   bidLock?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['DateTime']>;
   createdById?: Maybe<Scalars['String']>;
+  deletedVehiclesCount?: Maybe<Scalars['Int']>;
   downloadableFile_filename?: Maybe<Scalars['String']>;
   endDate: Scalars['DateTime'];
   eventCategory: Scalars['String'];
@@ -320,6 +322,7 @@ export type EventVehiclesTempArgs = {
 export type EventListResponse = {
   __typename?: 'EventListResponse';
   completedEventCount?: Maybe<Scalars['Int']>;
+  deletedVehiclesCount?: Maybe<Scalars['Int']>;
   events?: Maybe<Array<Event>>;
   liveEventCount?: Maybe<Scalars['Int']>;
   totalBids?: Maybe<Scalars['Int']>;
@@ -847,6 +850,7 @@ export type Query = {
   deletedStatus: Status;
   deletedStatuses: Array<Status>;
   deletedUser?: Maybe<User>;
+  deletedUserCount: Scalars['Int'];
   deletedUsers: Array<Maybe<User>>;
   deletedVehicle: Vehicle;
   deletedVehicleCategories: Array<VehicleCategory>;
@@ -1746,7 +1750,7 @@ export type UpdateUserMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, BalanceEMDAmount?: number | null, businessName: string, city: string, country: string, email: string, firstName: string, idNo: number, idProofNo: string, lastName: string, mobile: string, pancardNo: string, role: string, status: string, userCategory: string, idProofType: string, aadharcard_back_image?: string | null, aadharcard_front_image?: string | null, driving_license_back_image?: string | null, driving_license_front_image?: string | null, pancard_image?: string | null, username: string, state: string } };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, city: string, country: string, email: string, firstName: string, lastName: string, mobile: string, username: string, state: string, status: string } };
 
 export type GetUserQueryVariables = Exact<{
   where: UserWhereUniqueInput;
@@ -1783,7 +1787,7 @@ export type UserWatchlistQueryVariables = Exact<{
 }>;
 
 
-export type UserWatchlistQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, watchList?: Array<{ __typename?: 'Vehicle', id: string, image?: string | null, YOM?: number | null, watchedByCount?: number | null, autobse_contact_person?: string | null, autobseContact?: string | null, userVehicleBidsCount?: number | null, bidAmountUpdate?: number | null, bidStartTime: any, bidStatus?: string | null, bidTimeExpire: any, reservePrice?: number | null, currentBidAmount?: number | null, dateOfRegistration?: string | null, doorCount?: number | null, engineNo?: string | null, fitness?: string | null, fuel?: string | null, gearBox?: string | null, hypothication?: string | null, inspectionLink?: string | null, kmReading?: number | null, loanAgreementNo: string, lotNumber?: number | null, make?: string | null, model?: string | null, myBidRank?: number | null, ownership?: number | null, quoteIncreament?: number | null, rcStatus?: string | null, registrationNumber: string, repoDt?: string | null, startBidAmount?: number | null, startPrice?: number | null, state?: string | null, totalBids?: number | null, varient?: string | null, vehicleCondition?: string | null, watchedBy?: Array<{ __typename?: 'User', id: string }> | null, currentBidUser?: { __typename?: 'User', id: string } | null, event?: { __typename?: 'Event', bidLock?: string | null, id: string, noOfBids: number, startDate: any, seller?: { __typename?: 'Seller', name: string } | null } | null, userVehicleBids?: Array<{ __typename?: 'Bid', amount: number, name: string, bidVehicleId: string, userId: string, bidVehicle?: { __typename?: 'Vehicle', currentBidAmount?: number | null } | null }> | null }> | null } | null };
+export type UserWatchlistQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, watchList?: Array<{ __typename?: 'Vehicle', id: string, image?: string | null, YOM?: number | null, watchedByCount?: number | null, autobse_contact_person?: string | null, autobseContact?: string | null, userVehicleBidsCount?: number | null, bidAmountUpdate?: number | null, bidStartTime: any, bidStatus?: string | null, bidTimeExpire: any, reservePrice?: number | null, currentBidAmount?: number | null, dateOfRegistration?: string | null, doorCount?: number | null, engineNo?: string | null, fitness?: string | null, fuel?: string | null, gearBox?: string | null, hypothication?: string | null, inspectionLink?: string | null, kmReading?: number | null, loanAgreementNo: string, lotNumber?: number | null, make?: string | null, model?: string | null, myBidRank?: number | null, ownership?: number | null, quoteIncreament?: number | null, rcStatus?: string | null, registrationNumber: string, repoDt?: string | null, startBidAmount?: number | null, startPrice?: number | null, state?: string | null, vehicleEventStatus?: VehicleEventStatus | null, totalBids?: number | null, varient?: string | null, vehicleCondition?: string | null, watchedBy?: Array<{ __typename?: 'User', id: string }> | null, currentBidUser?: { __typename?: 'User', id: string } | null, event?: { __typename?: 'Event', bidLock?: string | null, id: string, noOfBids: number, startDate: any, seller?: { __typename?: 'Seller', name: string } | null } | null, userVehicleBids?: Array<{ __typename?: 'Bid', amount: number, name: string, bidVehicleId: string, userId: string, bidVehicle?: { __typename?: 'Vehicle', currentBidAmount?: number | null } | null }> | null }> | null } | null };
 
 
 export const LoginUsingPasswordDocument = `
@@ -2392,30 +2396,15 @@ export const UpdateUserDocument = `
     mutation UpdateUser($data: UpdateUserInput!, $where: UserWhereUniqueInput!) {
   updateUser(data: $data, where: $where) {
     id
-    BalanceEMDAmount
-    businessName
     city
     country
     email
     firstName
-    idNo
-    idProofNo
     lastName
     mobile
-    pancardNo
-    role
-    status
-    userCategory
-    idProofType
-    aadharcard_back_image
-    aadharcard_front_image
-    driving_license_back_image
-    driving_license_front_image
-    pancard_image
     username
     state
     status
-    role
   }
 }
     `;
@@ -2687,6 +2676,7 @@ export const UserWatchlistDocument = `
       startBidAmount
       startPrice
       state
+      vehicleEventStatus
       totalBids
       userVehicleBids {
         amount

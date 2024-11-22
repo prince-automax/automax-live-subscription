@@ -70,7 +70,6 @@ export default function LoginUsingOtp() {
     }
   }, [success, error]);
 
- 
   async function CallUserCreation(userInput) {
     console.log("hit on user Creation");
     console.log("User Input for creation:", userInput);
@@ -94,7 +93,7 @@ export default function LoginUsingOtp() {
             lastName,
             pancardNo: pancard,
             state,
-            mobile:mobile,
+            mobile: mobile,
           },
         });
 
@@ -103,22 +102,22 @@ export default function LoginUsingOtp() {
         if (result?.sendOtp?.status === "Success") {
           setVerificationMode(true);
           setSuccess({
-            text: "User created successfully. Please enter the OTP.",
+            text: "User created successfully. Please Enter the OTP.",
           });
-        } 
-        else {
+        } else {
           setError({ text: "User creation failed. Please try again." });
         }
       }
     } catch (error: any) {
+      console.log("error", error);
 
-      console.log('error',error);
-      
       // Extracting the specific error message
-      const graphqlError = error?.response?.errors?.[0]?.message || "An error occurred during OTP sending. Please try again.";
+      const graphqlError =
+        error?.response?.errors?.[0]?.message ||
+        "An error occurred during OTP sending. Please try again.";
       // const graphqlError = error?.response?.errors?.[0]?.extensions?.exception?.originalError?.message?.[0] || "An error occurred during OTP sending. Please try again.";
 
-console.log('grahqlError',graphqlError);
+      console.log("grahqlError", graphqlError);
 
       // Log full error for debugging purposes
 
@@ -180,6 +179,8 @@ console.log('grahqlError',graphqlError);
 
   // handles the logic when the user clicks on the "Send OTP" button.
   async function CallOTPVerify() {
+    console.log("mobileNumber", mobileNumber);
+
     try {
       let isValid = true;
 
@@ -219,6 +220,7 @@ console.log('grahqlError',graphqlError);
             text: "You have been successfully logged in.",
           });
           router.push(`/dashboard`);
+          setMobileNumber("");
         } else {
           setError({
             text: "OTP verification failed. Please contact the support team.",
@@ -226,8 +228,8 @@ console.log('grahqlError',graphqlError);
         }
       }
     } catch (error) {
-      console.log('error of verify otp',error);
-      
+      console.log("error of verify otp", error);
+
       const graphqlError =
         error?.response?.errors?.[0]?.message ||
         "An error occurred during OTP sending. Please try again.";
@@ -236,7 +238,7 @@ console.log('grahqlError',graphqlError);
       console.error("Error during OTP sending for user creation:", error);
       if (graphqlError === "Invalid otp.") {
         setVerificationMode(true);
-        setOTP("")
+        setOTP("");
       } else {
         setVerificationMode(false);
       }
@@ -254,7 +256,13 @@ console.log('grahqlError',graphqlError);
     pancard: Yup.string()
       .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN card format")
       .required("PAN card is required"),
-    state: Yup.string().required("State is required"),
+    state: Yup.string()
+      .required("State is required")
+      .test(
+        "is-not-placeholder",
+        "Please select a valid state",
+        (value) => value !== "Please Select State" && value !== ""
+      ),
     mobile: Yup.string()
       .matches(/^[0-9]{10}$/, "Mobile number must be only 10 digits long") // Ensures only 10 digits
       .required("Mobile number is required"),
@@ -269,7 +277,7 @@ console.log('grahqlError',graphqlError);
     firstName: "",
     lastName: "",
     pancard: "",
-    state: "Kerala", // default value
+    state: "", // default value
     mobile: "",
     terms: false, // checkbox initial value
   };
@@ -295,12 +303,24 @@ console.log('grahqlError',graphqlError);
                   validationSchema={validationSchema}
                   onSubmit={CallUserCreation}
                 >
-                  {(props) => {
-                    // console.log(props, "klklk");
-                    return (
-                      <Form>
-                        <div className="mt-6 grid grid-cols-1 gap-6 ">
-                          <div className="col-span-6 sm:col-span-3">
+                  {(props) => (
+                    <Form>
+                      {/* Form Container */}
+                      <div className="p-2 w-full mx-auto">
+                        {/* Title Section */}
+                        <div className="mb-6">
+                          <h2 className="text-2xl font-semibold text-gray-800">
+                            Create Your Account
+                          </h2>
+                          <p className="text-gray-500 text-sm mt-1">
+                            Fill in the details below to get started.
+                          </p>
+                        </div>
+
+                        {/* Form Fields */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                          {/* First Name */}
+                          <div>
                             <FormField
                               field="input"
                               required
@@ -308,9 +328,12 @@ console.log('grahqlError',graphqlError);
                               label="First Name"
                               width="w-full"
                               placeholder="First Name"
+                              className="border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                             />
                           </div>
-                          <div className="col-span-6 sm:col-span-3">
+
+                          {/* Last Name */}
+                          <div>
                             <FormField
                               field="input"
                               required
@@ -318,139 +341,179 @@ console.log('grahqlError',graphqlError);
                               label="Last Name"
                               width="w-full"
                               placeholder="Last Name"
+                              className="border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                             />
                           </div>
-                          <div className="col-span-6 sm:col-span-3">
+
+                          {/* Pan Card */}
+                          <div className="sm:col-span-2">
                             <FormField
-                              field="input"
+                              field="inputWithChange"
                               required
                               name="pancard"
                               label="Pan Card"
                               width="w-full"
                               placeholder="Pan Card"
+                              onChange={(e) => {
+                                const upperCaseValue =
+                                  e.target.value.toUpperCase();
+                                props.setFieldValue("pancard", upperCaseValue);
+                              }}
+                              value={props.values.pancard}
+                              className="border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                             />
                           </div>
 
-                          <div className="col-span-6 sm:col-span-3">
+                          {/* State */}
+                          <div>
                             <FormField
                               field="select"
                               required
                               name="state"
                               label="State"
                               width="w-full"
-                              placeholder="State"
+                              placeholder="Please Select State"
                               options={renderingStates}
-                              defaultValue="Kerala"
-                              onChange={async (e) => {
+                              defaultValue=""
+                              onChange={(e) => {
                                 const { value } = e.target;
                                 props.setFieldValue("state", value);
                               }}
+                              className="border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                             />
                           </div>
 
-                          <div className="col-span-6 sm:col-span-3 ">
+                          {/* Mobile */}
+                          <div>
                             <FormField
                               field="input"
                               required
                               name="mobile"
-                              label="Enter Mobile Number"
+                              label="Mobile Number"
                               width="w-full"
-                              placeholder="Mobile Number"
+                              placeholder="Enter Mobile Number"
+                              className="border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                             />
                           </div>
-                          <div className="col-span-6 sm:col-span-3 flex">
-                            <div className="flex items-center h-5">
-                              <input
-                                id="terms"
-                                name="terms"
-                                type="checkbox"
-                                className="w-5 h-5 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600  dark:ring-offset-gray-800 focus:outline-none focus:ring-0 "
-                                onChange={props.handleChange}
-                                onBlur={props.handleBlur}
-                                checked={props.values.terms}
-                              />
-                            </div>
-                            <div className="ml-3  text-base  w-full">
-                              <label className={`font-light  `}>
-                                I accept the{" "}
-                                <Link
-                                  className="font-medium  hover:underline  text-blue-800 bg-red-700 "
-                                  href="/tnc"
-                                >
-                                  <span className="text-blue-800 font-normal underline">
-                                    {" "}
-                                    Terms and Conditions
-                                  </span>
-                                </Link>
-                              </label>
-                              {props.errors.terms &&
-                                props.touched.terms &&
-                                typeof props.errors.terms === "string" && (
-                                  <div className="text-red-500 text-sm">
-                                    {props.errors.terms}
-                                  </div>
-                                )}
-                            </div>
-                          </div>
-                          <div className="col-span-6 sm:col-span-3 ">
-                            <Button
-                              btnclass="w-full"
-                              type="submit"
-                              color="indigo"
-                              // onClick={CallUserCreation}
-                            >
-                              Send OTP
-                            </Button>
-                          </div>
-                        
                         </div>
-                        <div className="mt-3">
-                            <p className="text-base font-light text-gray-500 dark:text-gray-400">
-                              Already have an account?
+
+                        {/* Terms and Conditions */}
+                        <div className="mt-4 flex items-start">
+                          <input
+                            id="terms"
+                            name="terms"
+                            type="checkbox"
+                            className="w-5 h-5 border-gray-300 rounded focus:ring-indigo-500"
+                            onChange={props.handleChange}
+                            onBlur={props.handleBlur}
+                            checked={props.values.terms}
+                          />
+                          <div className="ml-3">
+                            <label className="text-gray-600 text-sm">
+                              I accept the{" "}
                               <Link
-                                href="/login"
-                                className="font-medium !text-red-700 hover:underline"
+                                href="/tnc"
+                                className="text-indigo-500 hover:underline"
                               >
-                                <span className="font-medium !text-blue-700 hover:underline">
-                                  {" "}
-                                  Login here
-                                </span>
+                                Terms and Conditions
                               </Link>
-                            </p>
+                            </label>
+                            {props.errors.terms &&
+                              props.touched.terms &&
+                              typeof props.errors.terms === "string" && (
+                                <div className="text-red-500 text-xs mt-1">
+                                  {props.errors.terms}
+                                </div>
+                              )}
                           </div>
-                      </Form>
-                    );
-                  }}
+                        </div>
+
+                        {/* Submit Button */}
+                        <div className="mt-6">
+                          <Button
+                            btnclass="w-full py-3 text-white bg-indigo-500 hover:bg-indigo-600 rounded-lg shadow-md transition duration-300"
+                            type="submit"
+                          >
+                            Send OTP
+                          </Button>
+                        </div>
+
+                        {/* Login Section */}
+                        <div className=" mt-3 text-center">
+                    <p className="text-base space-x-1 font-medium text-gray-700 flex justify-center">
+                    Already have an account ?{" "}
+                      
+                      {" "}
+                      <Link href="/login">
+                        <p className="text-indigo-500 hover:text-indigo-700 hover:underline hover:border hover:cursor-pointer hover:bg-blue-200 rounded-full px-2 py-px">
+                        Sign in
+                        </p>
+                      </Link>
+                    </p>
+                  </div>
+                      </div>
+                    </Form>
+                  )}
                 </Formik>
               </>
             ) : (
               <>
-                <div className=" space-y-3 sm:space-y-4">
-                  <label
-                    htmlFor="mobile"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Mobile Number <span className="text-red-500 text-xs">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="mobile"
-                    placeholder="Please enter your mobile number"
-                    value={mobileNumber}
-                    onChange={(e) => {
-                      setMobileNumber(e.target.value);
-                    }}
-                    maxLength={10}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                  <Button
-                    btnclass="w-full"
-                    type="submit"
-                    color="indigo"
-                    onClick={CallLogin}
-                  >
-                    Send OTP
-                  </Button>
+                <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg space-y-6">
+                  {/* Mobile Number Section */}
+                  <div className="space-y-3">
+                    <label
+                      htmlFor="mobile"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Mobile Number{" "}
+                      <span className="text-red-500 text-xs">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="mobile"
+                      placeholder="Enter your mobile number"
+                      value={mobileNumber}
+                      onChange={(e) => setMobileNumber(e.target.value)}
+                      maxLength={10}
+                      className="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    />
+                  </div>
+
+                  {/* Submit Button */}
+                  <div>
+                    <Button
+                      btnclass="w-full"
+                      type="submit"
+                      color="indigo"
+                      onClick={CallLogin}
+                    >
+                      Send OTP
+                    </Button>
+                  </div>
+                  {/* Login Section */}
+                  {/* <div className="mt-4 text-center">
+          <p className="text-gray-500 text-sm">
+           New to Autobse?{" "}
+            <Link href="/register" className="text-indigo-500 hover:underline">
+             Join Now
+            </Link>
+          </p>
+        </div> */}
+                  <div className=" text-center">
+                    <p className="text-base space-x-1 font-medium text-gray-700 flex justify-center">
+                      New to{" "}
+                      <span className="text-indigo-600 font-bold ml-1">
+                        {" "}
+                        Autobse
+                      </span>
+                      ?{" "}
+                      <Link href="/register">
+                        <p className="text-indigo-500 hover:text-indigo-700 hover:underline hover:border hover:cursor-pointer hover:bg-blue-200 rounded-full px-2 py-px">
+                          Join Now
+                        </p>
+                      </Link>
+                    </p>
+                  </div>
                 </div>
               </>
             )}
@@ -458,75 +521,75 @@ console.log('grahqlError',graphqlError);
         )}
 
         {verificationMode && (
-          <div className="space-y-6">
-            <div className="rounded-md bg-green-50 p-4">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <CheckCircleIcon
-                    className="h-5 w-5 text-green-400"
-                    aria-hidden="true"
-                  />
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-green-800">
-                    OTP sent successfully!
-                  </h3>
-                  <div className="mt-2 text-sm text-green-700">
-                    <p>
-                      Please enter the OTP received on your registered mobile
-                      number.
-                    </p>
-                  </div>
-                </div>
-              </div>
+          <div className="max-w-lg mx-auto  bg-white border border-gray-200 rounded-lg shadow-md p-6">
+            {/* Header Section */}
+            <div className="text-center">
+              <h2 className="text-xl font-semibold text-gray-800">
+                Verify Your OTP
+              </h2>
+              <p className="mt-2 text-sm text-gray-600">
+                Enter the One-Time Password sent to your registered mobile
+                number.
+              </p>
             </div>
-            <div>
+
+            {/* Success Message */}
+            <div className="mt-6 flex items-center p-4 bg-green-50 border border-green-200 rounded-lg">
+              <CheckCircleIcon
+                className="h-6 w-6 text-green-500"
+                aria-hidden="true"
+              />
+              <p className="ml-3 text-sm text-green-700">
+                OTP sent successfully! Please check your messages.
+              </p>
+            </div>
+
+            {/* OTP Input */}
+            <div className="mt-6">
               <label
                 htmlFor="otp"
                 className="block text-sm font-medium text-gray-700"
               >
-                OTP
+                One-Time Password
               </label>
-              <div className="mt-1">
-                <input
-                  type="text"
-                  name="mobile"
-                  placeholder="Please enter otp"
-                  value={otp}
-                  onChange={(e) => {
-                    setOTP(e.target.value);
-                  }}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
+              <input
+                type="text"
+                id="otp"
+                value={otp}
+                onChange={(e) => setOTP(e.target.value)}
+                placeholder="Enter OTP"
+                className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
             </div>
 
-            <div className="space-y-4">
-              <Button
-                btnclass="w-full"
-                type="submit"
-                color="indigo"
-                onClick={CallOTPVerify}
-              >
-                Submit
-              </Button>
-
+            {/* Action Buttons */}
+            <div className="mt-8 grid grid-cols-2 gap-4">
               <button
-                className="w-full text-center text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 py-2 rounded"
-                onClick={() => {
-                  setVerificationMode(false);
-                }}
+                type="button"
+                onClick={CallOTPVerify}
+                className="w-full px-4 py-2 text-white bg-indigo-600 rounded-lg shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 text-sm font-medium"
+              >
+                Verify OTP
+              </button>
+              <button
+                type="button"
+                onClick={() => setVerificationMode(false)}
+                className="w-full px-4 py-2 text-gray-700 bg-gray-100 rounded-lg shadow hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 text-sm font-medium"
               >
                 Cancel
               </button>
             </div>
-            <button
-              type="button"
-              onClick={CallLogin}
-              className="w-full flex items-center justify-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 hover:text-indigo-800 focus:outline-none"
-            >
-              Click here to resend OTP
-            </button>
+
+            {/* Resend OTP */}
+            <div className="mt-6 text-center">
+              <button
+                type="button"
+                onClick={CallLogin}
+                className="text-sm font-medium text-indigo-600 hover:underline focus:outline-none"
+              >
+                Didn’t receive the OTP? Resend
+              </button>
+            </div>
           </div>
         )}
       </div>

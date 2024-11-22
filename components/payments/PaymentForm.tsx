@@ -38,7 +38,6 @@ export default function PaymentForm() {
     // },
   ];
 
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
@@ -51,21 +50,23 @@ export default function PaymentForm() {
       graphQLClient({ Authorization: `Bearer ${accessToken}` })
     );
 
-    const validationSchema = Yup.object({
-      amount: Yup.number()
-        .typeError("Amount must be a number")
-        .required("Amount is required")
-        .max(2147483647, "Amount must not exceed 1 core"),
-      paymentFor: Yup.string().required("Payment for is required"),
-      proof: Yup.string().required("Image is required"),
-    });
-    
+  const validationSchema = Yup.object({
+    amount: Yup.number()
+      .typeError("Amount must be a number")
+      .required("Amount is required")
+      .max(2147483647, "Amount must not exceed 1 Crore "),
+    paymentFor: Yup.string().required("Payment for is required"),
+    proof: Yup.string().required("Image is required"),
+    description: Yup.string()
+      .max(255, "Description must not exceed 255 characters")
+      .required("Description is required"),
+  });
+
   const onSubmit = async (values, resetForm) => {
     setIsLoading(true);
     console.log("Submitting payment details:", values);
-    if(values?.paymentFor=="Select Payment"){
-      toast.error(
-        "errorMessage" )
+    if (values?.paymentFor == "Select Payment") {
+      toast.error("errorMessage");
     }
 
     try {
@@ -83,10 +84,9 @@ export default function PaymentForm() {
       const paymentId = response?.createPayment?.id;
 
       // Step 2: If GraphQL API is successful, proceed to call the REST API for image upload
-      if (paymentId &&  values?.proof !== "") {
+      if (paymentId && values?.proof !== "") {
         // console.log("GraphQL API successful, uploading image...");
-        console.log('GOT HIT');
-        
+        console.log("GOT HIT");
 
         // Call REST API to upload the image (proof)
         const formData = new FormData();
@@ -181,25 +181,32 @@ export default function PaymentForm() {
             </div>
 
             <div>
+              <div className="flex justify-between">
               <label
                 htmlFor="comment"
                 className="block text-sm font-medium text-gray-700"
               >
-                Add your comments
+                Add your Description
               </label>
-              <div className="mt-1">
+              <span id="message" className="text-sm text-gray-500">
+              Max. 255 characters
+              </span>
+              </div>
+              <div className="mt-1  text-end">
                 <textarea
                   rows={4}
                   name="description"
                   placeholder="Eg: For Registration"
                   id="description"
-                  className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md text-center placeholder:text-center pt-10"
+                  className="shadow-sm block w-full sm:text-sm border-gray-300 rounded-md text-left placeholder:text-left "
                   value={props.values.description}
                   onChange={(event) => {
                     props.setFieldValue("description", event.target.value);
                   }}
+                  // maxLength={255} // Add maxLength attribute to limit characters
                 />
               </div>
+
               <div className="mt-2 text-xs text-red-600">
                 <ErrorMessage name="description" />
               </div>
@@ -210,7 +217,7 @@ export default function PaymentForm() {
                 htmlFor="image"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
               >
-                Upload image{" "}    <span className="text-red-500 text-xs">*</span>
+                Upload image <span className="text-red-500 text-xs">*</span>
                 <span className="text-blue-600">(Payment Receipt)</span>
               </label>
               <input

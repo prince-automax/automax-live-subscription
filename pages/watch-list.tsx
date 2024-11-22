@@ -119,8 +119,8 @@ function WatchList() {
     {},
     {
       enabled: isReady,                // Enable query only when `isReady` is true
-      refetchOnWindowFocus: false,  
-      refetchInterval:false  ,  // Do not refetch on window focus
+      refetchOnWindowFocus: true,  
+      refetchInterval: false, // Do not refetch on window focus
       refetchOnMount: false,            // Prevent refetch on component mount
       // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
     }
@@ -153,31 +153,34 @@ function WatchList() {
       console.log("Component unmounted in watchlist");
     };
   }, []); // Empty dependency array means this runs only once on mount and unmount
+  const { data, isLoading, refetch } =
+  useUserWatchlistQuery<UserWatchlistQuery>(
+   client,
+    {
+      where: {
+        id: userId,
+      },
+    },
+    {
+      enabled: isReady,                // Enable query only when `isReady` is true
+      refetchOnWindowFocus: false,  
+      // refetchInterval:false  ,  // Do not refetch on window focus
+      refetchOnMount: false,            // Prevent refetch on component mount
+      // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
+    }
+  );
 
   useEffect(() => {
-    if(isReady){
-      refetch();      
-    }
-    
-  }, [vehicleUpdate, BidUpdate,UserUpdate]);
-
-  const { data, isLoading, refetch } =
-    useUserWatchlistQuery<UserWatchlistQuery>(
-     client,
-      {
-        where: {
-          id: userId,
-        },
-      },
-      {
-        enabled: isReady,                // Enable query only when `isReady` is true
-        refetchOnWindowFocus: false,  
-        // refetchInterval:false  ,  // Do not refetch on window focus
-        refetchOnMount: false,            // Prevent refetch on component mount
-        // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
+    if (vehicleUpdate.data || BidUpdate.data || UserUpdate?.data) {
+      if(isReady){
+        refetch();
       }
-    );
-  // console.log("data", data);
+     
+    }
+  }, [vehicleUpdate.data, BidUpdate.data, UserUpdate?.data, refetch]);
+
+ 
+  console.log("data", data);
 
   const RemoveFromWatchlist = useRemoveFromWatchlistMutation(
    client
@@ -297,13 +300,15 @@ function WatchList() {
     }
   }
   return (
-    <DashboardTemplate heading={"My Watch List"}>
+    <DashboardTemplate heading={`My Watch List`}>
       {isLoading ? (
         <Loader />
       ) : (
         <div className="space-y-6 mt-8">
           {!data?.user?.watchList?.length && <div>No Vehicles Found</div>}
-          {data?.user?.watchList?.map((item, index) => {
+          {data?.user?.watchList?. map((item, index) => {
+          // filter((item) => item.vehicleEventStatus == "live")
+         
             // console.log("item in front image", item);
 
             return (
@@ -434,7 +439,7 @@ function WatchList() {
                             Total Bids
                           </dt>
                           <dd className="text-sm font-medium sm:font-normal text-gray-900">
-                            {item?.totalBids}
+                            {item?.userVehicleBidsCount}
                           </dd>
                         </div>
                         <div className="sm:col-span-1 flex max-sm:flex-col items-center justify-between sm:block">
@@ -563,7 +568,7 @@ function WatchList() {
                               Start Price
                             </span>
                             <span className="font-bold text-base">
-                              ₹ {item?.startPrice}
+                              ₹ {item?.startPrice ? item?.startPrice  : "0" }
                             </span>
                           </div>
                           <div className="flex items-center justify-between  text-gray-700">
@@ -737,7 +742,7 @@ function WatchList() {
                             Total Bids
                           </dt>
                           <dd className="text-sm font-medium sm:font-normal text-gray-900">
-                            {item?.totalBids}
+                            {item?.userVehicleBidsCount}
                           </dd>
                         </div>
                         <div className="sm:col-span-1 flex max-sm:flex-col items-center justify-between sm:block">
@@ -804,14 +809,14 @@ function WatchList() {
                             ) : (
                               <button
                                 type="button"
-                                className="inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                className="inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-xs sm:text-sm  leading-4 font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 onClick={() => RemoveWathclist(item.id)}
                               >
-                                <MinusIcon
+                                {/* <MinusIcon
                                   className="-ml-0.5 mr-2 h-4 w-4"
                                   aria-hidden="true"
-                                />
-                                from watchlist
+                                /> */}
+                             Remove from watchlist
                               </button>
                             )}
                           </div>
@@ -890,7 +895,7 @@ function WatchList() {
                         <div className="space-y-2 mt-2">
                           <div className="flex items-center justify-between text-xs text-gray-700">
                             <span>Start Price</span>
-                            <span>{item?.startPrice}</span>
+                            ₹ {item?.startPrice ? item?.startPrice  : "0" }
                           </div>
                           <div className="flex items-center justify-between text-xs text-gray-700">
                             <span>Reserve Price</span>
@@ -922,7 +927,7 @@ function WatchList() {
                         <EnterBid
                           row={item}
                           call={CallBid}
-                          event={data["event"]}
+                          event={item["event"]}
                         />
                       </div>
                     </div>
@@ -948,15 +953,26 @@ function WatchList() {
 }
 
 const EnterBid = ({ row, call, event }) => {
+  console.log('event',row);
+  
   const [bidAmount, setBidAmount] = useState("");
+// console.log('row',row?.currentBidAmount+ +row?.quoteIncreament,bidAmount);
 
   useEffect(() => {
-    if (event?.bidLock === "locked") {
-      if (row.currentBidAmount) {
+    if (row?.event?.bidLock === "locked") {
+      console.log('event is locked');
+      
+      if (row?.currentBidAmount) {
+        console.log("row?.currentBidAmount",);
+        
         setBidAmount(row.currentBidAmount + +row?.quoteIncreament);
       } else if (row.startPrice) {
+        console.log("row?.startPrice",);
+
         setBidAmount(row.startPrice);
       } else if (!row?.startPrice) {
+        console.log("!row?.startPrice",);
+
         setBidAmount(row?.quoteIncreament);
       }
     } else {
@@ -971,9 +987,12 @@ const EnterBid = ({ row, call, event }) => {
         setBidAmount(row?.quoteIncreament);
       }
     }
-  }, [event?.bidLock, row]);
+  }, [row?.event?.bidLock, row]);
 
   const enrolled = row.userVehicleBidsCount > 0;
+
+  // console.log('bidAmount',bidAmount);
+  
 
   return (
     <div>
@@ -1023,7 +1042,7 @@ const EnterBid = ({ row, call, event }) => {
           } else if (parseInt(bidAmount) % row.quoteIncreament !== 0) {
             Swal.fire({
               title:
-                "Bid amount should be greater than minimum quote increment.",
+                `Bid amount must be multiple of ${row.quoteIncreament}`,
               confirmButtonText: "OK",
               position: "top",
             });

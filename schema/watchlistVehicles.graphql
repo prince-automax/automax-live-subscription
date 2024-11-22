@@ -92,6 +92,7 @@ ownership
     startBidAmount
     startPrice
     state
+    vehicleEventStatus
     totalBids
     userVehicleBids {
       amount

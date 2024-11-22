@@ -37,7 +37,11 @@ export default function Example() {
     <>
       <HeroSection />
 
-      <HomePageEventCalender/>
+     <div className="">
+    <div className=" flex justify-center">
+    <HomePageEventCalender/>
+    </div>
+     </div>
       {/* <AllEventsTable/> */}
       <Cards />
       {/* <RecentlySold /> */}

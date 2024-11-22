@@ -1,7 +1,7 @@
 import { Field, ErrorMessage } from "formik";
 import * as HIcons from "@heroicons/react/solid";
 import { EyeIcon, EyeOffIcon } from "@heroicons/react/outline";
-import { useState } from "react";
+import React,{ useState } from "react";
 
 const DynamicHeroIcon = (props) => {
   const { ...icons } = HIcons;
@@ -11,26 +11,21 @@ const DynamicHeroIcon = (props) => {
 };
 
 function classNames(...classes) {
-
   return classes.filter(Boolean).join(" ");
 }
 
-export default function TextInput(props) {
-
-
-
+const TextInput = (props, ) => {
+  console.log("props",props);
+  
   const [showPassword, setShowPassword] = useState(false);
   const [inputFieldType, setInputFieldType] = useState(props.type);
 
   const handleShowPassword = () => {
-
-    
     if (showPassword) {
       setInputFieldType("password");
     } else {
       setInputFieldType("text");
     }
-
     setShowPassword(!showPassword);
   };
 
@@ -41,7 +36,7 @@ export default function TextInput(props) {
           ? "sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5"
           : ""
       }
-    >
+    >  
       {props.label && (
         <label
           htmlFor={props.name}
@@ -65,7 +60,9 @@ export default function TextInput(props) {
           )}
           <Field
             type={inputFieldType}
-            name={props.name}
+            // innerRef={(el) => (props.fieldRef.current[props.name] = el)} // Attach ref to field
+
+              name={props.name}
             id={props.name}
             className={classNames(
               props.inline ? "max-w-lg py-2" : "",
@@ -99,7 +96,10 @@ export default function TextInput(props) {
       </div>
     </div>
   );
-}
+};
+
+// Set displayName to avoid ESLint warning
+// TextInput.displayName = "TextInput";
 
 TextInput.defaultProps = {
   inline: false,
@@ -109,3 +109,5 @@ TextInput.defaultProps = {
   required: false,
   showTogglePasswordButton: false,
 };
+
+export default TextInput;

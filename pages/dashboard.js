@@ -28,7 +28,7 @@ function Dashboard() {
     >
       <div className="w-full mt-4 ">
         <Tab.Group>
-          <Tab.List className="flex justify-start space-x-2 rounded-xl ">
+          {/* <Tab.List className="flex justify-start space-x-2 rounded-xl ">
             {Object.keys(tabs).map((tab) => (
               <Tab
                 key={tab}
@@ -45,7 +45,7 @@ function Dashboard() {
                 {tab}
               </Tab>
             ))}
-          </Tab.List>
+          </Tab.List> */}
 
           <Tab.Panels className="mt-4 ">
             <Tab.Panel className={"rounded-xl bg-white focus:outline-none"}>

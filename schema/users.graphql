@@ -200,30 +200,25 @@
 mutation UpdateUser($data: UpdateUserInput!, $where: UserWhereUniqueInput!) {
   updateUser(data: $data, where: $where) {
     id
-    BalanceEMDAmount
-    businessName
+    
+    
     city
     country
     email
     firstName
-    idNo
-    idProofNo
+    
+    
     lastName
     mobile
-    pancardNo
-    role
-    status
-    userCategory
-    idProofType
-     aadharcard_back_image
-    aadharcard_front_image
-    driving_license_back_image
-    driving_license_front_image
-    pancard_image
+    
+    
+    
+    
+    
     username
     state
     status
-    role
+   
   }
 }
 

@@ -34,6 +34,7 @@ const EventsTable = ({
   const [id, setUserId] = useState("");
   const [registered, setRegistered] = useState(false);
   const [registeredStatus, setRegisteredStatus] = useState("");
+  const [messageShown, setMessageShown] = useState({});
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -101,6 +102,48 @@ const EventsTable = ({
 
   // console.log(' User payments',userData);
   // console.log(' User payments stTUA',registered);
+  const handleBidNowClick = (eventId) => {
+    // If the message hasn't been shown for this event
+    if (!messageShown[eventId]) {
+      // Show the message
+      toast(
+        "Your Access to this service has been disabled. Please contact Autobse for assistance",
+        {
+          duration: 5000,
+          position: "top-right",
+          style: {
+            bottom: "80px",
+            background: "rgb(95, 99, 93)",
+            color: "white",
+            border: "rounded",
+            fontSize: "bold",
+          },
+          className: " bg-primary text-white ",
+  
+          // Custom Icon
+          icon: " 🚫 ",
+  
+          // Change colors of success/error/loading icon
+          iconTheme: {
+            primary: "#0000",
+            secondary: "#fff",
+          },
+  
+          // Aria
+          ariaProps: {
+            role: "status",
+            "aria-live": "polite",
+          },
+        }
+      );
+      
+      // Update the state to mark this event's message as shown
+      setMessageShown(prevState => ({
+        ...prevState,
+        [eventId]: true // Mark this event's message as shown
+      }));
+    }
+  };
 
   const PaymentStatus = () => {
     toast(
@@ -197,8 +240,8 @@ const EventsTable = ({
           View(value, eventCategory)
         ) : (
           <button
-            className=" bg-primary-hover font-semibold border text-white py-1 w-full rounded-lg  "
-            onClick={PaymentStatus}
+           className=" bg-primary-hover font-semibold border text-white py-1 w-full  px-2 rounded-md whitespace-nowrap"
+            onClick={()=>handleBidNowClick(value)}
           >
             BID NOW
           </button>

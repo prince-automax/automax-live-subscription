@@ -30,6 +30,8 @@ export default function Select(props) {
       <div className="mt-1 sm:mt-0 sm:col-span-2">
         <Field
           as="select"
+          // ref={(el) => props?.fieldRef?.current && (props.fieldRef.current[props.name] = el)} // Attach ref to field
+
           onChange={props.onChange}
           name={props.name}
           id={props.name}
