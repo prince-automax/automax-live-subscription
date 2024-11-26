@@ -915,6 +915,7 @@ export type QueryStateArgs = {
 
 export type QueryCompletedEventsArgs = {
   orderBy?: InputMaybe<Array<EventOrderByInput>>;
+  search?: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<EventWhereUniqueInput>;
@@ -966,6 +967,11 @@ export type QueryDeletedVehicleCategoryArgs = {
 };
 
 
+export type QueryDeletedVehiclesArgs = {
+  eventId: Scalars['String'];
+};
+
+
 export type QueryEmdUpdateArgs = {
   where: EmdUpdateWhereUniqueInput;
 };
@@ -979,6 +985,7 @@ export type QueryEventArgs = {
 export type QueryEventsArgs = {
   options?: InputMaybe<QueryOptionsType>;
   orderBy?: InputMaybe<Array<EventOrderByInput>>;
+  search?: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<EventWhereUniqueInput>;
@@ -997,6 +1004,7 @@ export type QueryGetAcrArgs = {
 
 export type QueryLiveEventsArgs = {
   orderBy?: InputMaybe<Array<EventOrderByInput>>;
+  search?: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<EventWhereUniqueInput>;
@@ -1005,6 +1013,11 @@ export type QueryLiveEventsArgs = {
 
 export type QueryLocationArgs = {
   where: LocationWhereUniqueInput;
+};
+
+
+export type QueryLocationsArgs = {
+  search?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -1028,6 +1041,11 @@ export type QuerySellerArgs = {
 };
 
 
+export type QuerySellersArgs = {
+  search?: InputMaybe<Scalars['String']>;
+};
+
+
 export type QueryStatusArgs = {
   where: StatusWhereUniqueInput;
 };
@@ -1035,6 +1053,7 @@ export type QueryStatusArgs = {
 
 export type QueryUpcomingEventsArgs = {
   orderBy?: InputMaybe<Array<EventOrderByInput>>;
+  search?: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<EventWhereUniqueInput>;
@@ -1049,6 +1068,7 @@ export type QueryUserArgs = {
 
 export type QueryUsersArgs = {
   orderBy?: InputMaybe<Array<UserOrderByInput>>;
+  search?: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<UserWhereUniqueInput>;
@@ -1067,6 +1087,7 @@ export type QueryVehicleCategoryArgs = {
 
 export type QueryVehiclesArgs = {
   orderBy?: InputMaybe<Array<BidOrderByInput>>;
+  search?: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
   vehiclesOrderBy?: InputMaybe<Array<VehicleOrderByInput>>;
@@ -1660,6 +1681,7 @@ export type LiveEventsQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<EventOrderByInput> | EventOrderByInput>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
+  search?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -1668,10 +1690,21 @@ export type LiveEventsQuery = { __typename?: 'Query', liveEvents?: Array<{ __typ
 export type UpcomingEventsQueryVariables = Exact<{
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
+  search?: InputMaybe<Scalars['String']>;
 }>;
 
 
 export type UpcomingEventsQuery = { __typename?: 'Query', upcomingEvents?: Array<{ __typename?: 'Event', bidLock?: string | null, createdAt?: any | null, vehiclesCount?: number | null, createdById?: string | null, downloadableFile_filename?: string | null, endDate: any, eventCategory: string, eventNo: number, extraTime?: number | null, extraTimeTrigerIn?: number | null, firstVehicleEndDate: any, gapInBetweenVehicles?: number | null, id: string, noOfBids: number, pauseDate?: any | null, pausedTotalTime?: number | null, startDate: any, status?: string | null, termsAndConditions: string, updatedAt?: any | null, vehicleLiveTimeIn?: number | null, location?: { __typename?: 'Location', name: string } | null, seller?: { __typename?: 'Seller', mobile: string, name: string } | null, vehicleCategory?: { __typename?: 'VehicleCategory', name: string } | null }> | null };
+
+export type CompletedEventsQueryVariables = Exact<{
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  search?: InputMaybe<Scalars['String']>;
+  orderBy?: InputMaybe<Array<EventOrderByInput> | EventOrderByInput>;
+}>;
+
+
+export type CompletedEventsQuery = { __typename?: 'Query', completedEvents?: Array<{ __typename?: 'Event', eventNo: number, startDate: any, vehiclesCount?: number | null, eventCategory: string, firstVehicleEndDate: any, id: string, downloadableFile_filename?: string | null, seller?: { __typename?: 'Seller', name: string, id: string, mobile: string } | null, location?: { __typename?: 'Location', name: string, id: string, state?: { __typename?: 'State', name: StateNames } | null } | null, vehicleCategory?: { __typename?: 'VehicleCategory', name: string } | null }> | null };
 
 export type GetEventsQueryVariables = Exact<{
   where: EventWhereUniqueInput;
@@ -1939,8 +1972,8 @@ export const useCreateEnquiryMutation = <
       options
     );
 export const LiveEventsDocument = `
-    query LiveEvents($orderBy: [EventOrderByInput!], $take: Int, $skip: Int) {
-  liveEvents(orderBy: $orderBy, take: $take, skip: $skip) {
+    query LiveEvents($orderBy: [EventOrderByInput!], $take: Int, $skip: Int, $search: String) {
+  liveEvents(orderBy: $orderBy, take: $take, skip: $skip, search: $search) {
     bidLock
     createdAt
     createdById
@@ -1991,8 +2024,8 @@ export const useLiveEventsQuery = <
       options
     );
 export const UpcomingEventsDocument = `
-    query UpcomingEvents($take: Int, $skip: Int) {
-  upcomingEvents(take: $take, skip: $skip) {
+    query UpcomingEvents($take: Int, $skip: Int, $search: String) {
+  upcomingEvents(take: $take, skip: $skip, search: $search) {
     bidLock
     createdAt
     vehiclesCount
@@ -2039,6 +2072,48 @@ export const useUpcomingEventsQuery = <
     useQuery<UpcomingEventsQuery, TError, TData>(
       variables === undefined ? ['UpcomingEvents'] : ['UpcomingEvents', variables],
       fetcher<UpcomingEventsQuery, UpcomingEventsQueryVariables>(client, UpcomingEventsDocument, variables, headers),
+      options
+    );
+export const CompletedEventsDocument = `
+    query CompletedEvents($take: Int, $skip: Int, $search: String, $orderBy: [EventOrderByInput!]) {
+  completedEvents(take: $take, skip: $skip, search: $search, orderBy: $orderBy) {
+    eventNo
+    startDate
+    seller {
+      name
+      id
+      mobile
+    }
+    vehiclesCount
+    eventCategory
+    location {
+      name
+      id
+      state {
+        name
+      }
+    }
+    firstVehicleEndDate
+    id
+    vehicleCategory {
+      name
+    }
+    downloadableFile_filename
+  }
+}
+    `;
+export const useCompletedEventsQuery = <
+      TData = CompletedEventsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: CompletedEventsQueryVariables,
+      options?: UseQueryOptions<CompletedEventsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<CompletedEventsQuery, TError, TData>(
+      variables === undefined ? ['CompletedEvents'] : ['CompletedEvents', variables],
+      fetcher<CompletedEventsQuery, CompletedEventsQueryVariables>(client, CompletedEventsDocument, variables, headers),
       options
     );
 export const GetEventsDocument = `

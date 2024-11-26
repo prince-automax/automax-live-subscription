@@ -21,7 +21,6 @@ import Router from "next/router";
 import toast from "react-hot-toast";
 import { cities } from "../utils/cities";
 import { states } from "../utils/states";
-import { countries } from "../utils/countries";
 import { useState, useEffect,useRef } from "react";
 import { ResizeImage } from "../components/image-Resizing/imageProfile";
 import DashboardTemplate from "../components/templates/DashboardTemplate";
@@ -33,9 +32,7 @@ const renderingStates = states.map((state) => {
   return { label: state.state, value: state.state };
 });
 
-const renderingCountries = countries.map((country) => {
-  return { label: country.name, value: country.name };
-});
+
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 
@@ -59,6 +56,8 @@ function ProfileUpdate() {
   const [panCheckData, setPanCheckData] = useState("");
   const [emailEnabled, setEmailEnabled] = useState(false);
   const [panEnabled, setPanEnabled] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false); // State to manage button disabled state
+
   const [imagePreviews, setImagePreviews] = useState({
     pancard_image: null,
     aadharcard_front_image: null,
@@ -100,6 +99,8 @@ function ProfileUpdate() {
     // if (selectedState != null && selectedState != "") {
     // filter cities and fill in cities object
     // console.log("789");
+    // setFieldValue("state", "Karnataka");
+
     const filteredC = cities.filter((c) => c.state === selectedState);
 
     setFilteredCities(
@@ -112,11 +113,7 @@ function ProfileUpdate() {
     );
     // }
   }, [selectedState, data?.user]);
-// 
-  // console.log("filteredCities", filteredCities);
-  // console.log("selected state", selectedState);
 
-  // console.log("get user", data);
 
   const callUpdateUserMutation =
     useUpdateUserMutation<UpdateUserMutationVariables>(
@@ -127,12 +124,14 @@ function ProfileUpdate() {
     return <Loader />;
   }
 
-  const validationSchema = Yup.object({
+  const userValidation = Yup.object({
     // firstName: Yup.string().required("First name is required"),
     email: Yup.string()
     // .required("Email is required")
     .email("Invalid email address"), // Built-in email validation
-    city: Yup.string().test(
+    city: Yup.string() 
+    .required("city number is required")
+    .test(
         "is-not-placeholder",
         "Please select a valid City",
         (value) => value !== "Please Select a City" && value !== ""
@@ -149,15 +148,19 @@ function ProfileUpdate() {
       ),
   });
 
-  const handleUserDetails = async (values) => {
-    console.log("values of onsubmit", values);
+  const handleUserDetails = async (values,{setSubmitting}) => {
+    console.log(values);
+    
+    setIsButtonDisabled(true); // Disable the button
 
+    console.log("setSubmitting", setSubmitting);
+    setSubmitting(true)
     try {
       const result = await callUpdateUserMutation.mutateAsync({
         data: {
           firstName: values.firstName,
           lastName: values.lastName,
-          email: values.email,
+          // email: values.email,
           city: values.city,
           state: values.state,
           country: "India",
@@ -173,12 +176,25 @@ function ProfileUpdate() {
       let name = values.firstName;
 
       // Display success message
-      toast.success(` Profile Updated`);
+     
+      if (result?.updateUser?.id) {
+        setTimeout(() => {
+          toast.success(` Profile Updated`);
+        }, 1000);
+        setSubmitting(false);
+      }
     } catch (error) {
       // Handle errors gracefully
       console.error("Error updating user:", error);
       toast.error("Failed to update user. Please try again.");
     }
+    finally {
+      setTimeout(() => {
+        setIsButtonDisabled(false);
+      }, 1000);
+    }
+
+   
   };
 
   const documetSchema = Yup.object({});
@@ -292,7 +308,7 @@ function ProfileUpdate() {
                 // idProof: null,
                 // idProofBack: null,
               }}
-              validationSchema={validationSchema}
+              validationSchema={userValidation}
               onSubmit={handleUserDetails}
             >
               {(props) => (
@@ -409,6 +425,7 @@ function ProfileUpdate() {
                           onChange={async (e) => {
                             const { value } = e.target;
                             props.setFieldValue("state", value);
+                            props.setFieldValue("city", "");
                             setSelectedState(value);
                           }}
                         />
@@ -433,11 +450,11 @@ function ProfileUpdate() {
                     <div className="my-8 flex justify-center">
                       <ButtonLoading
                         // loading={callUpdateUserMutation.isLoading ? true : false}
-                        
+                        disabled={props?.isSubmitting || isButtonDisabled} 
                         type="submit"
                         color="indigo"
                       >
-                        Update Details
+                       {props?.isSubmitting || isButtonDisabled ? 'Updating...' : 'Update Details'}  
                       </ButtonLoading>
                     </div>
                   </div>

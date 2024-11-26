@@ -102,7 +102,7 @@ function Events() {
   };
 
 
-  console.log('tik',tick);
+  // console.log('tik',tick);
   
   const { data: timeData ,refetch:timeRefetch } = useTimeQueryQuery<TimeQueryQueryVariables>(
     client,
@@ -217,6 +217,8 @@ function Events() {
 
   const handleBidSubmission = useCallback(
     async (amount, vehicleId) => {
+      
+      
       const confirmed = await Swal.fire({
         text: `Are you sure to bid for Rs. ${amount}?`,
         title: "BID CONFIRMATION",
@@ -245,12 +247,12 @@ function Events() {
           });
           Swal.fire("Success!", "Your bid has been submitted.", "success");
         } catch (e) {
-          console.log('error',e);
+          console.log('996',e.response.errors[0].message);
           
-          const errorMessage =
-            e.response?.errors?.map((err) => err.originalError?.details).join(", ") ||
-            e.message ||
-            "An error occurred. Please try again.";
+          const errorMessage = e.response.errors[0].message
+            // e.response?.errors?.map((err) => err).join(", ") ||
+            // e.message ||
+            // "An error occurred. Please try again.";
             
           Swal.fire(errorMessage);
         }
@@ -515,9 +517,9 @@ function Events() {
                               {/* INSPECTION REPORT STARTS HERE */}
                               <div
                                 className=" flex items-center justify-between text-sm font-roboto font-medium text-blue-800 "
-                                onClick={() =>
-                                  setShowInspectionReportModal(true)
-                                }
+                                // onClick={() =>
+                                //   setShowInspectionReportModal(true)
+                                // }
                               >
                                 {item?.inspectionLink !== "" &&
                                   item?.inspectionLink !== null && (
@@ -1110,11 +1112,11 @@ function Events() {
           })}
         </div>
       )}
-      <InspectionReportModal
+      {/* <InspectionReportModal
         color="blue"
         open={showInspectionReportModal}
         close={() => setShowInspectionReportModal(false)}
-      />
+      /> */}
       <ImageCarouselModal
         color="blue"
         open={showImageCarouselModal}
@@ -1138,18 +1140,18 @@ const EnterBid = ({ row, call, event }) => {
 
   useEffect(() => {
     if (event?.bidLock === "locked") {
-      console.log('event is locked');
+      // console.log('event is locked');
 
       if (row?.currentBidAmount) {
-        console.log("row?.currentBidAmount",);
+        // console.log("row?.currentBidAmount",);
 
         setBidAmount(row?.currentBidAmount + +row?.quoteIncreament);
       } else if (row?.startPrice) {
-        console.log("row?.startPrice",);
+        // console.log("row?.startPrice",);
 
         setBidAmount(row?.startPrice);
       } else if (!row?.startPrice) {
-        console.log("!row?.startPrice",);
+        // console.log("!row?.startPrice",);
 
         setBidAmount(row?.quoteIncreament);
       }

@@ -2000,19 +2000,19 @@ export const cities = [
 
   {
     city: "Rajauri",
-    state: "Jammu & Kashmir",
+    state: "Jammu_and_Kashmir",
   },
   {
     city: "Sopore",
-    state: "Jammu & Kashmir",
+    state: "Jammu_and_Kashmir",
   },
   {
     city: "Srinagar",
-    state: "Jammu & Kashmir",
+    state: "Jammu_and_Kashmir",
   },
   {
     city: "Udhampur",
-    state: "Jammu & Kashmir",
+    state: "Jammu_and_Kashmir",
   },
   {
     city: "Amlabad",

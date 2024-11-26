@@ -8,12 +8,12 @@ import {
   PrinterIcon,
 } from "@heroicons/react/outline";
 import AlertModal from "../ui/AlertModal";
-// import {
-//   useCompliedEventsQuery,
-//   CompliedEventsQuery,
-//   useGetUserQuery,
-//   GetUserQueryVariables,
-// } from "@utils/graphql";
+import {
+  useCompletedEventsQuery,
+  CompletedEventsQuery,
+  useGetUserQuery,
+  GetUserQueryVariables,
+} from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import Router from "next/router";
 import Link from "next/link";
@@ -23,7 +23,7 @@ export default function EventsTable({
   showHeadings,
   hideSearch,
   allowDownload,
-  eventCategory = "online",
+  eventCategory = "compeleted",
 }) {
   const [accessToken, setAccessToken] = useState("");
   const [registered, setRegistered] = useState(false);
@@ -46,36 +46,39 @@ export default function EventsTable({
       },
     },
   };
-  // const { data, isLoading } = useCompliedEventsQuery<CompliedEventsQuery>(
-  //   graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-  //   variables
-  // );
+  const { data, isLoading } = useCompletedEventsQuery<CompletedEventsQuery>(
+    graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+    variables
+  );
 
-  // const { data: userData, isLoading: loading } =
-  //   useGetUserQuery<GetUserQueryVariables>(
-  //     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-  //     { where: { id } },
-  //     {
-  //       enabled: accessToken !== "",
-  //     }
-  //   );
+console.log('daata',data);
 
-  // const payment = userData ? userData["user"]?.payments : "";
 
-  // useEffect(() => {
-  //   if (payment) {
-  //     payment?.map((item) => {
-  //       if (item.paymentFor === "registrations") {
-  //         if (item.status === "success") {
-  //           setRegistered(true);
-  //         } else {
-  //           item.status;
-  //         }
-  //       } else {
-  //       }
-  //     });
-  //   }
-  // }, [payment]);
+  const { data: userData, isLoading: loading } =
+    useGetUserQuery<GetUserQueryVariables>(
+      graphQLClient({ Authorization: `Bearer ${accessToken}` }),
+      { where: { id } },
+      {
+        enabled: accessToken !== "",
+      }
+    );
+
+  const payment = userData ? userData["user"]?.payments : "";
+
+  useEffect(() => {
+    if (payment) {
+      payment?.map((item) => {
+        if (item.paymentFor === "registrations") {
+          if (item.status === "success") {
+            setRegistered(true);
+          } else {
+            item.status;
+          }
+        } else {
+        }
+      });
+    }
+  }, [payment]);
 
   // console.log("registered", registered);
   // console.log("setRegisteredStatus", registeredStatus);
@@ -118,6 +121,11 @@ export default function EventsTable({
 
   const columns = [
     {
+      Header: " No",
+      accessor: "eventNo",
+      // Cell: ({ cell: { value } }) => StartDate(value),
+    },
+    {
       Header: "Event Date",
       accessor: "startDate",
       Cell: ({ cell: { value } }) => StartDate(value),
@@ -126,13 +134,12 @@ export default function EventsTable({
       Header: "Seller",
       accessor: "seller.name",
     },
+    { Header: "Type", accessor: "eventCategory" },
+
     {
-      Header: "Event Type",
-      accessor: "eventCategory",
-    },
-    {
-      Header: "State",
-      accessor: "location.state.name",
+      Header: "Vehicle",
+      accessor: "vehiclesCount",
+      Cell: ({ cell: { value } }) => (value ? value : ""),
     },
     {
       Header: "Location",
@@ -140,35 +147,58 @@ export default function EventsTable({
     },
     {
       Header: "Category",
-      accessor: "eventType",
+      accessor: "vehicleCategory",
       Cell: ({ cell: { value } }) => RenderEventTypes(value),
     },
     {
       Header: "Closing Date",
-      accessor: "endDate",
+      accessor: "firstVehicleEndDate",
       Cell: ({ cell: { value } }) => EndDate(value),
     },
+    // {
+    //   Header: "Details",
+    //   accessor: "id",
+    //   Cell: ({ cell: { value } }) =>
+    //     registered ? (
+    //       View(value, eventCategory)
+    //     ) : (
+    //       <button
+    //         className=" bg-primary-hover font-semibold border text-white py-1 w-full  px-2 rounded-md whitespace-nowrap"
+    //         onClick={() => handleBidNowClick(value)}
+    //       >
+    //         BID NOW
+    //       </button>
+    //     ),
+
+    //   // registeredStatus ? (
+    //   //   `Registration Staus: ${registeredStatus}`
+    //   // ) : (
+    //   //   <span className="text-bold text-red-500 text-xs">
+    //   //     Selected Auction has not been assigned to you. Please contact{" "}
+    //   //     <span className="p-3">9962334455 </span> for more details
+    //   //   </span>
+    //   // ),
+    // },
     {
-      Header: "Details",
-      accessor: "id",
+      Header: "Download",
+      accessor: "downloadableFile_filename",
       Cell: ({ cell: { value } }) =>
         registered ? (
-          View(value)
+          <DownloadButton file={value} allowDownload={allowDownload} />
         ) : (
-          <button
-            className=" bg-primary-hover font-semibold border text-white py-1 w-full px-6 rounded-lg"
-            onClick={PaymentStatus}
-          >
-            View
-          </button>
+          value && (
+            <DocumentDownloadIcon
+              className="h-8 w-8 text-gray-600 hover:text-green-600"
+              onClick={PaymentStatus}
+            />
+          )
         ),
     },
   ];
-
   return (
     <>
       <div className="relative bg-white">
-        {/* <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
+        <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
           {showHeadings && (
             <div className="pt-16 pb-8">
               <h2 className="text-base font-semibold tracking-wider text-primary uppercase">
@@ -189,10 +219,10 @@ export default function EventsTable({
             <Loader />
           ) : (
             <>
-              {data?.compliedEvents && data?.compliedEvents?.length > 0 && (
+              {data?.completedEvents && data?.completedEvents?.length > 0 && (
                 <>
                   <div className="sm:hidden">
-                    {data?.compliedEvents?.map((event, eventIdx) => {
+                    {data?.completedEvents?.map((event, eventIdx) => {
                       return (
                         <MobielViewCard
                           key={eventIdx}
@@ -209,7 +239,7 @@ export default function EventsTable({
                   <div className="hidden sm:block">
                     <Datatable
                       hideSearch={hideSearch}
-                      tableData={data?.compliedEvents}
+                      tableData={data?.completedEvents}
                       tableColumns={columns}
                     />
                   </div>
@@ -217,7 +247,7 @@ export default function EventsTable({
               )}
             </>
           )}
-        </div> */}
+        </div>
       </div>
     </>
   );
@@ -239,20 +269,26 @@ function View(value) {
     </div>
   );
 }
-
 function RenderEventTypes(eventTypes) {
-  if (eventTypes && eventTypes.length > 0) {
-    return (
-      <div>
-        {eventTypes.map((type, index) => {
-          return (
-            <div key={`d${index}`}>
-              <span>{type.name}</span>
-            </div>
-          );
-        })}
-      </div>
-    );
+  // console.log('eventTypes',eventTypes);
+
+  // if (eventTypes && eventTypes.length > 0) {
+  //   return (
+  //     <div>
+  //       {eventTypes.map((type, index) => {
+  //         return (
+  //           <div key={`d${index}`}>
+  //             <span>{type.name}</span>
+  //           </div>
+  //         );
+  //       })}
+  //     </div>
+  //   );
+  // } else {
+  //   return <div />;
+  // }
+  if (eventTypes) {
+    return <div>{eventTypes?.name}</div>;
   } else {
     return <div />;
   }

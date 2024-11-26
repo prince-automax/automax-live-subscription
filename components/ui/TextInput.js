@@ -15,7 +15,7 @@ function classNames(...classes) {
 }
 
 const TextInput = (props, ) => {
-  console.log("props",props);
+  // console.log("props",props);
   
   const [showPassword, setShowPassword] = useState(false);
   const [inputFieldType, setInputFieldType] = useState(props.type);

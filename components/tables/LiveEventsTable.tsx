@@ -6,6 +6,10 @@ import {
   CalendarIcon,
   DocumentDownloadIcon,
   PrinterIcon,
+  SearchIcon,
+  SelectorIcon,
+  SortAscendingIcon,
+  SortDescendingIcon,
 } from "@heroicons/react/outline";
 import AlertModal from "../ui/AlertModal";
 import {
@@ -35,6 +39,8 @@ const EventsTable = ({
   const [registered, setRegistered] = useState(false);
   const [registeredStatus, setRegisteredStatus] = useState("");
   const [messageShown, setMessageShown] = useState({});
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -45,7 +51,10 @@ const EventsTable = ({
     }
   }, []);
 
-
+  React.useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const client = React.useMemo(
     () => graphQLClient({ Authorization: `Bearer ${accessToken}` }),
@@ -54,11 +63,10 @@ const EventsTable = ({
 
   const LiveEventSubscription = useEventsSubscriptionSubscription();
 
-
-
   const variables = useMemo(
     () => ({
       skip: 0,
+      search: debouncedSearch,
       take: 10,
       orderBy: [
         {
@@ -66,7 +74,7 @@ const EventsTable = ({
         },
       ],
     }),
-    []
+    [debouncedSearch]
   );
 
   const { data, isLoading, refetch, isFetching } =
@@ -77,16 +85,13 @@ const EventsTable = ({
       // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
     });
 
-    console.log('Event', data);
-    
+  console.log("Event", data);
 
   useEffect(() => {
     if (LiveEventSubscription?.data) {
       refetch();
     }
-  }, [LiveEventSubscription?.data,refetch]);
-
-
+  }, [LiveEventSubscription?.data, refetch]);
 
   const { data: userData, isLoading: loading } = useGetUserQuery<GetUserQuery>(
     client,
@@ -119,16 +124,16 @@ const EventsTable = ({
             fontSize: "bold",
           },
           className: " bg-primary text-white ",
-  
+
           // Custom Icon
           icon: " 🚫 ",
-  
+
           // Change colors of success/error/loading icon
           iconTheme: {
             primary: "#0000",
             secondary: "#fff",
           },
-  
+
           // Aria
           ariaProps: {
             role: "status",
@@ -136,11 +141,11 @@ const EventsTable = ({
           },
         }
       );
-      
+
       // Update the state to mark this event's message as shown
-      setMessageShown(prevState => ({
+      setMessageShown((prevState) => ({
         ...prevState,
-        [eventId]: true // Mark this event's message as shown
+        [eventId]: true, // Mark this event's message as shown
       }));
     }
   };
@@ -240,8 +245,8 @@ const EventsTable = ({
           View(value, eventCategory)
         ) : (
           <button
-           className=" bg-primary-hover font-semibold border text-white py-1 w-full  px-2 rounded-md whitespace-nowrap"
-            onClick={()=>handleBidNowClick(value)}
+            className=" bg-primary-hover font-semibold border text-white py-1 w-full  px-2 rounded-md whitespace-nowrap"
+            onClick={() => handleBidNowClick(value)}
           >
             BID NOW
           </button>
@@ -276,6 +281,18 @@ const EventsTable = ({
   return (
     <>
       <div className="relative bg-white">
+        <div className="relative rounded-md shadow-sm max-w-sm">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search live events..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-600 rounded-md"
+          />
+        </div>
         {data?.liveEvents?.length > 0 ? (
           <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
             {showHeadings && (
@@ -313,6 +330,7 @@ const EventsTable = ({
                     })}
                   </div>
                   <div className="hidden sm:block">
+                    <div></div>
                     <Datatable
                       hideSearch={hideSearch}
                       tableData={data?.liveEvents}

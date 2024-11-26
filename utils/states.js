@@ -1,6 +1,6 @@
 export const states = [
   {
-    state: "Andhra Pradesh",
+    state: "Andhra_Pradesh",
     districts: [
       "Anantapur",
       "Chittoor",
@@ -18,7 +18,7 @@ export const states = [
     ]
   },
   {
-    state: "Arunachal Pradesh",
+    state: "Arunachal_Pradesh",
     districts: [
       "Tawang",
       "West Kameng",
@@ -125,10 +125,10 @@ export const states = [
       "West Champaran"
     ]
   },
-  {
-    state: "Chandigarh (UT)",
-    districts: ["Chandigarh"]
-  },
+  // {
+  //   state: "Chandigarh (UT)",
+  //   districts: ["Chandigarh"]
+  // },
   {
     state: "Chhattisgarh",
     districts: [
@@ -161,16 +161,16 @@ export const states = [
       "Surguja"
     ]
   },
+  // {
+  //   state: "Dadra and Nagar Haveli (UT)",
+  //   districts: ["Dadra and Nagar Haveli"]
+  // },
+  // {
+  //   state: "Daman and Diu (UT)",
+  //   districts: ["Daman", "Diu"]
+  // },
   {
-    state: "Dadra and Nagar Haveli (UT)",
-    districts: ["Dadra and Nagar Haveli"]
-  },
-  {
-    state: "Daman and Diu (UT)",
-    districts: ["Daman", "Diu"]
-  },
-  {
-    state: "Delhi (NCT)",
+    state: "Delhi",
     districts: [
       "Central Delhi",
       "East Delhi",
@@ -255,7 +255,7 @@ export const states = [
     ]
   },
   {
-    state: "Himachal Pradesh",
+    state: "Himachal_Pradesh",
     districts: [
       "Bilaspur",
       "Chamba",
@@ -272,7 +272,7 @@ export const states = [
     ]
   },
   {
-    state: "Jammu and Kashmir",
+    state: "Jammu_and_Kashmir",
     districts: [
       "Anantnag",
       "Bandipore",
@@ -381,23 +381,25 @@ export const states = [
       "Wayanad"
     ]
   },
+
+  // {
+  //   state: "Lakshadweep (UT)",
+  //   districts: [
+  //     "Agatti",
+  //     "Amini",
+  //     "Androth",
+  //     "Bithra",
+  //     "Chethlath",
+  //     "Kavaratti",
+  //     "Kadmath",
+  //     "Kalpeni",
+  //     "Kilthan",
+  //     "Minicoy"
+  //   ]
+  // },
+
   {
-    state: "Lakshadweep (UT)",
-    districts: [
-      "Agatti",
-      "Amini",
-      "Androth",
-      "Bithra",
-      "Chethlath",
-      "Kavaratti",
-      "Kadmath",
-      "Kalpeni",
-      "Kilthan",
-      "Minicoy"
-    ]
-  },
-  {
-    state: "Madhya Pradesh",
+    state: "Madhya_Pradesh",
     districts: [
       "Agar Malwa",
       "Alirajpur",
@@ -594,10 +596,10 @@ export const states = [
       "Sundargarh"
     ]
   },
-  {
-    state: "Puducherry (UT)",
-    districts: ["Karaikal", "Mahe", "Pondicherry", "Yanam"]
-  },
+  // {
+  //   state: "Puducherry (UT)",
+  //   districts: ["Karaikal", "Mahe", "Pondicherry", "Yanam"]
+  // },
   {
     state: "Punjab",
     districts: [
@@ -772,7 +774,7 @@ export const states = [
     ]
   },
   {
-    state: "Uttar Pradesh",
+    state: "Uttar_Pradesh",
     districts: [
       "Agra",
       "Aligarh",
@@ -852,7 +854,7 @@ export const states = [
     ]
   },
   {
-    state: "West Bengal",
+    state: "West_Bengal",
     districts: [
       "Alipurduar",
       "Bankura",

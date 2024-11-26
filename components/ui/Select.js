@@ -46,7 +46,7 @@ export default function Select(props) {
           {props.options.map(option => {
             return (
               <option key={option.value} value={option.value}>
-                {option.label}
+                {option.label.replace(/_/g, " ")}
               </option>
             );
           })}          

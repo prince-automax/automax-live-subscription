@@ -60,7 +60,7 @@ function Datatable(props) {
       {useSortBy}
       {!hideSearch && (
         <div className="mt-0.5">
-          <div className="relative rounded-md shadow-sm max-w-sm">
+          {/* <div className="relative rounded-md shadow-sm max-w-sm">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <SearchIcon
                 className="h-5 w-5 text-gray-400"
@@ -77,7 +77,7 @@ function Datatable(props) {
               placeholder="Search.."
               autoComplete="off"
             />
-          </div>
+          </div> */}
         </div>
       )}
 

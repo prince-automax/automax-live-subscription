@@ -19,28 +19,24 @@ import {
   ChevronDownIcon,
   EyeIcon,
   DesktopComputerIcon,
+  BadgeCheckIcon
+  
 } from "@heroicons/react/outline";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCar,
-  faCashRegister,
-  faCog,
-  faImages,
-  faHammer,
+import {faList
 } from "@fortawesome/free-solid-svg-icons";
 import graphQLClient from "@utils/useGQLQuery";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Welcome from "../common/Welcome";
-import { useEventsCountQuery,EventsCountQueryVariables} from "@utils/graphql";
+import { useEventsCountQuery, EventsCountQueryVariables } from "@utils/graphql";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 const MemoizedTopBar = React.memo(TopBar);
-
 
 export default function DashboardTemplate({ children, heading, subHeading }) {
   const router = useRouter();
@@ -52,13 +48,14 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
   const [liveOpen, setLiveOpen] = useState(0);
   const [liveOnline, setLiveOnline] = useState(0);
   const [Upcoming, setUpcoming] = useState(0);
+  const [completedEvents, setCompletedEvents] = useState(0);
   const [isReady, setIsReady] = useState(false); // New flag to enable query
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
       setAccessToken(token);
-      setIsReady(true)
+      setIsReady(true);
     }
   }, []);
 
@@ -67,26 +64,20 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
     [accessToken]
   );
 
- 
-
-    
-
   const { data, isLoading, refetch } = useEventsCountQuery(
     client,
     {},
     {
-      enabled: isReady,                // Enable query only when `isReady` is true
-      refetchOnWindowFocus: false,  
-      refetchInterval:false    // Do not refetch on window focus
+      enabled: isReady, // Enable query only when `isReady` is true
+      refetchOnWindowFocus: false,
+      refetchInterval: false, // Do not refetch on window focus
       // refetchOnMount: false,            // Prevent refetch on component mount
       // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
-    }   
+    }
   );
-  
+
   // console.log('datan on count',data);
-  
-  
-  
+
   useEffect(() => {
     // Code in this section runs on mount
     console.log("Component mountedm in dashboardTemplate");
@@ -97,20 +88,16 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
     };
   }, []); // Empty dependency array means this runs only once on mount and unmount
 
-
-
-  useEffect(()=>{
-    if(data?.events?.liveEventCount){
-      const liveOnline=data?.events?.liveEventCount
-      const upcomingEventsCount=data?.events?.upcomingEventCount
-
-      setLiveOnline(liveOnline)
-      setUpcoming(upcomingEventsCount)
+  useEffect(() => {
+    if (data?.events?.liveEventCount) {
+      const liveOnline = data?.events?.liveEventCount;
+      const upcomingEventsCount = data?.events?.upcomingEventCount;
+      const completedEventsCount = data?.events?.completedEventCount;
+      setLiveOnline(liveOnline);
+      setUpcoming(upcomingEventsCount);
+      setCompletedEvents(completedEventsCount);
     }
-    
-  },[data?.events])
-
- 
+  }, [data?.events]);
 
   const setNavigationLink = (href) => {
     router.push(href);
@@ -131,11 +118,19 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
           ? true
           : false,
     },
+
     {
       name: `Upcoming Events (${Upcoming})`,
       href: "/upcoming-events",
       icon: CalendarIcon,
       current: router.pathname == "/upcoming-events" ? true : false,
+    },
+    {
+      name: `Completed Events (${completedEvents})`,
+      href: "/completedEvents",
+      icon:BadgeCheckIcon ,
+
+      current: router.pathname == "/completedEvents" ? true : false,
     },
     // {
     //   name: `Open Auctions  (${liveOpen})`,
@@ -145,9 +140,7 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
     // },
   ];
 
-  // Inside DashboardTemplate
-  // Inside DashboardTemplate
-  // Inside DashboardTemplate
+  
   useEffect(() => {
     const activeLink = document.querySelector(".active-link");
     if (activeLink) {
@@ -233,7 +226,11 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
     },
   ];
 
-  const mobileNavigation=[...eventsNavigations,...activityNavigations,...accountNavigations]
+  const mobileNavigation = [
+    ...eventsNavigations,
+    ...activityNavigations,
+    ...accountNavigations,
+  ];
 
   return (
     <>
@@ -242,31 +239,30 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
         <div className="lg:flex max-md:w-full ">
           {showSidebar && (
             <aside className=" max-md:w-full relative py-6 sm:py-0 px-2 sm:px-6  flex-none lg:border-r border-gray-200">
-             
               <nav className="mt-1 sm:max-lg:mt-8 space-y-4 max-md:w-full  ">
                 <div className=" text-black bg-white lg:hidden flex w-full space-x-4  overflow-x-scroll scrollbar-hide ">
                   {mobileNavigation.map((item, index) => (
-  <ul key={index} className="space-x-4">
-    <li className="space-x-4 ">
-      <Link key={item.name} href={item.href}>
-        <a
-          className={classNames(
-            router.pathname === item.href
-              ? "text-white bg-orange-500 active-link transition ease-in-out transform translate-x-1"
-              : "text-gray-900 hover:text-gray-900 hover:bg-gray-100",
-            "group rounded-md px-3 py-2 flex items-center text-sm font-medium border shadow-inner shadow-slate-200"
-          )}
-          onClick={(e) => {
-            e.preventDefault();
-            setNavigationLink(item.href);
-          }}
-        >
-          <span className="truncate">{item.name}</span>
-        </a>
-      </Link>
-    </li>
-  </ul>
-))}
+                    <ul key={index} className="space-x-4">
+                      <li className="space-x-4 ">
+                        <Link key={item.name} href={item.href}>
+                          <a
+                            className={classNames(
+                              router.pathname === item.href
+                                ? "text-white bg-orange-500 active-link transition ease-in-out transform translate-x-1"
+                                : "text-gray-900 hover:text-gray-900 hover:bg-gray-100",
+                              "group rounded-md px-3 py-2 flex items-center text-sm font-medium border shadow-inner shadow-slate-200"
+                            )}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setNavigationLink(item.href);
+                            }}
+                          >
+                            <span className="truncate">{item.name}</span>
+                          </a>
+                        </Link>
+                      </li>
+                    </ul>
+                  ))}
                 </div>
 
                 <div className="hidden lg:block">

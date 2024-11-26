@@ -71,7 +71,7 @@ function ProfilePage() {
           "Pan Number":
             (user.pancardNo && user.pancardNo) != "" ? user.pancardNo : "-",
           City: (user.city && user.city) != "" ? user.city : "-",
-          State: (user.state && user.state) != "" ? user.state : "-",
+          State: (user.state && user.state) != "" ? user.state?.replace(/_/g, " ") : "-",
           Country: (user.country && user.country) != "" ? user.country : "-",
         },
         pancard_image: user.pancard_image ?? null,

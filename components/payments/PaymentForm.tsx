@@ -16,6 +16,8 @@ import Loader from "@components/ui/Loader";
 export default function PaymentForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [accessToken, setAccessToken] = useState("");
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false); // State to manage button disabled state
+
 
   const SUPPORTED_FORMATS = [
     "image/jpg",
@@ -62,11 +64,15 @@ export default function PaymentForm() {
       .required("Description is required"),
   });
 
-  const onSubmit = async (values, resetForm) => {
+  const onSubmit = async (values, { resetForm, setSubmitting }) => {
+    setSubmitting(true); // Indicate that the form is submitting
+
     setIsLoading(true);
     console.log("Submitting payment details:", values);
     if (values?.paymentFor == "Select Payment") {
-      toast.error("errorMessage");
+      toast.error("Select an Option");
+      setSubmitting(false); // Reset submitting state
+
     }
 
     try {
@@ -119,7 +125,8 @@ export default function PaymentForm() {
         errorMessage || "Request was not submitted. Please try again."
       );
     } finally {
-      setIsLoading(false); // Step 5: Set loading to false when form submission is complete
+      setIsLoading(false); // Reset loading state
+      setSubmitting(false); // Indicate that the form is no longer submitting
     }
   };
 
@@ -135,8 +142,8 @@ export default function PaymentForm() {
         description: "",
       }}
       validationSchema={validationSchema}
-      onSubmit={(values, { resetForm }) => {
-        onSubmit(values, resetForm);
+      onSubmit={(values, actions) => {
+        onSubmit(values, actions);
       }}
     >
       {(props) => (
@@ -252,10 +259,13 @@ export default function PaymentForm() {
 
             <ButtonLoading
               // loading={callPaymentCreate.isLoading ? 1 : 0}
+              disabled={props?.isSubmitting }
               type="submit"
               color="indigo"
             >
-              Submit{" "}
+            
+              {props?.isSubmitting || isButtonDisabled ? 'Submitting...' : 'Submit'}  
+
             </ButtonLoading>
           </div>
         </Form>

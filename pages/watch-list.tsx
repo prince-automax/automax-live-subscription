@@ -327,12 +327,12 @@ function WatchList() {
                   {/* WORKBOOK MATCH, TITLE, IMAGE FOR MOBILE VIEW STARTS HERE  */}
                   <div className="flex-auto p-3 lg:space-y-4 sm:p-6 ">
                     {/* workbook match and watchlist remove button starts here */}
-                    <div className="mb-3 flex justify-between">
+                    <div className="mb-3 flex justify-between border ">
                       <button
                         type="button"
                         className="
-                         sm:hidden inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded text-red-700 "
-                        // onClick={() => removeFromWatchList(item.id)}
+                         sm:hidden inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded text-blue-700 "
+                        onClick={() => RemoveWathclist(item.id)}
                       >
                         Remove
                       </button>
@@ -491,10 +491,21 @@ function WatchList() {
                         <div className="mt-1 flex flex-row sm:flex-wrap sm:mt-0 space-x-2 sm:space-x-6 justify-around w-full  sm:max-md:justify-around sm:max-md:w-full ">
                           <div className="flex flex-col space-y-2 w-64">
                             <div className=" flex items-center justify-between text-sm text-blue-800 ">
-                              <p className="flex items-center text-sm font-roboto font-medium text-[#2563EB]">
-                                {" "}
-                                Inspection Report
-                              </p>
+                            {item?.inspectionLink !== "" &&
+                                item?.inspectionLink !== null && (
+                                  <Link href={item?.inspectionLink}>
+                                    <a
+                                      target="_blank"
+                                      className="flex items-center text-xs sm:text-sm  text-blue-800"
+                                    >
+                                      <DocumentReportIcon
+                                        className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
+                                        aria-hidden="true"
+                                      />
+                                      Inspection Report
+                                    </a>
+                                  </Link>
+                                )}
 
                               <FontAwesomeIcon icon={faCircleInfo} />
                             </div>
@@ -821,11 +832,21 @@ function WatchList() {
                             )}
                           </div>
                           <div className="mt-2 flex items-center text-sm text-blue-800">
-                            <DocumentReportIcon
-                              className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
-                              aria-hidden="true"
-                            />
-                            Inspection Report
+                          {item?.inspectionLink !== "" &&
+                                item?.inspectionLink !== null && (
+                                  <Link href={item?.inspectionLink}>
+                                    <a
+                                      target="_blank"
+                                      className="flex items-center text-xs sm:text-sm  text-blue-800"
+                                    >
+                                      <DocumentReportIcon
+                                        className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
+                                        aria-hidden="true"
+                                      />
+                                      Inspection Report
+                                    </a>
+                                  </Link>
+                                )}
                           </div>
                           <div className="mt-2">
                             <Link href={`/vehicle/${item.id}`}>

@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Datatable from "../ui/Datatable";
 import Loader from "../ui/Loader";
 import moment from "moment";
@@ -6,6 +6,7 @@ import {
   CalendarIcon,
   DocumentDownloadIcon,
   PrinterIcon,
+  SearchIcon,
 } from "@heroicons/react/outline";
 import AlertModal from "../ui/AlertModal";
 
@@ -32,17 +33,24 @@ export function LiveEventHomePage({
   const [accessToken, setAccessToken] = useState("");
   const [registered, setRegistered] = useState(false);
   const [registeredStatus, setRegisteredStatus] = useState("");
-
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
       setAccessToken(token);
     }
   }, []);
+  React.useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
 
   const variablesLive = {
     skip: 0,
     take: 10,
+    search: debouncedSearch,
     where: {
       OR: [
         {
@@ -60,11 +68,15 @@ export function LiveEventHomePage({
   };
   const { data, refetch, isLoading } = useLiveEventsQuery<LiveEventsQuery>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
-    variablesLive
+    variablesLive,
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
+    }
   );
 
-  console.log('evebt ', data);
-
+  console.log("evebt ", data);
 
   useEffect(() => {
     refetch();
@@ -104,9 +116,20 @@ export function LiveEventHomePage({
   ];
 
   return (
-
     <>
       <div className="relative bg-white ">
+        <div className="relative rounded-md shadow-sm max-w-sm">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search live events..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-600 rounded-md"
+          />
+        </div>
         <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
           {showHeadings && (
             <div className=" ">
@@ -115,7 +138,6 @@ export function LiveEventHomePage({
                   NO LIVE EVENTS ...
                 </p>
               )}
-
             </div>
           )}
 
@@ -123,7 +145,6 @@ export function LiveEventHomePage({
             <Loader />
           ) : (
             <>
-
               <>
                 <div className="sm:hidden">
                   {data?.liveEvents?.map((event, eventIdx) => {
@@ -135,7 +156,7 @@ export function LiveEventHomePage({
                         allowDownload={allowDownload}
                         registered={registered}
                         registeredStatus={registeredStatus}
-                      // noOfVehicles={event?.v}
+                        // noOfVehicles={event?.v}
                       />
                     );
                   })}
@@ -163,8 +184,6 @@ LiveEventHomePage.defaultProps = {
 };
 
 function vechileCount(value) {
-
-
   return (
     <div>
       <span>{value}</span>
@@ -173,13 +192,12 @@ function vechileCount(value) {
 }
 
 function View(value, eventCategory) {
-
-
   return (
     <div>
       <Link
-        href={`/${eventCategory === "open" ? "open-auctions" : "events"
-          }/${value}?type=l`}
+        href={`/${
+          eventCategory === "open" ? "open-auctions" : "events"
+        }/${value}?type=l`}
       >
         <a target="_blank">
           <div>
@@ -192,18 +210,12 @@ function View(value, eventCategory) {
 }
 
 function RenderEventTypes(eventTypes) {
-
   if (eventTypes) {
-    return (
-      <div>
-        {eventTypes?.name}
-      </div>
-    );
+    return <div>{eventTypes?.name}</div>;
   } else {
     return <div />;
   }
 }
-
 
 function StartDate(value) {
   return (
@@ -245,8 +257,6 @@ function EndDate(value) {
 }
 
 function DownloadButton({ file, allowDownload }) {
-
-
   const [showAlert, setShowAlert] = useState(false);
 
   const showAlertModal = () => {

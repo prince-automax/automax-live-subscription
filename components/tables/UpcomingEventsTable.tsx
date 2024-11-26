@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import Datatable from "../ui/Datatable";
 import Loader from "../ui/Loader";
 import moment from "moment";
@@ -9,6 +9,7 @@ import {
   CalendarIcon,
   DocumentDownloadIcon,
   PrinterIcon,
+  SearchIcon,
 } from "@heroicons/react/outline";
 import { useEffect, useState } from "react";
 import AlertModal from "../ui/AlertModal";
@@ -29,7 +30,14 @@ export default function UpcomingEventsTable({
   const [accessToken, setAccessToken] = useState("");
   const [registered, setRegistered] = useState(false);
   const [registeredStatus, setRegisteredStatus] = useState("");
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const id = localStorage.getItem("id");
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -41,6 +49,7 @@ export default function UpcomingEventsTable({
   const variables = {
     skip: 0,
     take: 10,
+    search: debouncedSearch,
   };
 
   const { data, isLoading, refetch } =
@@ -179,6 +188,21 @@ export default function UpcomingEventsTable({
   return (
     <>
       <div className="relative bg-white">
+      <div className="relative rounded-md shadow-sm max-w-sm mt-6">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <SearchIcon
+                className="h-5 w-5 text-gray-400"
+                aria-hidden="true"
+              />
+            </div>
+            <input
+        type="text"
+        placeholder="Search Upcoming events..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-600 rounded-md"
+        />
+          </div>
         {data?.upcomingEvents?.length > 0 ? (
           <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
             {showHeadings && (

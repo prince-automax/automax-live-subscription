@@ -9,6 +9,7 @@ const DynamicHeroIcon = props => {
 
 export default function Button(props) {
 
+    // console.log('props of button', props?.disabled);
     
     
     const colorsTable = {
@@ -24,6 +25,7 @@ export default function Button(props) {
 
     return (
         <button
+        disabled={props?.disabled}
             type="button"
             className={` ${colorMapper(
                 props.color
