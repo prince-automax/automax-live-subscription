@@ -15,3 +15,17 @@
 # }
 # }
 # }
+
+query UserPayments($search: String, $orderBy: [PaymentOrderByInput!]) {
+  payments(search: $search, orderBy: $orderBy) {
+    amount
+    createdAt
+    description
+    image
+    paymentFor
+    status
+    user {
+      firstName
+    }
+  }
+}

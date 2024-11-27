@@ -805,6 +805,12 @@ export type Payment = {
   userId?: Maybe<Scalars['String']>;
 };
 
+export type PaymentOrderByInput = {
+  createdAt?: InputMaybe<OrderDirection>;
+  refNo?: InputMaybe<OrderDirection>;
+  updatedAt?: InputMaybe<OrderDirection>;
+};
+
 export enum PaymentStatusType {
   Approved = 'approved',
   Pending = 'pending',
@@ -825,6 +831,7 @@ export enum PaymentType {
 
 export type PaymentWhereUniqueInput = {
   id?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 export type Query = {
@@ -913,6 +920,11 @@ export type QueryStateArgs = {
 };
 
 
+export type QueryStatesArgs = {
+  search?: InputMaybe<Scalars['String']>;
+};
+
+
 export type QueryCompletedEventsArgs = {
   orderBy?: InputMaybe<Array<EventOrderByInput>>;
   search?: InputMaybe<Scalars['String']>;
@@ -983,7 +995,6 @@ export type QueryEventArgs = {
 
 
 export type QueryEventsArgs = {
-  options?: InputMaybe<QueryOptionsType>;
   orderBy?: InputMaybe<Array<EventOrderByInput>>;
   search?: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -1023,6 +1034,13 @@ export type QueryLocationsArgs = {
 
 export type QueryPaymentArgs = {
   where: PaymentWhereUniqueInput;
+};
+
+
+export type QueryPaymentsArgs = {
+  orderBy?: InputMaybe<Array<PaymentOrderByInput>>;
+  search?: InputMaybe<Scalars['String']>;
+  where?: InputMaybe<PaymentWhereUniqueInput>;
 };
 
 
@@ -1080,6 +1098,11 @@ export type QueryVehicleArgs = {
 };
 
 
+export type QueryVehicleCategoriesArgs = {
+  search?: InputMaybe<Scalars['String']>;
+};
+
+
 export type QueryVehicleCategoryArgs = {
   where: VehicleCategoryWhereUniqueInput;
 };
@@ -1092,10 +1115,6 @@ export type QueryVehiclesArgs = {
   take?: InputMaybe<Scalars['Int']>;
   vehiclesOrderBy?: InputMaybe<Array<VehicleOrderByInput>>;
   where?: InputMaybe<VehicleWhereUniqueInput>;
-};
-
-export type QueryOptionsType = {
-  enabled?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type Recentsold = {
@@ -1776,6 +1795,14 @@ export type EventsSubscriptionSubscriptionVariables = Exact<{ [key: string]: nev
 
 
 export type EventsSubscriptionSubscription = { __typename?: 'Subscription', subscriptionEventUpdates: { __typename?: 'Event', id: string } };
+
+export type UserPaymentsQueryVariables = Exact<{
+  search?: InputMaybe<Scalars['String']>;
+  orderBy?: InputMaybe<Array<PaymentOrderByInput> | PaymentOrderByInput>;
+}>;
+
+
+export type UserPaymentsQuery = { __typename?: 'Query', payments: Array<{ __typename?: 'Payment', amount?: number | null, createdAt?: any | null, description?: string | null, image?: string | null, paymentFor?: string | null, status?: string | null, user?: { __typename?: 'User', firstName: string } | null }> };
 
 export type UpdateUserMutationVariables = Exact<{
   data: UpdateUserInput;
@@ -2467,6 +2494,35 @@ export const EventsSubscriptionDocument = `
   }
 }
     `;
+export const UserPaymentsDocument = `
+    query UserPayments($search: String, $orderBy: [PaymentOrderByInput!]) {
+  payments(search: $search, orderBy: $orderBy) {
+    amount
+    createdAt
+    description
+    image
+    paymentFor
+    status
+    user {
+      firstName
+    }
+  }
+}
+    `;
+export const useUserPaymentsQuery = <
+      TData = UserPaymentsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: UserPaymentsQueryVariables,
+      options?: UseQueryOptions<UserPaymentsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<UserPaymentsQuery, TError, TData>(
+      variables === undefined ? ['UserPayments'] : ['UserPayments', variables],
+      fetcher<UserPaymentsQuery, UserPaymentsQueryVariables>(client, UserPaymentsDocument, variables, headers),
+      options
+    );
 export const UpdateUserDocument = `
     mutation UpdateUser($data: UpdateUserInput!, $where: UserWhereUniqueInput!) {
   updateUser(data: $data, where: $where) {

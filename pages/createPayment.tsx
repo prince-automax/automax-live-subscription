@@ -9,7 +9,7 @@ function Payments() {
     <DashboardTemplate heading="Payments">
       <div className="divide-y divide-gray-200">
         <PaymentForm />
-        <PaymentsTable />
+        {/* <PaymentsTable /> */}
       </div>
     </DashboardTemplate>
   );

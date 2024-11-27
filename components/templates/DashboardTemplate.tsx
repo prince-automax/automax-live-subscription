@@ -202,7 +202,7 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
     },
     {
       name: "Payments",
-      href: "/payments",
+      href: "/AllPayments",
       icon: CashIcon,
       current: router.pathname == "/payments" ? true : false,
     },

@@ -12,13 +12,13 @@ import toast from "react-hot-toast";
 import FormField from "@components/ui/FormField";
 import { ResizeImage } from "../image-Resizing/imagePayment";
 import Loader from "@components/ui/Loader";
-
+import { useRouter } from "next/router";
 export default function PaymentForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [accessToken, setAccessToken] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false); // State to manage button disabled state
 
-
+  const router = useRouter();
   const SUPPORTED_FORMATS = [
     "image/jpg",
     "image/jpeg",
@@ -69,18 +69,17 @@ export default function PaymentForm() {
 
     setIsLoading(true);
     console.log("Submitting payment details:", values);
-    if (values?.paymentFor == "Select Payment") {
-      toast.error("Select an Option");
-      setSubmitting(false); // Reset submitting state
-
-    }
+    // if (values?.paymentFor == "Select Payment") {
+    //   return toast.error("Select an Option");
+    //   setSubmitting(false); // Reset submitting state
+    // }
 
     try {
       // Step 1: Call GraphQL API to create payment
       const response = await callPaymentCreate.mutateAsync({
         createPaymentInput: {
           amount: parseInt(values.amount),
-          paymentFor: values.paymentFor,
+          paymentFor: values?.paymentFor,
           description: values.description,
           status: PaymentStatusType.Pending,
         },
@@ -114,16 +113,20 @@ export default function PaymentForm() {
           toast.success("Payment  successfully.");
           resetForm({ proof: "" });
           // setIsLoading(false)
+          router.push("/AllPayments");
         } else {
           throw new Error("Image upload failed");
         }
       }
     } catch (error) {
       const errorMessage =
-        error?.response?.errors?.[0]?.message || error.message;
-      toast.error(
-        errorMessage || "Request was not submitted. Please try again."
-      );
+        error.response.errors[0].message ||
+        "An error occurred. Please try again";
+      // e.response?.errors?.map((err) => err).join(", ") ||
+      // e.message ||
+      // "An error occurred. Please try again.";
+
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false); // Reset loading state
       setSubmitting(false); // Indicate that the form is no longer submitting
@@ -189,15 +192,15 @@ export default function PaymentForm() {
 
             <div>
               <div className="flex justify-between">
-              <label
-                htmlFor="comment"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Add your Description
-              </label>
-              <span id="message" className="text-sm text-gray-500">
-              Max. 255 characters
-              </span>
+                <label
+                  htmlFor="comment"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Add your Description
+                </label>
+                <span id="message" className="text-sm text-gray-500">
+                  Max. 255 characters
+                </span>
               </div>
               <div className="mt-1  text-end">
                 <textarea
@@ -259,13 +262,13 @@ export default function PaymentForm() {
 
             <ButtonLoading
               // loading={callPaymentCreate.isLoading ? 1 : 0}
-              disabled={props?.isSubmitting }
+              disabled={props?.isSubmitting}
               type="submit"
               color="indigo"
             >
-            
-              {props?.isSubmitting || isButtonDisabled ? 'Submitting...' : 'Submit'}  
-
+              {props?.isSubmitting || isButtonDisabled
+                ? "Submitting..."
+                : "Submit"}
             </ButtonLoading>
           </div>
         </Form>

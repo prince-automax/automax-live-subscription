@@ -155,7 +155,7 @@ function Events() {
         // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
       }
     );
-  // console.log("data", data);
+  console.log("data", data);
 
   useEffect(() => {
     if (vehicleUpdate.data || BidUpdate.data || UserUpdate?.data) {

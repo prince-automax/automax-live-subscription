@@ -19,6 +19,8 @@ const nextConfig = {
             "ops.adroitauto.in",
             "autobseimagesandexcel-dev.s3.ap-south-1.amazonaws.com"
         ],
+        minimumCacheTTL: 60, // Cache time in seconds (default is 60)
+
     },
 };
 

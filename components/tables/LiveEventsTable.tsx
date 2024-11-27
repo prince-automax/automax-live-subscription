@@ -85,7 +85,7 @@ const EventsTable = ({
       // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
     });
 
-  console.log("Event", data);
+  console.log("LIve events", data);
 
   useEffect(() => {
     if (LiveEventSubscription?.data) {
