@@ -20,14 +20,30 @@ const TextInput = (props, ) => {
   const [showPassword, setShowPassword] = useState(false);
   const [inputFieldType, setInputFieldType] = useState(props.type);
 
+  // const handleShowPassword = () => {
+  //   if (showPassword) {
+  //     setInputFieldType("password");
+  //   } else {
+  //     setInputFieldType(props.type);
+  //   }
+  //   setShowPassword(!showPassword);
+  // };
+
   const handleShowPassword = () => {
+
+    
     if (showPassword) {
       setInputFieldType("password");
     } else {
       setInputFieldType("text");
     }
+
     setShowPassword(!showPassword);
   };
+
+
+  const inputMode = props.inputMode || undefined;
+  const pattern = props.pattern || undefined;
 
   return (
     <div
@@ -57,10 +73,11 @@ const TextInput = (props, ) => {
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <DynamicHeroIcon icon={props.icon} />
             </div>
-          )}
+          )}  
           <Field
             type={inputFieldType}
             // innerRef={(el) => (props.fieldRef.current[props.name] = el)} // Attach ref to field
+            inputMode={inputMode}  // Pass the resolved 'inputMode'
 
               name={props.name}
             id={props.name}
@@ -71,6 +88,9 @@ const TextInput = (props, ) => {
               props.disabled ? "bg-gray-100" : "",
               props.width
             )}
+            pattern={pattern}  // Pass the resolved 'pattern'
+
+
             placeholder={props.placeholder}
             disabled={props.disabled}
             autoComplete="off"

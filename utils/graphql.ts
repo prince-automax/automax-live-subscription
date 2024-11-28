@@ -876,7 +876,7 @@ export type Query = {
   locations: Array<Location>;
   locationsCount: Scalars['Int'];
   payment: Payment;
-  payments: Array<Payment>;
+  payments?: Maybe<Array<Payment>>;
   paymentsCount: Scalars['Int'];
   recentSold: Recentsold;
   recentSolds: Array<Recentsold>;
@@ -1154,6 +1154,7 @@ export type SellerWhereUniqueInput = {
 
 export type SendOtpDto = {
   firstName?: InputMaybe<Scalars['String']>;
+  forSignin: Scalars['Boolean'];
   lastName?: InputMaybe<Scalars['String']>;
   mobile: Scalars['String'];
   pancardNo?: InputMaybe<Scalars['String']>;
@@ -1802,7 +1803,7 @@ export type UserPaymentsQueryVariables = Exact<{
 }>;
 
 
-export type UserPaymentsQuery = { __typename?: 'Query', payments: Array<{ __typename?: 'Payment', amount?: number | null, createdAt?: any | null, description?: string | null, image?: string | null, paymentFor?: string | null, status?: string | null, user?: { __typename?: 'User', firstName: string } | null }> };
+export type UserPaymentsQuery = { __typename?: 'Query', payments?: Array<{ __typename?: 'Payment', amount?: number | null, createdAt?: any | null, description?: string | null, image?: string | null, paymentFor?: string | null, status?: string | null, user?: { __typename?: 'User', firstName: string } | null }> | null };
 
 export type UpdateUserMutationVariables = Exact<{
   data: UpdateUserInput;

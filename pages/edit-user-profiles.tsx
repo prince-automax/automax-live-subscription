@@ -21,7 +21,7 @@ import Router from "next/router";
 import toast from "react-hot-toast";
 import { cities } from "../utils/cities";
 import { states } from "../utils/states";
-import { useState, useEffect,useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ResizeImage } from "../components/image-Resizing/imageProfile";
 import DashboardTemplate from "../components/templates/DashboardTemplate";
 // import {welcomeMessage} from "../components/alerts/welcomeMessage"
@@ -31,8 +31,6 @@ import Image from "next/image";
 const renderingStates = states.map((state) => {
   return { label: state.state, value: state.state };
 });
-
-
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 
@@ -49,7 +47,6 @@ function welcomeMessage(props) {
 function ProfileUpdate() {
   const id = localStorage.getItem("id");
   const fieldRefs = useRef({}); // Store refs for each field
-
 
   // const token = localStorage.getItem("token");
   const [emailCheckData, setEmailCheckData] = useState("");
@@ -114,7 +111,6 @@ function ProfileUpdate() {
     // }
   }, [selectedState, data?.user]);
 
-
   const callUpdateUserMutation =
     useUpdateUserMutation<UpdateUserMutationVariables>(
       graphQLClient({ Authorization: `Bearer ${accessToken}` })
@@ -127,19 +123,19 @@ function ProfileUpdate() {
   const userValidation = Yup.object({
     // firstName: Yup.string().required("First name is required"),
     email: Yup.string()
-    // .required("Email is required")
-    .email("Invalid email address"), // Built-in email validation
-    city: Yup.string() 
-    .required("city number is required")
-    .test(
-        "is-not-placeholder",
-        "Please select a valid City",
-        (value) => value !== "Please Select a City" && value !== ""
-      ),
-      mobile: Yup.string()
+      // .required("Email is required")
+      .email("Invalid email address"), // Built-in email validation
+    // city: Yup.string()
+    // .required("city  is required")
+    // .test(
+    //     "is-not-placeholder",
+    //     "Please select a valid City",
+    //     (value) => value !== "Please Select a City" && value !== ""
+    //   ),
+    mobile: Yup.string()
       .matches(/^[0-9]{10}$/, "Mobile number must be only 10 digits long")
       .required("Mobile number is required"),
-      state: Yup.string()
+    state: Yup.string()
       .required("State is required")
       .test(
         "is-not-placeholder",
@@ -148,13 +144,13 @@ function ProfileUpdate() {
       ),
   });
 
-  const handleUserDetails = async (values,{setSubmitting}) => {
+  const handleUserDetails = async (values, { setSubmitting }) => {
     console.log(values);
-    
+
     setIsButtonDisabled(true); // Disable the button
 
     console.log("setSubmitting", setSubmitting);
-    setSubmitting(true)
+    setSubmitting(true);
     try {
       const result = await callUpdateUserMutation.mutateAsync({
         data: {
@@ -176,7 +172,7 @@ function ProfileUpdate() {
       let name = values.firstName;
 
       // Display success message
-     
+
       if (result?.updateUser?.id) {
         setTimeout(() => {
           toast.success(` Profile Updated`);
@@ -187,14 +183,11 @@ function ProfileUpdate() {
       // Handle errors gracefully
       console.error("Error updating user:", error);
       toast.error("Failed to update user. Please try again.");
-    }
-    finally {
+    } finally {
       setTimeout(() => {
         setIsButtonDisabled(false);
       }, 1000);
     }
-
-   
   };
 
   const documetSchema = Yup.object({});
@@ -263,13 +256,13 @@ function ProfileUpdate() {
     }
   };
   const scrollToError = (errors) => {
-    console.log("scrollToError",errors);
-    
+    console.log("scrollToError", errors);
+
     const firstErrorField = Object.keys(errors)[0]; // Find first invalid field
     if (firstErrorField && fieldRefs.current[firstErrorField]) {
       fieldRefs.current[firstErrorField].scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
+        behavior: "smooth",
+        block: "center",
       });
       fieldRefs.current[firstErrorField].focus();
     }
@@ -293,7 +286,7 @@ function ProfileUpdate() {
                 firstName: data["user"]["firstName"],
                 lastName: data["user"]["lastName"],
                 email: data["user"]["email"],
-                city: data["user"]["city"] ? data["user"]["city"] : "",
+                // city: data["user"]["city"] ? data["user"]["city"] : "",
                 state: data["user"]["state"] ? data["user"]["state"] : "",
                 country: data["user"]["country"]
                   ? data["user"]["country"]
@@ -315,15 +308,15 @@ function ProfileUpdate() {
                 <Form
                 // onSubmit={async (e) => {
                 //   console.log('trigrred validated onsubmit ',);
-                      
+
                 //   e.preventDefault(); // Prevent default form submission
                 //   const validationErrors = await props?.validateForm(); // Trigger validation
                 //   if (Object.keys(validationErrors).length > 0) {
                 //     // If validation fails, scroll to first error
                 //     console.log('validation errors',validationErrors);
-                    
+
                 //     console.log('error contains in form');
-                          
+
                 //     scrollToError(validationErrors);
                 //   } else {
                 //     // If validation passes, proceed with submission
@@ -346,25 +339,43 @@ function ProfileUpdate() {
 
                       <div className="col-span-6 sm:col-span-3">
                         <FormField
-                          field="input"
+                          field="inputWithChange"
+                          required
+                          maxLength="30"
                           name="firstName"
                           label="First Name"
                           width="w-full"
                           placeholder="First Name"
-                          fieldRef={fieldRefs}
-
+                          onChange={(e) => {
+                            const value = e.target.value.replace(
+                              /[^a-zA-Z ]/g,
+                              ""
+                            ); // Allow only letters and spaces
+                            props.setFieldValue("firstName", value);
+                          }}
+                          value={props.values.firstName}
+                          className="border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                         />
                       </div>
 
                       <div className="col-span-6 sm:col-span-3">
                         <FormField
-                          field="input"
+                          field="inputWithChange"
+                          required
+                          maxLength="30"
                           name="lastName"
                           label="Last Name"
                           width="w-full"
                           placeholder="Last Name"
-                          fieldRef={fieldRefs}
-
+                          onChange={(e) => {
+                            const value = e.target.value.replace(
+                              /[^a-zA-Z ]/g,
+                              ""
+                            ); // Allow only letters and spaces
+                            props.setFieldValue("lastName", value);
+                          }}
+                          value={props.values.lastName}
+                          className="border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                         />
                       </div>
 
@@ -377,7 +388,6 @@ function ProfileUpdate() {
                           placeholder="Email address"
                           custom
                           fieldRef={fieldRefs}
-
                           onBlur={(e) => {
                             setEmailCheckData(e.target.value);
                             setEmailEnabled(e.target.value != "");
@@ -389,7 +399,7 @@ function ProfileUpdate() {
                         <FormField
                           field="input"
                           fieldRef={fieldRefs}
-
+                          disabled={true}
                           name="mobile"
                           label="Mobile Number"
                           width="w-full"
@@ -416,7 +426,7 @@ function ProfileUpdate() {
                         <FormField
                           field="select"
                           fieldRef={fieldRefs}
-
+                          disabled={true}
                           name="state"
                           label="State"
                           width="w-full"
@@ -431,7 +441,7 @@ function ProfileUpdate() {
                         />
                       </div>
 
-                      <div className="col-span-6 sm:col-span-3">
+                      {/* <div className="col-span-6 sm:col-span-3">
                         <FormField
                           field="select"
                           name="city"
@@ -444,17 +454,19 @@ function ProfileUpdate() {
                             props.setFieldValue("city", value);
                           }}
                         />
-                      </div>
+                      </div> */}
                     </div>
 
                     <div className="my-8 flex justify-center">
                       <ButtonLoading
                         // loading={callUpdateUserMutation.isLoading ? true : false}
-                        disabled={props?.isSubmitting || isButtonDisabled} 
+                        disabled={props?.isSubmitting || isButtonDisabled}
                         type="submit"
                         color="indigo"
                       >
-                       {props?.isSubmitting || isButtonDisabled ? 'Updating...' : 'Update Details'}  
+                        {props?.isSubmitting || isButtonDisabled
+                          ? "Updating..."
+                          : "Update Details"}
                       </ButtonLoading>
                     </div>
                   </div>

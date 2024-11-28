@@ -21,7 +21,6 @@ import { states } from "../utils/states";
 import { countries } from "../utils/countries";
 import { useState, useEffect } from "react";
 import { ResizeImage } from "../components/image-Resizing/imageProfile";
-// import {welcomeMessage} from "../components/alerts/welcomeMessage"
 import {
   useUpdateUserMutation,
   UpdateUserMutationVariables,
@@ -87,8 +86,6 @@ function ProfileUpdate() {
     }
   }, [selectedState]);
 
-
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
@@ -139,8 +136,8 @@ function ProfileUpdate() {
   const validationSchema = Yup.object({
     id: Yup.string().required(),
     firstName: Yup.string().required("First name is required"),
-    email: Yup.string()
-      .email("Invalid email address"),
+    lastName: Yup.string().required("Last name is required"),
+    email: Yup.string().email("Invalid email address"),
     password: Yup.string()
       .required("Password is required")
       .matches(/^(?=.{6,})/, "Password must contain at least 6 characters"),
@@ -154,18 +151,28 @@ function ProfileUpdate() {
     mobile: Yup.string()
       .matches(/^[0-9]{10}$/, "Mobile number must be only 10 digits long")
       .required("Mobile number is required"),
-    state: Yup.string().required("State is required"),
-    // idProofNo: Yup.string()
-    //   // .required("Aadhar number is required")
-    //   .matches(/^[0-9]{12}$/, "Aadhar number must be exactly 12 digits long"), // Ensures 12 digits only
+    state: Yup.string()
+      .required("State is required")
+      .notOneOf(["Please Select State", ""], "Please select a valid State"),
+    // city: Yup.string()
+    //   .required("city  is required")
+    //   .test(
+    //     "is-not-placeholder",
+    //     "Please select a valid City",
+    //     (value) => value !== "Please Select a City" && value !== ""
+    //   ),
+    // city: Yup.string()
+    // .required("City is required")
+    // .notOneOf(["Please Select City", ""], "Please select a valid City"),
     idProofNo: Yup.string()
-    // .required("Aadhar number is required")
-    .matches(/^\d+$/, "Aadhar number must contain only digits") // Ensure only digits
-    .length(12, "Aadhar number must be exactly 12 digits long"), // Validate exact length
+      // .required("Aadhar number is required")
+      .matches(/^\d+$/, "Aadhar number must contain only digits") // Ensure only digits
+      .length(12, "Aadhar number must be exactly 12 digits long"), // Validate exact length
   });
-  
 
   const onSubmit = async (values) => {
+    console.log("values", values);
+
     try {
       // console.log("touched here", values);
 
@@ -215,7 +222,6 @@ function ProfileUpdate() {
       toast.error(errorMessage);
     }
   };
-
 
   // const handleSubmit = (values) => {
   //   console.log('values', values);
@@ -352,7 +358,7 @@ function ProfileUpdate() {
               firstName: data?.["user"]?.["firstName"],
               lastName: data?.["user"]?.["lastName"],
               email: data?.["user"]?.["email"],
-              city: data?.["user"]?.["city"] ? data["user"]?.["city"] : "",
+              // city: data?.["user"]?.["city"] ? data["user"]?.["city"] : "",
               state: data?.["user"]?.["state"] ? data?.["user"]?.["state"] : "",
               country: data?.["user"]?.["country"]
                 ? data?.["user"]?.["country"]
@@ -388,32 +394,49 @@ function ProfileUpdate() {
 
                     <div className="col-span-6 sm:col-span-3">
                       <FormField
-                        field="input"
-                        
+                        field="inputWithChange"
+                        required
+                        maxLength="30"
                         name="firstName"
                         label="First Name"
                         width="w-full"
                         placeholder="First Name"
-                        
+                        onChange={(e) => {
+                          const value = e.target.value.replace(
+                            /[^a-zA-Z ]/g,
+                            ""
+                          ); // Allow only letters and spaces
+                          props.setFieldValue("firstName", value);
+                        }}
+                        value={props.values.firstName}
+                        className="border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
                       <FormField
-                        field="input"
+                        field="inputWithChange"
+                        required
+                        maxLength="30"
                         name="lastName"
-                        
                         label="Last Name"
                         width="w-full"
                         placeholder="Last Name"
-                        
+                        onChange={(e) => {
+                          const value = e.target.value.replace(
+                            /[^a-zA-Z ]/g,
+                            ""
+                          ); // Allow only letters and spaces
+                          props.setFieldValue("lastName", value);
+                        }}
+                        value={props.values.lastName}
+                        className="border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                       />
                     </div>
 
                     <div className="col-span-6  sm:col-span-3">
                       <FormField
                         field="input"
-                        
                         name="email"
                         label="Email Address"
                         width="w-full"
@@ -431,6 +454,7 @@ function ProfileUpdate() {
                         field="input"
                         required
                         placeholder="Mobile Number"
+                        disabled={true}
                         name="mobile"
                         label="Mobile Number"
                         width="w-full"
@@ -445,6 +469,7 @@ function ProfileUpdate() {
                         name="state"
                         label="State"
                         width="w-full"
+                        disabled={true}
                         placeholder="Please Select State"
                         options={renderingStates}
                         onChange={async (e) => {
@@ -455,7 +480,7 @@ function ProfileUpdate() {
                       />
                     </div>
 
-                    <div className="col-span-6 sm:col-span-3">
+                    {/* <div className="col-span-6 sm:col-span-3">
                       <FormField
                         field="select"
                         name="city"
@@ -468,7 +493,7 @@ function ProfileUpdate() {
                           props.setFieldValue("city", value);
                         }}
                       />
-                    </div>
+                    </div> */}
 
                     <div className="space-y-1 col-span-6 border-t border-gray-200 pt-8">
                       <h3 className="text-lg leading-6 font-medium text-gray-900">
@@ -481,18 +506,29 @@ function ProfileUpdate() {
 
                     <div className="col-span-6 sm:col-span-3">
                       <FormField
-                        field="input"
+                        field="inputWithChange"
                         name="idProofNo"
                         label="Aadhar Card Number"
                         placeholder="Aadhar Card Number"
-                        type="number"
+                        type="text"
                         width="w-full"
+                        maxLength="12"
+                        onChange={(e) => {
+                          // Allow only numeric input by replacing non-numeric characters
+                          const numericValue = e.target.value.replace(
+                            /[^0-9]/g,
+                            ""
+                          ); // Remove non-numeric characters
+                          props.setFieldValue("idProofNo", numericValue); // Update form value with numeric-only input
+                        }}
+                        value={props.values.mobile}
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
                       <FormField
                         field="input"
+                        disabled={true}
                         name="pancardNo"
                         label="Pan Card Number"
                         placeholder="Pan Card Number"
@@ -507,113 +543,6 @@ function ProfileUpdate() {
                     </div>
 
                     <div className="col-span-6 sm:col-span-3"></div>
-
-                    {/* <div className="col-span-6 sm:col-span-3">
-                       <label
-                         htmlFor="idProof"
-                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                       >
-                         Upload {getIdProofLabel(props?.values?.idProofType)}{" "}
-                         Document Front Side
-                       </label>
-                       <input
-                         onChange={async (event) => {
-                           try {
-                             const file = event.target.files[0];
-                             const image = await ResizeImage(file);
-                             props.setFieldValue("idProof", image);
-                           } catch (err) {
-                             console.log(err);
-                           }
-                         }}
-                         id="idProof"
-                         type="file"
-                         name="idProof"
-                         className="text-sm text-grey-500
-                                               file:mr-5 file:py-2 file:px-6
-                                               file:rounded-md file:border-0
-                                               file:text-sm file:font-medium
-                                               file:bg-blue-50 file:text-blue-700
-                                               hover:file:cursor-pointer hover:file:bg-amber-50
-                                               hover:file:text-amber-700
-                                               block w-full border border-gray-300 rounded-md
-                                               "
-                       />
-                       <div className="mt-2 text-xs text-red-600">
-                         <ErrorMessage name="idProof" />
-                       </div>
-                     </div> */}
-
-                    {/* <div className="col-span-6 sm:col-span-3">
-                       <label
-                         htmlFor="idProofBack"
-                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                       >
-                         Upload {getIdProofLabel(props?.values?.idProofType)}{" "}
-                         Document Back Side
-                       </label>
-                       <input
-                         onChange={async (event) => {
-                           try {
-                             const file = event.target.files[0];
-                             const image = await ResizeImage(file);
-                             props.setFieldValue("idProofBack", image);
-                           } catch (err) {
-                             console.log(err);
-                           }
-                         }}
-                         id="idProofBack"
-                         type="file"
-                         name="idProofBack"
-                         className="text-sm text-grey-500
-                                               file:mr-5 file:py-2 file:px-6
-                                               file:rounded-md file:border-0
-                                               file:text-sm file:font-medium
-                                               file:bg-blue-50 file:text-blue-700
-                                               hover:file:cursor-pointer hover:file:bg-amber-50
-                                               hover:file:text-amber-700
-                                               block w-full border border-gray-300 rounded-md
-                                               "
-                       />
-                       <div className="mt-2 text-xs text-red-600">
-                         <ErrorMessage name="idProofBack" />
-                       </div>
-                     </div> */}
-
-                    {/* <div className="col-span-6 sm:col-span-3">
-                   <label
-                     htmlFor="pancard"
-                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                   >
-                     Upload Pan Card
-                   </label>
-                   <input
-                     onChange={async (event) => {
-                       try {
-                         const file = event.target.files[0];
-                         const image = await ResizeImage(file);
-                         props.setFieldValue("pancard", image);
-                       } catch (err) {
-                         console.log(err);
-                       }
-                     }}
-                     name="pancard"
-                     id="pancard"
-                     type="file"
-                     className="text-sm text-grey-500
-                                               file:mr-5 file:py-2 file:px-6
-                                               file:rounded-md file:border-0
-                                               file:text-sm file:font-medium
-                                               file:bg-blue-50 file:text-blue-700
-                                               hover:file:cursor-pointer hover:file:bg-amber-50
-                                               hover:file:text-amber-700
-                                               block w-full border border-gray-300 rounded-md
-                                               "
-                   />
-                   <div className="mt-2 text-xs text-red-600">
-                     <ErrorMessage name="pancard" />
-                   </div>
-                 </div> */}
 
                     <div className="space-y-1 col-span-6 border-t border-gray-200 pt-8">
                       <h3 className="text-lg leading-6 font-medium text-gray-900">

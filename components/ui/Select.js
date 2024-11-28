@@ -19,10 +19,10 @@ export default function Select(props) {
       {props.label && (
         <label
           htmlFor={props.name}
-          className={
-            props.inline
+          className={`
+            ${props.inline
               ? 'block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'
-              : 'text-sm font-medium text-gray-700'
+              : 'text-sm font-medium text-gray-700'} `
           }>
           {props.label} {props.required && <span className="text-red-500 text-xs">*</span>}
         </label>
@@ -31,15 +31,16 @@ export default function Select(props) {
         <Field
           as="select"
           // ref={(el) => props?.fieldRef?.current && (props.fieldRef.current[props.name] = el)} // Attach ref to field
+          disabled={props.disabled}
 
           onChange={props.onChange}
           name={props.name}
           id={props.name}
-          className={classNames(
+          className={`${classNames(
             props.inline ? 'max-w-lg py-2' : '',
             'block w-full mt-1 sm:text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md',
             props.width
-          )}>
+          )} ${props?.disabled ? `bg-gray-200`:`""` } `}>
             <option >
                {props?.placeholder}
               </option>
