@@ -24,7 +24,7 @@ function ProfilePage() {
       Email: "-",
       "ID Proof Number": "-",
       "Pan Number": "-",
-      City: "-",
+      // City: "-",
       State: "-",
       Country: "-",
     },
@@ -70,7 +70,7 @@ function ProfilePage() {
             (user.idProofNo && user.idProofNo) != "" ? user.idProofNo : "-",
           "Pan Number":
             (user.pancardNo && user.pancardNo) != "" ? user.pancardNo : "-",
-          City: (user.city && user.city) != "" ? user.city : "-",
+          // City: (user.city && user.city) != "" ? user.city : "-",
           State: (user.state && user.state) != "" ? user.state?.replace(/_/g, " ") : "-",
           Country: (user.country && user.country) != "" ? user.country : "-",
         },

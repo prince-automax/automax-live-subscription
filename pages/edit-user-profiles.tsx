@@ -121,10 +121,12 @@ function ProfileUpdate() {
   }
 
   const userValidation = Yup.object({
-    // firstName: Yup.string().required("First name is required"),
+    firstName: Yup.string().required("First Name is required"),
+    lastName: Yup.string().required("Last Name is required"),
+
     email: Yup.string()
       // .required("Email is required")
-      .email("Invalid email address"), // Built-in email validation
+      .email("Invalid Email Address"), // Built-in email validation
     // city: Yup.string()
     // .required("city  is required")
     // .test(
@@ -248,7 +250,7 @@ function ProfileUpdate() {
         localStorage.setItem("name", `${data?.res.firstName}`);
         let name = data?.res.firstName;
         // Router.push("/dashboard");
-        toast.success(`Welcome ${name}`);
+        toast.success(`Documents Updated`);
       }
       console.log("Success:", data);
     } catch (error) {
@@ -385,7 +387,7 @@ function ProfileUpdate() {
                           name="email"
                           label="Email Address"
                           width="w-full"
-                          placeholder="Email address"
+                          placeholder="Email Address"
                           custom
                           fieldRef={fieldRefs}
                           onBlur={(e) => {
@@ -492,7 +494,7 @@ function ProfileUpdate() {
                     <div className="mt-6 ">
                       <div className="space-y-1 mb-4">
                         <h3 className="text-lg leading-6 font-medium text-gray-900">
-                          Documents Details
+                          Document Details
                         </h3>
                         <p className="max-w-2xl text-sm text-gray-500 mb-4">
                           Please update your document details here.
@@ -526,6 +528,8 @@ function ProfileUpdate() {
                             {({ field }) => (
                               <input
                                 type="file"
+                                accept=".jpg,.jpeg"
+
                                 id="pancard_image"
                                 className="w-64 border border-gray-300 rounded-lg shadow-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 onChange={async (e) => {
@@ -578,6 +582,8 @@ function ProfileUpdate() {
                             {({ field }) => (
                               <input
                                 type="file"
+                                accept=".jpg,.jpeg"
+
                                 id="aadharcard_front_image"
                                 className="w-64 border border-gray-300 rounded-lg shadow-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 onChange={async (e) => {
@@ -632,6 +638,8 @@ function ProfileUpdate() {
                             {({ field }) => (
                               <input
                                 type="file"
+                                accept=".jpg,.jpeg"
+
                                 id="aadharcard_back_image"
                                 className="w-64 border border-gray-300 rounded-lg shadow-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 onChange={async (e) => {
@@ -684,6 +692,8 @@ function ProfileUpdate() {
                             {({ field }) => (
                               <input
                                 type="file"
+                                accept=".jpg,.jpeg"
+
                                 id="driving_license_front_image"
                                 className="w-64 border border-gray-300 rounded-lg shadow-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 onChange={async (e) => {
@@ -738,6 +748,8 @@ function ProfileUpdate() {
                             {({ field }) => (
                               <input
                                 type="file"
+                                accept=".jpg,.jpeg"
+
                                 id="driving_license_back_image"
                                 className="w-64 border border-gray-300 rounded-lg shadow-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 onChange={async (e) => {

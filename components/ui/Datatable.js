@@ -85,7 +85,7 @@ function Datatable(props) {
         <div className="mt-2 ring-1 ring-gray-300 rounded-lg overflow-auto max-sm:overflow-scroll max-sm:h-[450px] lg:max-w-2xl  xl:max-w-[1115px] ">
           <table
             {...getTableProps()}
-            className="min-w-full divide-y divide-gray-300 relative max-sm:uppercase"
+            className="min-w-full divide-y divide-gray-300 relative max-sm:uppercase "
           >
             <thead className="bg-primary rounded-lg ">
               {headerGroups.map((headerGroup, hgidx) => (
@@ -118,7 +118,7 @@ function Datatable(props) {
               ))}
             </thead>
 
-            <tbody {...getTableBodyProps()} className=" ">
+            <tbody {...getTableBodyProps()} className=" uppercase  ">
               {page.map((row, rowIdx) => {
                 prepareRow(row);
                 return (

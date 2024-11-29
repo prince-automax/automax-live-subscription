@@ -314,7 +314,7 @@ export default function Contact() {
                     
                     onSubmit={onSubmitData}
                     validationSchema={validationSchema}
-                  >
+                  >   
                 {({ errors, touched, validateForm, handleSubmit,setTouched,isSubmitting }) => (
                       <Form 
                       onSubmit={async (e) => {

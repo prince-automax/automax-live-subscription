@@ -354,7 +354,14 @@ export type EventOrderByInput = {
 };
 
 export type EventWhereUniqueInput = {
+  endDate?: InputMaybe<Scalars['DateTime']>;
+  eventCategory?: InputMaybe<EventCategory>;
+  eventNo?: InputMaybe<Scalars['Float']>;
   id?: InputMaybe<Scalars['String']>;
+  locationId?: InputMaybe<Scalars['String']>;
+  sellerId?: InputMaybe<Scalars['String']>;
+  startDate?: InputMaybe<Scalars['DateTime']>;
+  status?: InputMaybe<EventStatusType>;
 };
 
 export type ExcelWhereUniqueInput = {
@@ -443,6 +450,7 @@ export type Mutation = {
   deleteVehicle: Vehicle;
   deleteVehiclecategory: VehicleCategory;
   login: LoginResponse;
+  resetUserPassword: User;
   restoreEnquiry: Enquiry;
   restoreEvent: Event;
   restoreExcelUpload: Excelupload;
@@ -634,6 +642,11 @@ export type MutationDeleteVehiclecategoryArgs = {
 
 export type MutationLoginArgs = {
   loginInput: LoginUserInput;
+};
+
+
+export type MutationResetUserPasswordArgs = {
+  pass: Scalars['String'];
 };
 
 
@@ -1682,6 +1695,13 @@ export type VerifyOtpMutationVariables = Exact<{
 
 export type VerifyOtpMutation = { __typename?: 'Mutation', verifyOtp: { __typename?: 'VerifyOtpResponse', access_token: string, user: { __typename?: 'User', mobile: string, id: string, firstName: string, username: string, lastName: string, status: string, role: string } } };
 
+export type ResetPasswordMutationVariables = Exact<{
+  pass: Scalars['String'];
+}>;
+
+
+export type ResetPasswordMutation = { __typename?: 'Mutation', resetUserPassword: { __typename?: 'User', id: string, status: string, firstName: string, username: string } };
+
 export type CreateBidMutationVariables = Exact<{
   bidVehicleId: Scalars['String'];
   createBidInput: CreateBidInput;
@@ -1948,6 +1968,29 @@ export const useVerifyOtpMutation = <
     useMutation<VerifyOtpMutation, TError, VerifyOtpMutationVariables, TContext>(
       ['verifyOtp'],
       (variables?: VerifyOtpMutationVariables) => fetcher<VerifyOtpMutation, VerifyOtpMutationVariables>(client, VerifyOtpDocument, variables, headers)(),
+      options
+    );
+export const ResetPasswordDocument = `
+    mutation ResetPassword($pass: String!) {
+  resetUserPassword(pass: $pass) {
+    id
+    status
+    firstName
+    username
+  }
+}
+    `;
+export const useResetPasswordMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<ResetPasswordMutation, TError, ResetPasswordMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<ResetPasswordMutation, TError, ResetPasswordMutationVariables, TContext>(
+      ['ResetPassword'],
+      (variables?: ResetPasswordMutationVariables) => fetcher<ResetPasswordMutation, ResetPasswordMutationVariables>(client, ResetPasswordDocument, variables, headers)(),
       options
     );
 export const CreateBidDocument = `

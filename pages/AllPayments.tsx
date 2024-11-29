@@ -8,7 +8,7 @@ import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
 import Link from "next/link";
 import Image from "next/image";
-import { SearchIcon,} from "@heroicons/react/outline";
+import { SearchIcon } from "@heroicons/react/outline";
 import fallback from "../public/noImage.jpeg";
 import { OrderDirection } from "@utils/apollo";
 const AllUserPayments = () => {
@@ -37,14 +37,14 @@ const AllUserPayments = () => {
     [accessToken]
   );
 
-  const variable={
+  const variable = {
     search: debouncedSearch,
-   orderBy: [
-    {
-      createdAt: OrderDirection.Desc
-    }
-  ]
-  }
+    orderBy: [
+      {
+        createdAt: OrderDirection.Desc,
+      },
+    ],
+  };
 
   const { data, isLoading, refetch } = useUserPaymentsQuery<UserPaymentsQuery>(
     client,
@@ -58,9 +58,7 @@ const AllUserPayments = () => {
     }
   );
 
-  console.log('data',data);
-  
-
+  console.log("data", data);
 
   const columns = [
     {
@@ -94,35 +92,38 @@ const AllUserPayments = () => {
   return (
     <DashboardTemplate heading="All Payments">
       <div>
-      <div className="flex justify-between mt-9">
-      <div className="relative rounded-md shadow-sm max-w-sm">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+        <div className="flex justify-between mt-9">
+          <div className="relative rounded-md shadow-sm max-w-sm">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <SearchIcon
+                className="h-5 w-5 text-gray-400"
+                aria-hidden="true"
+              />
+            </div>
+            <input
+              type="text"
+              placeholder="Search Payments..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-600 rounded-md"
+            />
           </div>
-          <input
-            type="text"
-            placeholder="Search Payments..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-600 rounded-md"
-          />
+          <div className="mt- flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-reverse sm:space-y-0 sm:space-x-3 md:mt-0 md:flex-row md:space-x-3">
+            <Link href="/createPayment">
+              <a
+                type="button"
+                className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md  text-white bg-blue-600 hover:bg-blue-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+              >
+                Make Payment
+              </a>
+            </Link>
+          </div>
         </div>
-        <div className="mt- flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-reverse sm:space-y-0 sm:space-x-3 md:mt-0 md:flex-row md:space-x-3">
-          <Link href="/createPayment">
-            <a
-              type="button"
-              className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md  text-white bg-blue-600 hover:bg-blue-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-            >
-              Make Payment
-            </a>
-          </Link>
-        </div>
-      </div>
         {isLoading ? (
           <Loader />
         ) : (
           <>
-            { data?.payments && data?.payments?.length > 0 ? (
+            {data?.payments && data?.payments?.length > 0 ? (
               <Datatable
                 tableData={data?.payments}
                 tableColumns={columns}
@@ -192,14 +193,15 @@ function ImageComponent(src) {
         onClick={toggleZoom}
       >
         {src ? (
-          <Image
-            src={src}
-            alt="Image"
-            width={500}
-            height={500}
-            className="rounded-lg border border-gray-300"
-            layout="responsive"
-          />
+          // <Image
+          //   src={src}
+          //   alt="Image"
+          //   width={500}
+          //   height={500}
+          //   className="rounded-lg border border-gray-300"
+          //   layout="responsive"
+          // />
+          <button className=" bg-primary-hover uppercase font-semibold border text-white py-1 w-full  px-2 rounded-md whitespace-nowrap">View Receipt</button>
         ) : (
           // <p>Not Available</p>
           <Image

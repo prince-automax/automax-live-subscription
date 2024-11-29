@@ -57,7 +57,7 @@ export default function PaymentForm() {
       .typeError("Amount must be a number")
       .required("Amount is required")
       .max(2147483647, "Amount must not exceed 1 Crore "),
-    paymentFor: Yup.string().required("Payment for is required"),
+    paymentFor: Yup.string().required("Payment For is required"),
     proof: Yup.string().required("Image is required"),
     description: Yup.string()
       .max(255, "Description must not exceed 255 characters")
@@ -227,19 +227,57 @@ export default function PaymentForm() {
                 htmlFor="image"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
               >
-                Upload image <span className="text-red-500 text-xs">*</span>
+                Upload Image <span className="text-red-500 text-xs">*</span>
                 <span className="text-blue-600">(Payment Receipt)</span>
               </label>
               <input
-                onChange={async (event) => {
-                  try {
-                    const file = event.target.files[0];
+                                              accept=".jpg,.jpeg"
 
-                    const image = await ResizeImage(file);
+                // onChange={async (event) => {
+                //   try {
+                //     const file = event.target.files[0];
 
-                    props.setFieldValue("proof", image);
-                  } catch (err) {
-                    // console.log("error", err);
+                //     const image = await ResizeImage(file);
+
+                //     props.setFieldValue("proof", image);
+                //   } catch (err) {
+                //     // console.log("error", err);
+                //   }
+                // }}
+
+                onChange={async (e) => {
+                 
+                  const file = e.target.files[0];
+
+                  // Check if the file type is JPG or JPEG
+                  if (
+                    file &&
+                    (file.type === "image/jpeg" ||
+                      file.type === "image/jpg")
+                  ) {
+                    console.log('@@@@@@');
+                    
+                    try {
+                      const image = await ResizeImage(file);
+                      props.setFieldValue("proof", image);
+
+                      console.log('compressed image',image);
+                      
+               
+                    } catch (error) {
+                      console.error(
+                        "Error resizing image:",
+                        error
+                      );
+                      toast.error(error?.message);
+                      // Handle error (e.g., display a custom error message if needed)
+                    }
+                  } else {
+                    // Set error if file type is not supported
+                   props?.setFieldError(
+                      "proof",
+                      "Please upload a JPG or JPEG image."
+                    );
                   }
                 }}
                 name="proof"

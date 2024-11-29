@@ -65,11 +65,14 @@ console.log('daata',data);
 
   const payment = userData ? userData["user"]?.payments : "";
 
+  console.log("payments of user",payment);
+  
+
   useEffect(() => {
     if (payment) {
       payment?.map((item) => {
         if (item.paymentFor === "registrations") {
-          if (item.status === "success") {
+          if (item.status === "approved") {
             setRegistered(true);
           } else {
             item.status;
@@ -79,6 +82,9 @@ console.log('daata',data);
       });
     }
   }, [payment]);
+
+  console.log('regs',registered);
+  
 
   // console.log("registered", registered);
   // console.log("setRegisteredStatus", registeredStatus);
@@ -184,7 +190,7 @@ console.log('daata',data);
       accessor: "downloadableFile_filename",
       Cell: ({ cell: { value } }) =>
         registered ? (
-          <DownloadButton file={value} allowDownload={allowDownload} />
+          <DownloadButton file={value} allowDownload={true} />
         ) : (
           value && (
             <DocumentDownloadIcon
@@ -349,9 +355,9 @@ function DownloadButton({ file, allowDownload }) {
     <>
       {allowDownload ? (
         <>
-          {file && file?.file?.url && (
+          {file && (
             <a
-              href={`${process.env.BASE_URL}${file?.file?.url}`}
+            href={`${file}`}
               rel="noopener noreferrer"
               target="_blank"
             >

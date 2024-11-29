@@ -83,3 +83,11 @@ role
 
   }
 }
+
+mutation ResetPassword($pass: String!) {
+  resetUserPassword(pass: $pass) {
+    id
+    status,
+    firstName, username
+  }
+}
