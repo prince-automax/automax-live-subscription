@@ -13,6 +13,8 @@ import FormField from "@components/ui/FormField";
 import { ResizeImage } from "../image-Resizing/imagePayment";
 import Loader from "@components/ui/Loader";
 import { useRouter } from "next/router";
+import { GetErrorMessage,ToastMessage } from "@utils/ErrorCodes";
+
 export default function PaymentForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [accessToken, setAccessToken] = useState("");
@@ -115,18 +117,25 @@ export default function PaymentForm() {
           // setIsLoading(false)
           router.push("/AllPayments");
         } else {
-          throw new Error("Image upload failed");
+          // throw new Error("Image upload failed");
+          toast.error("payment failed.");
+
         }
       }
     } catch (error) {
-      const errorMessage =
-        error.response.errors[0].message ||
-        "An error occurred. Please try again";
-      // e.response?.errors?.map((err) => err).join(", ") ||
-      // e.message ||
-      // "An error occurred. Please try again.";
-
-      toast.error(errorMessage);
+      if (
+        error.response &&
+        error.response &&
+        error.response.errors?.[0]?.errorCode
+      ) {
+        const errorCode =  error.response.errors?.[0]?.errorCode;
+        console.log('ERROR CODE ', errorCode);
+        
+        const userFriendlyMessage = GetErrorMessage(errorCode);
+        ToastMessage(userFriendlyMessage) // Show toast notification
+      } else {
+        toast.error("An unexpected error occurred. Please try again.");
+      }
     } finally {
       setIsLoading(false); // Reset loading state
       setSubmitting(false); // Indicate that the form is no longer submitting

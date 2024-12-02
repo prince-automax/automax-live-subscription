@@ -84,9 +84,16 @@ role
   }
 }
 
-mutation ResetPassword($pass: String!) {
-  resetUserPassword(pass: $pass) {
-    id
+# mutation ResetPassword($password: String!) {
+#   resetUserPassword(password: $password) {
+#     id
+#     status,
+#     firstName, username
+#   }
+# }
+mutation ResetPassword($data: ResetPasswordInput!) {
+  resetUserPassword(data: $data) {
+ id
     status,
     firstName, username
   }

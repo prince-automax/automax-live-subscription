@@ -103,7 +103,7 @@ const MyQuotes = () => {
       enabled: !!accessToken && !!userId && !!serverTime, // Enable query only when `isReady` is true
       refetchOnWindowFocus: false,
       refetchInterval: false, // Do not refetch on window focus
-      refetchOnMount: false, // Prevent refetch on component mount
+      refetchOnMount: true, // Prevent refetch on component mount
       // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
     }
   );

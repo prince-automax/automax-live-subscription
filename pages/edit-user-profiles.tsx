@@ -27,6 +27,7 @@ import DashboardTemplate from "../components/templates/DashboardTemplate";
 // import {welcomeMessage} from "../components/alerts/welcomeMessage"
 import Swal from "sweetalert2";
 import Image from "next/image";
+import { GetErrorMessage, ToastMessage } from "@utils/ErrorCodes";
 
 const renderingStates = states.map((state) => {
   return { label: state.state, value: state.state };
@@ -254,9 +255,22 @@ function ProfileUpdate() {
       }
       console.log("Success:", data);
     } catch (error) {
-      console.error("Error:", error);
+      if (
+        error.response &&
+        error.response &&
+        error.response.errors?.[0]?.errorCode
+      ) {
+        const errorCode = error.response.errors?.[0]?.errorCode;
+        console.log("ERROR CODE ", errorCode);
+
+        const userFriendlyMessage = GetErrorMessage(errorCode);
+        ToastMessage(userFriendlyMessage); // Show toast notification
+      } else {
+        toast.error("An unexpected error occurred. Please try again.");
+      }
     }
   };
+
   const scrollToError = (errors) => {
     console.log("scrollToError", errors);
 
@@ -529,7 +543,6 @@ function ProfileUpdate() {
                               <input
                                 type="file"
                                 accept=".jpg,.jpeg"
-
                                 id="pancard_image"
                                 className="w-64 border border-gray-300 rounded-lg shadow-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 onChange={async (e) => {
@@ -583,7 +596,6 @@ function ProfileUpdate() {
                               <input
                                 type="file"
                                 accept=".jpg,.jpeg"
-
                                 id="aadharcard_front_image"
                                 className="w-64 border border-gray-300 rounded-lg shadow-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 onChange={async (e) => {
@@ -639,7 +651,6 @@ function ProfileUpdate() {
                               <input
                                 type="file"
                                 accept=".jpg,.jpeg"
-
                                 id="aadharcard_back_image"
                                 className="w-64 border border-gray-300 rounded-lg shadow-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 onChange={async (e) => {
@@ -693,7 +704,6 @@ function ProfileUpdate() {
                               <input
                                 type="file"
                                 accept=".jpg,.jpeg"
-
                                 id="driving_license_front_image"
                                 className="w-64 border border-gray-300 rounded-lg shadow-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 onChange={async (e) => {
@@ -749,7 +759,6 @@ function ProfileUpdate() {
                               <input
                                 type="file"
                                 accept=".jpg,.jpeg"
-
                                 id="driving_license_back_image"
                                 className="w-64 border border-gray-300 rounded-lg shadow-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 onChange={async (e) => {

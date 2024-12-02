@@ -10,7 +10,7 @@ import FormField from "@components/ui/FormField";
 import * as Yup from "yup";
 import graphQLClient from "@utils/useGQLQuery";
 import { states } from "@utils/states";
-
+import { GetErrorMessage,ToastMessage } from "@utils/ErrorCodes";
 import {
   useCreateUserMutation,
   CreateUserMutationVariables,
@@ -106,22 +106,37 @@ export default function LoginUsingOtp() {
         // }
       }
     } catch (error: any) {
-      console.log("error", error);
+      console.log('ERROR', error);
+      
+      // console.log("pandi", error?.response?.errors?.[0]?.errorCode );
 
-      // Extracting the specific error message
-      const graphqlError =
-        error?.response?.errors?.[0]?.message ||
-        "An error occurred during OTP sending. Please try again.";
-      // const graphqlError = error?.response?.errors?.[0]?.extensions?.exception?.originalError?.message?.[0] || "An error occurred during OTP sending. Please try again.";
+      // // Extracting the specific error message
+      // const graphqlError =
+      //   error?.response?.errors?.[0]?.errorCode ||
+      //   "An error occurred during OTP sending. Please try again.";
+      // // const graphqlError = error?.response?.errors?.[0]?.extensions?.exception?.originalError?.message?.[0] || "An error occurred during OTP sending. Please try again.";
 
-      console.log("grahqlError", graphqlError);
+      // console.log("grahqlError", graphqlError);
 
-      // Log full error for debugging purposes
+      // // Log full error for debugging purposes
 
-      // Display the extracted error message to the user
-      setError({
-        text: graphqlError,
-      });
+      // // Display the extracted error message to the user
+      console.log('ERROR CODE ', error.response.errors?.[0]?.errorCode);
+      if (
+        error.response &&
+        error.response &&
+        error.response.errors?.[0]?.errorCode
+      ) {
+        const errorCode =  error.response.errors?.[0]?.errorCode;
+        console.log('ERROR CODE ', errorCode);
+        
+        const userFriendlyMessage = GetErrorMessage(errorCode);
+        ToastMessage(userFriendlyMessage) // Show toast notification
+      } else {
+        toast.error("An unexpected error occurred. Please try again.");
+      }
+
+    
     }
   }
 
@@ -158,18 +173,17 @@ export default function LoginUsingOtp() {
         // }
       }
     } catch (error) {
-      // Extracting the specific error message
-      const graphqlError =
-        error?.response?.errors?.[0]?.message ||
-        "An error occurred during OTP sending. Please try again.";
-
-      // Log full error for debugging purposes
-      console.error("Error during OTP sending for user creation:", error);
-
-      // Display the extracted error message to the user
-      setError({
-        text: graphqlError,
-      });
+      if (
+        error?.response &&
+        error?.response &&
+        error?.response.errors?.[0]?.errorCode
+      ) {
+        const errorCode = error?.response?.errors?.[0]?.errorCode
+        const userFriendlyMessage = GetErrorMessage(errorCode);
+        ToastMessage(userFriendlyMessage) // Show toast notification
+      } else {
+        toast.error("An unexpected error occurred. Please try again.");
+      }
     }
   }
 

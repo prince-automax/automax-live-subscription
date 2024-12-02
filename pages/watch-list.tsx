@@ -20,7 +20,7 @@ import {
   useVehicleUpdateSubscription,
   VehicleUpdateSubscriptionVariables,
   useBidCreationSubscription,
- useUserUpdateSubscriptionSubscription
+  useUserUpdateSubscriptionSubscription,
 } from "@utils/apollo";
 import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
@@ -32,7 +32,12 @@ import withPrivateRoute from "../utils/withPrivateRoute";
 import Image from "next/image";
 import Link from "next/link";
 import ImageCarouselModal from "@components/modals/ImageCarouselModal";
-import { ClipboardListIcon, DocumentReportIcon, PlusIcon, MinusIcon,} from "@heroicons/react/outline";
+import {
+  ClipboardListIcon,
+  DocumentReportIcon,
+  PlusIcon,
+  MinusIcon,
+} from "@heroicons/react/outline";
 import { useQueryClient } from "react-query";
 import { SecondsToDhms } from "@utils/common";
 import Swal from "sweetalert2";
@@ -55,7 +60,7 @@ function WatchList() {
   const [images, setImages] = useState([]);
   const [showImageCarouselModal, setShowImageCarouselModal] = useState(false);
   const [showChild, setShowChild] = useState(true);
-  const [isReady, setIsReady] = useState(false); 
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -87,7 +92,6 @@ function WatchList() {
       setAccessToken(token);
       setUserId(id);
       setIsReady(true);
-
     }
   }, []);
 
@@ -95,7 +99,6 @@ function WatchList() {
     () => graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     [accessToken]
   );
-
 
   const options = {
     rewind: true,
@@ -118,10 +121,10 @@ function WatchList() {
     client,
     {},
     {
-      enabled: isReady,                // Enable query only when `isReady` is true
-      refetchOnWindowFocus: true,  
+      enabled: isReady, // Enable query only when `isReady` is true
+      refetchOnWindowFocus: true,
       refetchInterval: false, // Do not refetch on window focus
-      refetchOnMount: false,            // Prevent refetch on component mount
+      refetchOnMount: false, // Prevent refetch on component mount
       // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
     }
   );
@@ -132,8 +135,6 @@ function WatchList() {
       setserverTime(timeData.time);
     }
   }, [timeData]);
-
-
 
   const vehicleUpdate = useVehicleUpdateSubscription();
   const BidUpdate = useBidCreationSubscription();
@@ -154,37 +155,33 @@ function WatchList() {
     };
   }, []); // Empty dependency array means this runs only once on mount and unmount
   const { data, isLoading, refetch } =
-  useUserWatchlistQuery<UserWatchlistQuery>(
-   client,
-    {
-      where: {
-        id: userId,
+    useUserWatchlistQuery<UserWatchlistQuery>(
+      client,
+      {
+        where: {
+          id: userId,
+        },
       },
-    },
-    {
-      enabled: isReady,                // Enable query only when `isReady` is true
-      refetchOnWindowFocus: false,  
-      // refetchInterval:false  ,  // Do not refetch on window focus
-      refetchOnMount: false,            // Prevent refetch on component mount
-      // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
-    }
-  );
+      {
+        enabled: isReady, // Enable query only when `isReady` is true
+        refetchOnWindowFocus: false,
+        // refetchInterval:false  ,  // Do not refetch on window focus
+        refetchOnMount: false, // Prevent refetch on component mount
+        // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
+      }
+    );
 
   useEffect(() => {
     if (vehicleUpdate.data || BidUpdate.data || UserUpdate?.data) {
-      if(isReady){
+      if (isReady) {
         refetch();
       }
-     
     }
-  }, [vehicleUpdate.data, BidUpdate.data, UserUpdate?.data, refetch]);
+  }, [vehicleUpdate.data, BidUpdate.data, UserUpdate?.data, refetch,isReady]);
 
- 
   console.log("data", data);
 
-  const RemoveFromWatchlist = useRemoveFromWatchlistMutation(
-   client
-  );
+  const RemoveFromWatchlist = useRemoveFromWatchlistMutation(client);
 
   const RemoveWathclist = async (id: string) => {
     try {
@@ -241,10 +238,8 @@ function WatchList() {
     );
   }
 
-
-  const callCreateBid = useCreateBidMutation<CreateBidMutationVariables>(
-    client
-  );
+  const callCreateBid =
+    useCreateBidMutation<CreateBidMutationVariables>(client);
 
   async function CallBid(amount, vehicleId) {
     const confirmed = await Swal.fire({
@@ -306,9 +301,9 @@ function WatchList() {
       ) : (
         <div className="space-y-6 mt-8">
           {!data?.user?.watchList?.length && <div>No Vehicles Found</div>}
-          {data?.user?.watchList?. map((item, index) => {
-          // filter((item) => item.vehicleEventStatus == "live")
-         
+          {data?.user?.watchList?.map((item, index) => {
+            // filter((item) => item.vehicleEventStatus == "live")
+
             // console.log("item in front image", item);
 
             return (
@@ -491,7 +486,7 @@ function WatchList() {
                         <div className="mt-1 flex flex-row sm:flex-wrap sm:mt-0 space-x-2 sm:space-x-6 justify-around w-full  sm:max-md:justify-around sm:max-md:w-full ">
                           <div className="flex flex-col space-y-2 w-64">
                             <div className=" flex items-center justify-between text-sm text-blue-800 ">
-                            {item?.inspectionLink !== "" &&
+                              {item?.inspectionLink !== "" &&
                                 item?.inspectionLink !== null && (
                                   <Link href={item?.inspectionLink}>
                                     <a
@@ -579,7 +574,7 @@ function WatchList() {
                               Start Price
                             </span>
                             <span className="font-bold text-base">
-                              ₹ {item?.startPrice ? item?.startPrice  : "0" }
+                              ₹ {item?.startPrice ? item?.startPrice : "0"}
                             </span>
                           </div>
                           <div className="flex items-center justify-between  text-gray-700">
@@ -658,7 +653,11 @@ function WatchList() {
                     moment(item?.bidTimeExpire).diff(moment(), "s") > 0
                       ? "blink"
                       : ""
-                  }`}
+                  }${
+                    index % 2 == 0
+                      ? "border-yellow-100 bg-gray-100 "
+                      : "border-gray-100 bg-slate-50"
+                  } `}
                   id={`parentcontainer-${index}`}
                 >
                   {/* image only for desktop view starts here */}
@@ -827,26 +826,26 @@ function WatchList() {
                                   className="-ml-0.5 mr-2 h-4 w-4"
                                   aria-hidden="true"
                                 /> */}
-                             Remove from watchlist
+                                Remove from watchlist
                               </button>
                             )}
                           </div>
                           <div className="mt-2 flex items-center text-sm text-blue-800">
-                          {item?.inspectionLink !== "" &&
-                                item?.inspectionLink !== null && (
-                                  <Link href={item?.inspectionLink}>
-                                    <a
-                                      target="_blank"
-                                      className="flex items-center text-xs sm:text-sm  text-blue-800"
-                                    >
-                                      <DocumentReportIcon
-                                        className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
-                                        aria-hidden="true"
-                                      />
-                                      Inspection Report
-                                    </a>
-                                  </Link>
-                                )}
+                            {item?.inspectionLink !== "" &&
+                              item?.inspectionLink !== null && (
+                                <Link href={item?.inspectionLink}>
+                                  <a
+                                    target="_blank"
+                                    className="flex items-center text-xs sm:text-sm  text-blue-800"
+                                  >
+                                    <DocumentReportIcon
+                                      className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
+                                      aria-hidden="true"
+                                    />
+                                    Inspection Report
+                                  </a>
+                                </Link>
+                              )}
                           </div>
                           <div className="mt-2">
                             <Link href={`/vehicle/${item.id}`}>
@@ -870,37 +869,36 @@ function WatchList() {
                   {/* WORKBOOK MATCH, TITLE, IMAGE FOR MOBILE VIEW,VEHICLE INFORMATION, INOECTION REPORT FOR MOBILE AND DESKTOP ENDS HERE  */}
 
                   {/* PARENT DIV THAT INCLUDE BID TIMING AND BID BOX FOR DESKTOP STARTS HERE */}
-                  <div className="flex-none w-50   sm:max-md:w-full text-center mx-auto sm:w-60 sm:p-2 ">
+                  <div className="flex-none w-50   sm:max-md:w-full text-center mx-auto sm:w-60  ">
                     {/* BID TIMING SHOW STARTS HERE */}
-                    <div className="flex sm:max-md:flex-row flex-col items-center  justify-center  p-4 space-y-2">
-                      <div className="w-full max-sm:flex flex-col sm:max-md:w-1/2 sm:max-md:self-start    sm:max-md:text-left space-y-2 mt-1 sm:mt-2 ">
-                        <p className="sm:max-md:text-base md:text-left">
+                    <div className="flex sm:max-md:flex-row flex-col items-center  justify-center  p-1 space-y-2">
+                      <div className="w-full  sm:max-md:w-1/2 sm:max-md:self-start    sm:max-md:text-left space-y-2 mt-1 sm:mt-2 ">
+                        <span className="sm:max-md:text-base md:text-left">
                           {" "}
                           {SecondsLeft(item)}
-                        </p>
-
-                        {/* <div className="w-full space-y-2 mt-4"> */}
-                        <div className="flex justify-between sm:flex-col md:items-start sm:justify-left text-sm  text-gray-700 ">
-                          <p className="font-semibold">Start Date</p>
-                          <p className=" ">
-                            {item?.event?.startDate
-                              ? moment(item?.event?.startDate).format(
-                                  "MMMM Do, YYYY ddd h:mm a"
-                                )
-                              : "NA"}
-                          </p>
+                        </span>
+                        <div className="hidden sm:block">
+                          <div className=" flex flex-col md:items-start justify-left text-xs sm:max-md:text-sm text-gray-700">
+                            <span className="font-semibold">Start Date</span>
+                            <span>
+                              {item.event.startDate
+                                ? moment(item.event.startDate).format(
+                                    "MMMM Do, YYYY ddd h:mm a"
+                                  )
+                                : "NA"}
+                            </span>
+                          </div>
                         </div>
-                        <div className="flex justify-between sm:flex-col md:items-start text-sm  text-gray-700">
-                          <p className="font-semibold">End Date</p>
-                          <p className="items-start">
+                        <div className="flex flex-col md:items-start text-xs sm:max-md:text-sm text-gray-700">
+                          <span className="font-semibold">End Date</span>
+                          <span>
                             {item?.bidTimeExpire
                               ? moment(item?.bidTimeExpire).format(
                                   "MMMM Do, YYYY ddd h:mm a"
                                 )
                               : "NA"}
-                          </p>
+                          </span>
                         </div>
-                        {/* </div> */}
                       </div>
                     </div>
 
@@ -915,8 +913,8 @@ function WatchList() {
 
                         <div className="space-y-2 mt-2">
                           <div className="flex items-center justify-between text-xs text-gray-700">
-                            <span>Start Price</span>
-                            ₹ {item?.startPrice ? item?.startPrice  : "0" }
+                            <span>Start Price</span>₹{" "}
+                            {item?.startPrice ? item?.startPrice : "0"}
                           </div>
                           <div className="flex items-center justify-between text-xs text-gray-700">
                             <span>Reserve Price</span>
@@ -974,25 +972,25 @@ function WatchList() {
 }
 
 const EnterBid = ({ row, call, event }) => {
-  console.log('event',row);
-  
+  console.log("event", row);
+
   const [bidAmount, setBidAmount] = useState("");
-// console.log('row',row?.currentBidAmount+ +row?.quoteIncreament,bidAmount);
+  // console.log('row',row?.currentBidAmount+ +row?.quoteIncreament,bidAmount);
 
   useEffect(() => {
     if (row?.event?.bidLock === "locked") {
-      console.log('event is locked');
-      
+      console.log("event is locked");
+
       if (row?.currentBidAmount) {
-        console.log("row?.currentBidAmount",);
-        
+        console.log("row?.currentBidAmount");
+
         setBidAmount(row.currentBidAmount + +row?.quoteIncreament);
       } else if (row.startPrice) {
-        console.log("row?.startPrice",);
+        console.log("row?.startPrice");
 
         setBidAmount(row.startPrice);
       } else if (!row?.startPrice) {
-        console.log("!row?.startPrice",);
+        console.log("!row?.startPrice");
 
         setBidAmount(row?.quoteIncreament);
       }
@@ -1013,7 +1011,6 @@ const EnterBid = ({ row, call, event }) => {
   const enrolled = row.userVehicleBidsCount > 0;
 
   // console.log('bidAmount',bidAmount);
-  
 
   return (
     <div>
@@ -1062,8 +1059,7 @@ const EnterBid = ({ row, call, event }) => {
             });
           } else if (parseInt(bidAmount) % row.quoteIncreament !== 0) {
             Swal.fire({
-              title:
-                `Bid amount must be multiple of ${row.quoteIncreament}`,
+              title: `Bid amount must be multiple of ${row.quoteIncreament}`,
               confirmButtonText: "OK",
               position: "top",
             });

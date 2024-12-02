@@ -26,6 +26,7 @@ import {
   UpdateUserMutationVariables,
 } from "@utils/graphql";
 import Swal from "sweetalert2";
+import { GetErrorMessage, ToastMessage } from "@utils/ErrorCodes";
 
 const renderingStates = states.map((state) => {
   return { label: state.state, value: state.state };
@@ -557,10 +558,19 @@ function ProfileUpdate() {
         throw new Error("Image upload failed: " + imageUploadData.message);
       }
     } catch (error) {
-      console.error("Error:", error);
-      toast.error(
-        error.message || "An error occurred during the submission process."
-      );
+      if (
+        error.response &&
+        error.response &&
+        error.response.errors?.[0]?.errorCode
+      ) {
+        const errorCode =  error.response.errors?.[0]?.errorCode;
+        console.log('ERROR CODE ', errorCode);
+        
+        const userFriendlyMessage = GetErrorMessage(errorCode);
+        ToastMessage(userFriendlyMessage) 
+      } else {
+        toast.error("An unexpected error occurred. Please try again.");
+      }
     }
   };
 

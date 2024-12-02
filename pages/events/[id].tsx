@@ -174,9 +174,9 @@ function Events() {
         const diff = expiryTime.diff(currentTime, "seconds");
         if (diff > 0) {
           return (
-            <div className="w-full max-sm:flex items-center justify-between">
+            <div className="w-full max-sm:flex items-center justify-between ">
               <div className="text-sm text-[#646464] font-roboto">End's In</div>
-              <div className="text-base text-red-500 font-medium font-roboto h-10">
+              <div className="text-base text-red-500 font-medium font-roboto ">
                 {SecondsToDhms(diff)}
               </div>
             </div>
@@ -327,24 +327,7 @@ function Events() {
             const expiryTime = moment(item.bidTimeExpire);
             const currentTime = moment(serverTime).add(tick, "seconds");
             const diff = expiryTime.diff(currentTime, "seconds");
-            // console.log("difference", diff);
-
-            // if ((diff > 0 && type == "l") || type == "c") {
-            // {
-            // const find = (
-            //   workbook?.workSheets as any[] | undefined
-            // )?.filter(
-            //   (wb) => wb.registrationNumber === item.registrationNumber
-            // );
-
-            // console.log('item',item);
-
-            // console.log(
-            //   "biddssss",
-            //   item?.registrationNumber,
-            //   data?.event?.noOfBids,
-            //   item?.userVehicleBidsCount
-            // );
+            
             if ((diff > 0 && type == "l") || type == "c") {
               return (
                 <>
@@ -364,21 +347,7 @@ function Events() {
                   >
                     {/* workbook, title, image, vehic info, add to watch, more details , inspection report */}
                     <div className="flex-auto p-3 space-y-5  ">
-                      {/* workbook matched button */}
-                      {/* <div className="m-2"> 
-                          {find?.length > 0 && (
-                            <Link href={`/workbook/${find[0].id}`}>
-                              <a
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                title="Click here to view the workbook"
-                                className="bg-blue-700 p-2 cursor-pointer rounded-md text-white animate-pulse font-roboto font-medium"
-                              >
-                                WorkBook matched
-                              </a>
-                            </Link>
-                          )}
-                        </div> */}
+                      
                       {/* title of vehicle and seller name */}
                       <div className="sm:flex flex-wrap">
                         <div className="flex-auto">
@@ -731,7 +700,7 @@ function Events() {
                   {/* dESKTOP DESIGN */}
                   <div
                     key={`d${index}`}
-                    className={`hidden sm:flex sm:max-md:flex-col font-sans border  rounded  ${
+                    className={`hidden sm:flex sm:max-md:flex-col font-sans border   rounded  ${
                       moment(item?.bidTimeExpire).diff(moment(), "s") <= 120 &&
                       moment(item?.bidTimeExpire).diff(moment(), "s") > 0
                         ? "blink"
@@ -1005,7 +974,7 @@ function Events() {
                       </div>
                     </div>
                     {/* starts at herer */}
-                    <div className="flex-none w-50   sm:max-md:w-full text-center mx-auto sm:w-60 ">
+                    <div className="flex-none w-50   sm:max-md:w-full text-center mx-auto sm:w-64 ">
                       <div className="flex sm:max-md:flex-row flex-col items-center  justify-center  relative p-4 space-y-2">
                         <div className="w-full  sm:max-md:w-1/2 sm:max-md:self-start    sm:max-md:text-left space-y-2 mt-1 sm:mt-2 ">
                           <span className="sm:max-md:text-base md:text-left">

@@ -49,8 +49,9 @@ export default function ResetPassword() {
 
   const callVerifyOTP = useVerifyOtpMutation<VerfiyOtpDto>(graphQLClient());
   const callResetPassword =
-    useResetPasswordMutation<ResetPasswordMutationVariables>(graphQLClient({ Authorization: `Bearer ${token}` })
-);
+    useResetPasswordMutation<ResetPasswordMutationVariables>(
+      graphQLClient({ Authorization: `Bearer ${token}` })
+    );
 
   const HandleCancel = () => {
     setMobileMode(true);
@@ -71,18 +72,17 @@ export default function ResetPassword() {
 
   const passwordFormValidation = Yup.object({
     password: Yup.string()
-          .required("Password is required")
-          .matches(/^(?=.{6,})/, "Password must contain at least 6 characters"),
-       
-    
-      passwordConfirmation: Yup.string()
-          .required("Confirm password is required")
-          .oneOf([Yup.ref("password"), null], "Passwords do not match"),
-       
-      
+      .required("Password is required")
+      .min(6, "Password must be at least 6 characters")
+      .max(64, "Password cannot be more than 64 characters")
+      .matches(/^(?=.{6,})/, "Password must contain at least 6 characters"),
+
+    passwordConfirmation: Yup.string()
+      .required("Confirm password is required")
+      .oneOf([Yup.ref("password"), null], "Passwords do not match")
+      .min(6, "Confirm password must be at least 6 characters")
+      .max(64, "Confirm password cannot be more than 64 characters"),
   });
-
-
 
   async function CallOTP(values) {
     console.log("values", values);
@@ -135,30 +135,6 @@ export default function ResetPassword() {
     }
   }
 
-
-  const ResetPassword = async(values) => {
-    try {
-      const result = await callResetPassword.mutateAsync({
-        pass:"",
-      });
-      console.log(result);
-
-      if(result?.resetUserPassword?.id){
-        console.log('dsfasf');
-        toast.success("Password successfully reset")
-        router.push('/login')
-        
-      }
-    } catch (error) {
-
-console.log('password reset error', error);
-
-    }
-  };
-
-
-
-
   async function CallOTPVerify(values) {
     console.log("otp form", values);
     const { otp } = values;
@@ -187,7 +163,7 @@ console.log('password reset error', error);
           // Perform necessary actions upon successful OTP verification
 
           // router.push(`/dashboard`);
-         setToken(result?.verifyOtp?.["access_token"])
+          setToken(result?.verifyOtp?.["access_token"]);
 
           setVerificationMode(false);
           setUpdatePasswordMode(true);
@@ -238,12 +214,39 @@ console.log('password reset error', error);
     }
   }
 
+  const ResetPassword = async (values) => {
+    try {
+      const result = await callResetPassword.mutateAsync({
+        data: {
+          password: values?.password,
+        },
+      });
+      console.log(result);
+
+      if (result?.resetUserPassword?.id) {
+        // setUpdatePasswordMode(false);
+
+        toast.success("Password successfully reset, Please Login");
+        router.push("/login");
+      }
+    } catch (error) {
+      const err = error.response.errors[0].message;
+      if (err === "Password must be at least 6 characters long") {
+        toast.error("Password must be at least 6 characters long");
+      } else if (err === "Password cannot exceed 64 characters") {
+        toast.error(" Password cannot exceed 64 characters");
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
+  };
+
   return (
     <>
       <div className="mt-4">
         {mobileMode && (
           <Formik
-            initialValues={{mobile:""}}
+            initialValues={{ mobile: "" }}
             validationSchema={mobileFormValidation}
             onSubmit={CallOTP}
           >
@@ -340,7 +343,7 @@ console.log('password reset error', error);
                 className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               /> */}
               <Formik
-                initialValues={{otp:""}}
+                initialValues={{ otp: "" }}
                 validationSchema={verifyFormValidation}
                 onSubmit={CallOTPVerify}
               >
@@ -430,11 +433,10 @@ console.log('password reset error', error);
               </div>
             </div>
 
-       
             <div className="mt-4 space-y-6">
               <Formik
                 initialValues={{
-                    password: "",
+                  password: "",
                   passwordConfirmation: "",
                 }}
                 validationSchema={passwordFormValidation}

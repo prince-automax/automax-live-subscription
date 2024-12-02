@@ -646,7 +646,7 @@ export type MutationLoginArgs = {
 
 
 export type MutationResetUserPasswordArgs = {
-  pass: Scalars['String'];
+  data: ResetPasswordInput;
 };
 
 
@@ -1143,6 +1143,10 @@ export type Recentsold = {
 
 export type RecentsoldWhereUniqueInput = {
   id?: InputMaybe<Scalars['String']>;
+};
+
+export type ResetPasswordInput = {
+  password: Scalars['String'];
 };
 
 export type Seller = {
@@ -1696,7 +1700,7 @@ export type VerifyOtpMutationVariables = Exact<{
 export type VerifyOtpMutation = { __typename?: 'Mutation', verifyOtp: { __typename?: 'VerifyOtpResponse', access_token: string, user: { __typename?: 'User', mobile: string, id: string, firstName: string, username: string, lastName: string, status: string, role: string } } };
 
 export type ResetPasswordMutationVariables = Exact<{
-  pass: Scalars['String'];
+  data: ResetPasswordInput;
 }>;
 
 
@@ -1971,8 +1975,8 @@ export const useVerifyOtpMutation = <
       options
     );
 export const ResetPasswordDocument = `
-    mutation ResetPassword($pass: String!) {
-  resetUserPassword(pass: $pass) {
+    mutation ResetPassword($data: ResetPasswordInput!) {
+  resetUserPassword(data: $data) {
     id
     status
     firstName

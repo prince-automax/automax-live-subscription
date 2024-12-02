@@ -9,6 +9,7 @@ import { EyeIcon, EyeOffIcon } from "@heroicons/react/outline";
 import { Formik, Form, ErrorMessage } from "formik";
 import FormField from "@components/ui/FormField";
 import * as Yup from "yup";
+import { GetErrorMessage,ToastMessage } from "@utils/ErrorCodes";
 
 import {
   useLoginUsingPasswordMutation,
@@ -117,16 +118,17 @@ export default function LoginUsingPassword() {
           });
         }
       } catch (error) {
-        console.log('ERROR',error);
-        
-        const graphqlError =
-          error?.response?.errors?.[0]?.message ||
-          "An error occurred while trying to log in. Please try again later.";
-
-        // Showing the user-friendly message
-        setError({
-          text: graphqlError,
-        });
+        if (
+          error?.response &&
+          error?.response &&
+          error?.response.errors?.[0]?.errorCode
+        ) {
+          const errorCode = error?.response?.errors?.[0]?.errorCode
+          const userFriendlyMessage = GetErrorMessage(errorCode);
+          ToastMessage(userFriendlyMessage) // Show toast notification
+        } else {
+          toast.error("An unexpected error occurred. Please try again.");
+        }
       }
     }
   }
