@@ -233,7 +233,7 @@ function ImageComponent(src) {
             <div className="flex justify-center">
               {src ? (
                 <Image
-                  src={src}
+                  src="https://autobseimagesandexcel-dev.S3.ap-south-1.amazonaws.com/06d213ad-1b31-4131-ba56-50ab5b0b72b4"
                   alt="Zoomed Image"
                   width={600}
                   height={550}

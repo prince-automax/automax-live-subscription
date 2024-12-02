@@ -273,7 +273,7 @@ function ProfileUpdate() {
 
   const scrollToError = (errors) => {
     console.log("scrollToError", errors);
-
+    
     const firstErrorField = Object.keys(errors)[0]; // Find first invalid field
     if (firstErrorField && fieldRefs.current[firstErrorField]) {
       fieldRefs.current[firstErrorField].scrollIntoView({
