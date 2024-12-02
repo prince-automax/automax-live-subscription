@@ -30,8 +30,8 @@ export default function UpcomingEventsTable({
   const [accessToken, setAccessToken] = useState("");
   const [registered, setRegistered] = useState(false);
   const [registeredStatus, setRegisteredStatus] = useState("");
-  const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const id = localStorage.getItem("id");
 
   React.useEffect(() => {
@@ -131,6 +131,11 @@ export default function UpcomingEventsTable({
 
   const columns = [
     {
+      Header: "No",
+      accessor: "eventNo",
+      // Cell: ({ cell: { value } }) => StartDate(value),
+    },
+    {
       Header: "Event Date",
       accessor: "startDate",
       Cell: ({ cell: { value } }) => StartDate(value),
@@ -188,47 +193,51 @@ export default function UpcomingEventsTable({
   return (
     <>
       <div className="relative bg-white">
-      <div className="relative rounded-md shadow-sm max-w-sm mt-6">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <SearchIcon
-                className="h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
-            </div>
-            <input
-        type="text"
-        placeholder="Search Upcoming events..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-600 rounded-md"
-        />
+        <div className="relative rounded-md shadow-sm max-w-sm mt-6">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
           </div>
-        {data?.upcomingEvents?.length > 0 ? (
-          <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
-            {showHeadings && (
-              <div className="pt-4 pb-1">
-                {data &&
-                  data?.upcomingEvents &&
-                  data?.upcomingEvents?.length > 0 ? (
-                  <p className="mt-px text-3xl font-extrabold text-gray-900 tracking-tight sm:text-3xl animate-pulse">
-                    Event Calender
-                  </p>
-                ) : (
-                  <p className="mt-px text-3xl font-extrabold text-gray-900 tracking-tight sm:text-3xl ">
-                    Event calender
-                  </p>
-                )}
-              </div>
-            )}
+          <input
+            type="text"
+            placeholder="Search upcoming events..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-600 rounded-md"
+          />
+        </div>
+        {/* {data?.upcomingEvents?.length > 0 ? ( */}
+        <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
+          {showHeadings && (
+            <div className="pt-4 pb-1">
+              {data &&
+              data?.upcomingEvents &&
+              data?.upcomingEvents?.length > 0 ? (
+                <p className="mt-px text-3xl font-extrabold text-gray-900 tracking-tight sm:text-3xl animate-pulse">
+                  Event Calender
+                </p>
+              ) : (
+                <p className="mt-px text-3xl font-extrabold text-gray-900 tracking-tight sm:text-3xl ">
+                  Event calender
+                </p>
+              )}
+            </div>
+          )}
 
-            {isLoading ? (
-              <Loader />
-            ) : (
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <>
               <>
-                <>
-                  <div className="sm:hidden">
-                    {data?.upcomingEvents?.map((event, eventIdx) => {
-                      return (
+                <div className="sm:hidden">
+                  {data?.upcomingEvents === null ? (
+                    <div className="sm:hidden w-full h-96 flex items-center justify-center">
+                      <p className="text-center text-gray-500 font-medium text-xl mt-4">
+                        We couldn't find any results for your search
+                      </p>
+                    </div>
+                  ) : data?.upcomingEvents.length > 0 ? (
+                    <div className="sm:hidden">
+                      {data?.upcomingEvents?.map((event, eventIdx) => (
                         <MobielViewCard
                           key={eventIdx}
                           index1={eventIdx}
@@ -240,35 +249,66 @@ export default function UpcomingEventsTable({
                           }
                           PaymentStatus={PaymentStatus}
                         />
-                      );
-                    })}
-                  </div>
-                  <div className="hidden sm:block">
-                    <Datatable
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="sm:hidden w-full h-96 flex items-center justify-center">
+                      <p className="font-poppins font-semibold text-black animate-pulse sm:text-xl">
+                        No upcoming events at this moment
+                      </p>
+                    </div>
+                  )}
+                </div>
+                <div className="hidden sm:block">
+                  {/* <Datatable
                       hideSearch={hideSearch}
                       tableData={data?.upcomingEvents}
                       tableColumns={columns}
-                    />
+                    /> */}
+                  <div className="hidden sm:block">
+                    {data?.upcomingEvents === null ? (
+                      // <p className="text-center text-gray-500 font-medium text-lg mt-4">
+                      //   No search item found
+                      // </p>
+                      <div className="w-full h-96 flex items-center justify-center ">
+                        <p className="text-center text-gray-500 font-medium text-xl mt-4">
+                          We couldn't find any results for your search
+                        </p>
+                      </div>
+                    ) : data?.upcomingEvents.length > 0 ? (
+                      <Datatable
+                        hideSearch={hideSearch}
+                        tableData={data?.upcomingEvents}
+                        tableColumns={columns}
+                      />
+                    ) : (
+                      <div className="w-full h-96 flex items-center justify-center ">
+                        <p className="font-poppins font-semibold text-black animate-pulse sm:text-xl">
+                          No upcoming events at this moment
+                        </p>
+                      </div>
+                    )}
                   </div>
-                </>
+                </div>
               </>
-            )}
-          </div>
-        ) : (
+            </>
+          )}
+        </div>
+        {/* ) : (
           <div className="w-full h-96 flex items-center justify-center ">
             <p className="font-poppins font-semibold text-black animate-pulse sm:text-xl">
               No upcoming events at this moment
             </p>
           </div>
-        )}
+        )} */}
       </div>
     </>
   );
 }
 
 function RenderEventTypes(eventTypes) {
-  console.log('eventTypes',eventTypes);
-  
+  console.log("eventTypes", eventTypes);
+
   return <div>{eventTypes?.name}</div>;
 }
 

@@ -46,7 +46,6 @@ export function LiveEventHomePage({
     return () => clearTimeout(timer);
   }, [search]);
 
-
   const variablesLive = {
     skip: 0,
     take: 10,
@@ -83,6 +82,12 @@ export function LiveEventHomePage({
   }, [data]);
 
   const columns = [
+    
+    {
+      Header: "No",
+      accessor: "eventNo",
+      // Cell: ({ cell: { value } }) => StartDate(value),
+    },
     {
       Header: "Event Date",
       accessor: "startDate",
@@ -131,7 +136,7 @@ export function LiveEventHomePage({
           />
         </div>
         <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
-          {showHeadings && (
+          {/* {showHeadings && (
             <div className=" ">
               {data?.liveEvents?.length == 0 && (
                 <p className="mt-px text-xl font-extrabold text-gray-900 tracking-tight sm:text-xl animate-pulse">
@@ -139,7 +144,7 @@ export function LiveEventHomePage({
                 </p>
               )}
             </div>
-          )}
+          )} */}
 
           {isLoading ? (
             <Loader />
@@ -147,7 +152,7 @@ export function LiveEventHomePage({
             <>
               <>
                 <div className="sm:hidden">
-                  {data?.liveEvents?.map((event, eventIdx) => {
+                  {/* {data?.liveEvents?.map((event, eventIdx) => {
                     return (
                       <MobielViewCard
                         key={eventIdx}
@@ -159,14 +164,52 @@ export function LiveEventHomePage({
                         // noOfVehicles={event?.v}
                       />
                     );
-                  })}
+                  })} */}
+                  {data?.liveEvents === null ? (
+                  <div className="sm:hidden w-full h-72 flex items-center justify-center">
+                    <p className="text-center text-gray-500 font-medium text-xl mt-4">
+                      We couldn't find any results for your search
+                    </p>
+                  </div>
+                ) : data?.liveEvents.length > 0 ? (
+                  <div className="sm:hidden">
+                    {data?.liveEvents?.map((event, eventIdx) => (
+                      <MobielViewCard
+                        key={eventIdx}
+                        index1={eventIdx}
+                        event={event}
+                        allowDownload={allowDownload}
+                        registered={registered}
+                        registeredStatus={registeredStatus}
+                       
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="sm:hidden w-full h-72 flex items-center justify-center">
+                    <p className="font-roboto font-semibold text-black animate-pulse sm:text-xl">
+                      No completed events at this moment
+                    </p>
+                  </div>
+                )}
                 </div>
+
                 <div className="hidden sm:block">
-                  <Datatable
-                    hideSearch={hideSearch}
-                    tableData={data?.liveEvents}
-                    tableColumns={columns}
-                  />
+                  {data?.liveEvents === null ? (
+                    <p className="text-center text-gray-500 font-medium text-lg mt-4">
+                      We couldn't find any results for your search 
+                    </p>
+                  ) : data?.liveEvents.length > 0 ? (
+                    <Datatable
+                      hideSearch={hideSearch}
+                      tableData={data?.liveEvents}
+                      tableColumns={columns}
+                    />
+                  ) : (
+                    <p className="text-center text-black font-semibold text-lg mt-4 animate-pulse">
+                      No Live Events
+                    </p>
+                  )}
                 </div>
               </>
               {/* )} */}

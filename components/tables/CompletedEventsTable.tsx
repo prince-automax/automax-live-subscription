@@ -1,11 +1,11 @@
-import { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Datatable from "../ui/Datatable";
 import Loader from "../ui/Loader";
 import moment from "moment";
 import {
   CalendarIcon,
   DocumentDownloadIcon,
-  PrinterIcon,
+  SearchIcon,
 } from "@heroicons/react/outline";
 import AlertModal from "../ui/AlertModal";
 import {
@@ -28,6 +28,8 @@ export default function EventsTable({
   const [accessToken, setAccessToken] = useState("");
   const [registered, setRegistered] = useState(false);
   const [registeredStatus, setRegisteredStatus] = useState("");
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const id = localStorage.getItem("id");
 
   useEffect(() => {
@@ -36,10 +38,15 @@ export default function EventsTable({
       setAccessToken(token);
     }
   }, []);
+  React.useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const variables = {
     skip: 0,
     take: 10,
+    search: debouncedSearch,
     where: {
       eventCategory: {
         equals: eventCategory,
@@ -51,8 +58,7 @@ export default function EventsTable({
     variables
   );
 
-console.log('daata',data);
-
+  console.log("daata", data);
 
   const { data: userData, isLoading: loading } =
     useGetUserQuery<GetUserQueryVariables>(
@@ -65,8 +71,7 @@ console.log('daata',data);
 
   const payment = userData ? userData["user"]?.payments : "";
 
-  console.log("payments of user",payment);
-  
+  console.log("payments of user", payment);
 
   useEffect(() => {
     if (payment) {
@@ -83,8 +88,7 @@ console.log('daata',data);
     }
   }, [payment]);
 
-  console.log('regs',registered);
-  
+  console.log("regs", registered);
 
   // console.log("registered", registered);
   // console.log("setRegisteredStatus", registeredStatus);
@@ -204,6 +208,18 @@ console.log('daata',data);
   return (
     <>
       <div className="relative bg-white">
+        <div className="relative rounded-md shadow-sm max-w-sm mt-6">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search completed events..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-600 rounded-md"
+          />
+        </div>
         <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
           {showHeadings && (
             <div className="pt-16 pb-8">
@@ -225,32 +241,59 @@ console.log('daata',data);
             <Loader />
           ) : (
             <>
-              {data?.completedEvents && data?.completedEvents?.length > 0 && (
-                <>
-                  <div className="sm:hidden">
-                    {data?.completedEvents?.map((event, eventIdx) => {
-                      return (
-                        <MobielViewCard
-                          key={eventIdx}
-                          index1={eventIdx}
-                          event={event}
-                          allowDownload={allowDownload}
-                          registered={registered}
-                          registeredStatus={registeredStatus}
-                          PaymentStatus={PaymentStatus}
-                        />
-                      );
-                    })}
+              {/* {data?.completedEvents && data?.completedEvents?.length > 0 && ( */}
+              <>
+                {data?.completedEvents === null ? (
+                  <div className="sm:hidden w-full h-72 flex items-center justify-center">
+                    <p className="text-center text-gray-500 font-medium text-xl mt-4">
+                      We couldn't find any results for your search
+                    </p>
                   </div>
-                  <div className="hidden sm:block">
+                ) : data?.completedEvents.length > 0 ? (
+                  <div className="sm:hidden">
+                    {data?.completedEvents?.map((event, eventIdx) => (
+                      <MobielViewCard
+                        key={eventIdx}
+                        index1={eventIdx}
+                        event={event}
+                        allowDownload={allowDownload}
+                        registered={registered}
+                        registeredStatus={registeredStatus}
+                        PaymentStatus={PaymentStatus}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="sm:hidden w-full h-72 flex items-center justify-center">
+                    <p className="font-roboto font-semibold text-black animate-pulse sm:text-xl">
+                      No completed events at this moment
+                    </p>
+                  </div>
+                )}
+
+                <div className="hidden sm:block">
+                  {data?.completedEvents === null ? (
+                    <div className="w-full h-72 flex items-center justify-center ">
+                      <p className="text-center text-gray-500 font-medium text-xl mt-4">
+                        We couldn't find any results for your search
+                      </p>
+                    </div>
+                  ) : data?.completedEvents.length > 0 ? (
                     <Datatable
                       hideSearch={hideSearch}
                       tableData={data?.completedEvents}
                       tableColumns={columns}
                     />
-                  </div>
-                </>
-              )}
+                  ) : (
+                    <div className="w-full h-72 flex items-center justify-center ">
+                      <p className="font-roboto font-semibold text-black animate-pulse sm:text-xl">
+                        No completed events at this moment
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </>
+              {/* // )} */}
             </>
           )}
         </div>
@@ -269,7 +312,9 @@ function View(value) {
     <div>
       <Link href={`/events/${value}?type=c`}>
         <a target="_blank">
-          <span className="border px-4 rounded-md bg-red-600 font-poppins text-white py-1">View</span>
+          <span className="border px-4 rounded-md bg-red-600 font-poppins text-white py-1">
+            View
+          </span>
         </a>
       </Link>
     </div>
@@ -356,11 +401,7 @@ function DownloadButton({ file, allowDownload }) {
       {allowDownload ? (
         <>
           {file && (
-            <a
-            href={`${file}`}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
+            <a href={`${file}`} rel="noopener noreferrer" target="_blank">
               <DocumentDownloadIcon className="h-8 w-8 text-gray-600 hover:text-green-600" />
             </a>
           )}
@@ -464,9 +505,7 @@ function MobielViewCard({
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <span
-                      className="border px-4 rounded-md bg-red-600 font-poppins text-white py-1"
-                    >
+                    <span className="border px-4 rounded-md bg-red-600 font-poppins text-white py-1">
                       View
                     </span>
                   </a>

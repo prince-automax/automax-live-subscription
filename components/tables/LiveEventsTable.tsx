@@ -5,11 +5,7 @@ import moment from "moment";
 import {
   CalendarIcon,
   DocumentDownloadIcon,
-  PrinterIcon,
   SearchIcon,
-  SelectorIcon,
-  SortAscendingIcon,
-  SortDescendingIcon,
 } from "@heroicons/react/outline";
 import AlertModal from "../ui/AlertModal";
 import {
@@ -293,61 +289,107 @@ const EventsTable = ({
             className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-600 rounded-md"
           />
         </div>
-        {data?.liveEvents?.length > 0 ? (
-          <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
-            {showHeadings && (
-              <div className="pt-8 pb-8">
-                {data?.liveEvents?.length == 0 ? (
-                  <p className="mt-px text-3xl font-extrabold text-gray-900 tracking-tight sm:text-3xl animate-pulse">
-                    No Live Events ...
-                  </p>
-                ) : (
-                  <h2 className="mt-px text-3xl font-extrabold text-gray-900 tracking-tight sm:text-3xl ">
-                    Live Events
-                  </h2>
-                )}
-              </div>
-            )}
+        {/* {data?.liveEvents?.length > 0 ? ( */}
+        <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
+          {showHeadings && (
+            <div className="pt-8 pb-8">
+              {data?.liveEvents?.length == 0 ? (
+                <p className="mt-px text-3xl font-extrabold text-gray-900 tracking-tight sm:text-3xl animate-pulse">
+                  No Live Events ...
+                </p>
+              ) : (
+                <h2 className="mt-px text-3xl font-extrabold text-gray-900 tracking-tight sm:text-3xl ">
+                  Live Events
+                </h2>
+              )}
+            </div>
+          )}
 
-            {isLoading ? (
-              <Loader />
-            ) : (
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <>
               <>
-                <>
-                  <div className="sm:hidden">
-                    {data?.liveEvents?.map((event, eventIdx) => {
-                      return (
-                        <MobielViewCard
-                          key={eventIdx}
-                          index1={eventIdx}
-                          event={event}
-                          allowDownload={allowDownload}
-                          registered={registered}
-                          registeredStatus={registeredStatus}
-                          PaymentStatus={PaymentStatus}
-                        />
-                      );
-                    })}
+                <div className="sm:hidden">
+
+
+                  {/* {data?.liveEvents?.map((event, eventIdx) => {
+                    return (
+                      <MobielViewCard
+                        key={eventIdx}
+                        index1={eventIdx}
+                        event={event}
+                        allowDownload={allowDownload}
+                        registered={registered}
+                        registeredStatus={registeredStatus}
+                        PaymentStatus={PaymentStatus}
+                      />
+                    );
+                  })} */}
+
+{data?.liveEvents === null ? (
+                  <div className="sm:hidden w-full h-72 flex items-center justify-center">
+                    <p className="text-center text-gray-500 font-medium text-xl mt-4">
+                      We couldn't find any results for your search
+                    </p>
                   </div>
-                  <div className="hidden sm:block">
-                    <div></div>
+                ) : data?.liveEvents.length > 0 ? (
+                  <div className="sm:hidden">
+                    {data?.liveEvents?.map((event, eventIdx) => (
+                      <MobielViewCard
+                        key={eventIdx}
+                        index1={eventIdx}
+                        event={event}
+                        allowDownload={allowDownload}
+                        registered={registered}
+                        registeredStatus={registeredStatus}
+                        PaymentStatus={PaymentStatus}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="sm:hidden w-full h-72 flex items-center justify-center">
+                    <p className="font-roboto font-semibold text-black animate-pulse sm:text-xl">
+                      No completed events at this moment
+                    </p>
+                  </div>
+                )}
+
+
+                </div>
+
+                <div className="hidden sm:block">
+                  {data?.liveEvents === null ? (
+                    <div className="w-full h-72 flex items-center justify-center ">
+                      <p className="text-center text-gray-500 font-medium text-xl mt-4">
+                        We couldn't find any results for your search
+                      </p>
+                    </div>
+                  ) : data?.liveEvents.length > 0 ? (
                     <Datatable
                       hideSearch={hideSearch}
                       tableData={data?.liveEvents}
                       tableColumns={columns}
                     />
-                  </div>
-                </>
+                  ) : (
+                    <div className="w-full h-72 flex items-center justify-center ">
+                      <p className="font-roboto font-semibold text-black animate-pulse sm:text-xl">
+                        No Live events at this moment
+                      </p>
+                    </div>
+                  )}
+                </div>
               </>
-            )}
-          </div>
-        ) : (
+            </>
+          )}
+        </div>
+        {/* ) : (
           <div className="w-full h-72 flex items-center justify-center ">
             <p className="font-roboto font-semibold text-black animate-pulse sm:text-xl">
               No Live events at this moment
             </p>
           </div>
-        )}
+        )} */}
       </div>
     </>
   );

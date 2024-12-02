@@ -80,11 +80,11 @@ const AllUserPayments = () => {
       Header: "Description",
       accessor: "description",
     },
-    {
-      Header: "Image",
-      accessor: "image", // Field from tableData
-      Cell: ({ value }) => ImageComponent(value),
-    },
+    // {
+    //   Header: "Image",
+    //   accessor: "image", // Field from tableData
+    //   Cell: ({ value }) => ImageComponent(value),
+    // },
   ];
 
   console.log("data", data);

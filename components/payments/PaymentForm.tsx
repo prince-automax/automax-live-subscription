@@ -63,7 +63,7 @@ export default function PaymentForm() {
     proof: Yup.string().required("Image is required"),
     description: Yup.string()
       .max(255, "Description must not exceed 255 characters")
-      .required("Description is required"),
+     
   });
 
   const onSubmit = async (values, { resetForm, setSubmitting }) => {
@@ -169,6 +169,7 @@ export default function PaymentForm() {
                 </div>
                 <FormField
                   field="inputWithChange"
+                  maxLength={8}
                   required
                   name="amount"
                   label="Amount"
@@ -222,7 +223,7 @@ export default function PaymentForm() {
                   onChange={(event) => {
                     props.setFieldValue("description", event.target.value);
                   }}
-                  // maxLength={255} // Add maxLength attribute to limit characters
+                  maxLength={255} // Add maxLength attribute to limit characters
                 />
               </div>
 

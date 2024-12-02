@@ -20,7 +20,7 @@ const HomePageEventCalender = () => {
       <div className="pl-6">
         <div className="w-full  sm:px-0  my-2 p-4 ">
           <Tab.Group>
-            <Tab.List className="flex justify-center space-x-1  sm:w-96  border ">
+            <Tab.List className="flex justify-center space-x-1  sm:w-96  border border-red ">
               {Object.keys(tabs).map((tab, tabIndex) => (
                 <Tab
                   key={tabIndex}

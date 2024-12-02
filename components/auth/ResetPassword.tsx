@@ -120,6 +120,8 @@ export default function ResetPassword() {
         // }
       }
     } catch (error) {
+      console.log('PASSWORD RESET OTP ERROR', error);
+      
       // Extracting the specific error message
       const graphqlError =
         error?.response?.errors?.[0]?.message ||
@@ -464,6 +466,7 @@ export default function ResetPassword() {
                         <div className="col-span-6 sm:col-span-3">
                           <FormField
                             field="input"
+                            required
                             id="passwordConfirmation"
                             label="Confirm Password"
                             name="passwordConfirmation"

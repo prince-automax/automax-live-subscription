@@ -466,7 +466,7 @@ export default function LoginUsingOtp() {
                             checked={props.values.terms}
                           />
                           <div className="ml-3">
-                            <label className="text-gray-600 text-sm">
+                            <label className="text-gray-600 text-sm underline underline-offset-2 hover:text-blue-600 ">
                               I accept the{" "}
                               <Link
                                 href="/tnc"

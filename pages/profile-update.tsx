@@ -900,6 +900,7 @@ function ProfileUpdate() {
                     {/* {!showDocumentForm && ( */}
                     <button
                       type="button"
+                      className="text-white bg-indigo-600 hover:bg-indigo-700 border-transparent inline-flex items-center justify-center px-4 py-2 border shadow-sm text-sm font-medium rounded-md focus:outline-none"
                       onClick={() =>
                         handleNext(values, {
                           validateForm,

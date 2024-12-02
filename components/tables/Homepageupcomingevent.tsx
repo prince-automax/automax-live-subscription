@@ -6,7 +6,7 @@ import {
   CalendarIcon,
   DocumentDownloadIcon,
   PrinterIcon,
-  SearchIcon
+  SearchIcon,
 } from "@heroicons/react/outline";
 import { useEffect, useState } from "react";
 import AlertModal from "../ui/AlertModal";
@@ -50,23 +50,17 @@ export function UpcomingEventHomePage({
     search: debouncedSearch,
   };
 
-
   const { data, isLoading, refetch } =
     useUpcomingEventsQuery<UpcomingEventsQuery>(
       graphQLClient({ Authorization: `Bearer ${accessToken}` }),
       variables
     );
 
-  console.log("data", data);
+  console.log("useUpcomingEventsQuery", data);
 
   //   useEffect(() => {
   //     refetch();
   //  }, [data]);
-
-  
-
- 
-
 
   const columns = [
     {
@@ -82,7 +76,7 @@ export function UpcomingEventHomePage({
       Header: "Event Type",
       accessor: "eventCategory",
     },
- 
+
     {
       Header: "Location",
       accessor: "location.name",
@@ -102,13 +96,12 @@ export function UpcomingEventHomePage({
       accessor: "firstVehicleBidTimeExpire",
       Cell: ({ cell: { value } }) => EndDate(value),
     },
-    
   ];
 
   return (
     <>
       <div className=" bg-white ">
-      <div className="relative rounded-md shadow-sm max-w-sm">
+        <div className="relative rounded-md shadow-sm max-w-sm">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
           </div>
@@ -121,45 +114,68 @@ export function UpcomingEventHomePage({
           />
         </div>
         <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
-        
-
           {isLoading ? (
             <Loader />
           ) : (
             <>
-              {data &&
-                data?.upcomingEvents &&
-                data?.upcomingEvents?.length === 0 && (
-                    <p className="mt-px text-xl font-extrabold text-gray-900 tracking-tight sm:text-xl animate-pulse">
-                  NO UPCOMING EVENTS ...
-                </p>)
-}
+              
               <>
                 <div className="sm:hidden">
-                  {data?.upcomingEvents?.map((event, eventIdx) => {
-                    return (
-                      <MobielViewCard
-                        key={eventIdx}
-                        index1={eventIdx}
-                        event={event}
-                        registered={registered}
-                        registeredStatus={registeredStatus}
-                        allowDownload={
-                          accessToken !== null && accessToken !== ""
-                        }
-                      />
-                    );
-                  })}
+                  {data?.upcomingEvents === null ? (
+                    <div className="sm:hidden w-full h-96 flex items-center justify-center">
+                      <p className="text-center text-gray-500 font-medium text-xl mt-4">
+                        We couldn't find any results for your search
+                      </p>
+                    </div>
+                  ) : data?.upcomingEvents.length > 0 ? (
+                    <div className="sm:hidden">
+                      {data?.upcomingEvents?.map((event, eventIdx) => (
+                        <MobielViewCard
+                          key={eventIdx}
+                          index1={eventIdx}
+                          event={event}
+                          registered={registered}
+                          registeredStatus={registeredStatus}
+                          allowDownload={
+                            accessToken !== null && accessToken !== ""
+                          }
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="sm:hidden w-full h-96 flex items-center justify-center">
+                      <p className="font-poppins font-semibold text-black animate-pulse sm:text-xl">
+                        No upcoming events at this moment
+                      </p>
+                    </div>
+                  )}
                 </div>
+
                 <div className="hidden sm:block">
-                  <Datatable
-                    hideSearch={hideSearch}
-                    tableData={data?.upcomingEvents}
-                    tableColumns={columns}
-                  />
+                  {data?.upcomingEvents === null ? (
+                    // <p className="text-center text-gray-500 font-medium text-lg mt-4">
+                    //   No search item found
+                    // </p>
+                    <div className="w-full h-96 flex items-center justify-center ">
+                      <p className="font-poppins font-semibold text-black animate-pulse sm:text-xl">
+                        We couldn't find any results for your search
+                      </p>
+                    </div>
+                  ) : data?.upcomingEvents.length > 0 ? (
+                    <Datatable
+                      hideSearch={hideSearch}
+                      tableData={data?.upcomingEvents}
+                      tableColumns={columns}
+                    />
+                  ) : (
+                    <div className="w-full h-96 flex items-center justify-center ">
+                      <p className="font-poppins font-semibold text-black animate-pulse sm:text-xl">
+                        No upcoming events at this moment
+                      </p>
+                    </div>
+                  )}
                 </div>
               </>
-            
             </>
           )}
         </div>
@@ -169,13 +185,8 @@ export function UpcomingEventHomePage({
 }
 
 function RenderEventTypes(eventTypes) {
-
   if (eventTypes) {
-    return (
-      <div>
-        {eventTypes?.name}
-      </div>
-    );
+    return <div>{eventTypes?.name}</div>;
   } else {
     return <div />;
   }
@@ -306,7 +317,9 @@ function MobielViewCard({
                 Event <span>:</span>
               </p>
 
-              <p className="col-span-2 text-sm flex  font-poppins font-medium text-[#0F172A]">{event?.seller?.name}</p>
+              <p className="col-span-2 text-sm flex  font-poppins font-medium text-[#0F172A]">
+                {event?.seller?.name}
+              </p>
             </div>
             <div className="grid grid-cols-3 gap-1 space-x-2 ">
               <p className="flex justify-between text-sm font-roboto text-[#646464] font-semibold  ">
@@ -336,7 +349,9 @@ function MobielViewCard({
 
               <p className="col-span-2  text-sm flex font-poppins font-medium text-[#0F172A]">
                 {" "}
-                {moment(event.firstVehicleBidTimeExpire).format(" Do-MMMM-YYYY")}{" "}
+                {moment(event.firstVehicleBidTimeExpire).format(
+                  " Do-MMMM-YYYY"
+                )}{" "}
                 {moment(event.firstVehicleBidTimeExpire).format(" h:mm a")}
               </p>
             </div>

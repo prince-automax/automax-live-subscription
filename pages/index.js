@@ -38,7 +38,7 @@ export default function Example() {
       <HeroSection />
 
      <div className="">
-    <div className=" flex justify-center">
+    <div className=" sm:flex sm:justify-center">
     <HomePageEventCalender/>
     </div>
      </div>

@@ -30,7 +30,6 @@ export default function Contact() {
   const fieldRefs = useRef({}); // Store refs for each field
 
   const validationSchema = Yup.object({
-   
     phone: Yup.string()
       .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
       .required("Phone number is required"),
@@ -48,7 +47,7 @@ export default function Contact() {
       fieldRefs.current[firstErrorField].focus(); // Focus on the first error field
     }
   };
-  
+
   const callCreateContactus =
     useCreateEnquiryMutation<CreateEnquiryMutationVariables>(graphQLClient());
 
@@ -311,32 +310,40 @@ export default function Contact() {
                       phone: "",
                       message: "",
                     }}
-                    
                     onSubmit={onSubmitData}
                     validationSchema={validationSchema}
-                  >   
-                {({ errors, touched, validateForm, handleSubmit,setTouched,isSubmitting }) => (
-                      <Form 
-                      onSubmit={async (e) => {
-                        setTouched({
-                          firstname: true,
-                          lastname: true,
-                          state: true,
-                          phone: true,
-                          message: true,
-                        });
-            
-                        e.preventDefault(); // Prevent default form submission
-                        const validationErrors = await validateForm(); // Trigger validation manually
-                        if (Object.keys(validationErrors).length > 0) {
-                          // If validation fails, scroll to the first error field
-                          scrollToError(validationErrors);
-                        } else {
-                          // If validation passes, proceed with form submission
-                          handleSubmit(e);
-                        }
-                      }}
-                      className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
+                  >
+                    {({
+                      errors,
+                      touched,
+                      validateForm,
+                      handleSubmit,
+                      setTouched,
+                      isSubmitting,
+                      setFieldValue,
+                    }) => (
+                      <Form
+                        onSubmit={async (e) => {
+                          setTouched({
+                            firstname: true,
+                            lastname: true,
+                            state: true,
+                            phone: true,
+                            message: true,
+                          });
+
+                          e.preventDefault(); // Prevent default form submission
+                          const validationErrors = await validateForm(); // Trigger validation manually
+                          if (Object.keys(validationErrors).length > 0) {
+                            // If validation fails, scroll to the first error field
+                            scrollToError(validationErrors);
+                          } else {
+                            // If validation passes, proceed with form submission
+                            handleSubmit(e);
+                          }
+                        }}
+                        className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8"
+                      >
                         <div>
                           <label
                             htmlFor="firstname"
@@ -351,12 +358,12 @@ export default function Contact() {
                               name="firstname"
                               id="firstname"
                               autoComplete="given-name"
-                innerRef={(el) => (fieldRefs.current["firstname"] = el)} // Attach refs
-
+                              innerRef={(el) =>
+                                (fieldRefs.current["firstname"] = el)
+                              } // Attach refs
                               className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
                             />
-                                {/* <ErrorMessage name="firstname" component="div" className="text-red-500 text-sm" /> */}
-
+                            {/* <ErrorMessage name="firstname" component="div" className="text-red-500 text-sm" /> */}
                           </div>
                         </div>
                         <div>
@@ -372,12 +379,12 @@ export default function Contact() {
                               name="lastname"
                               id="lastname"
                               autoComplete="family-name"
-                              
-                              innerRef={(el) => (fieldRefs.current["lastname"] = el)} // Attach refs
+                              innerRef={(el) =>
+                                (fieldRefs.current["lastname"] = el)
+                              } // Attach refs
                               className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
                             />
-                                                            {/* <ErrorMessage name="lastname" component="div" className="text-red-500 text-sm" /> */}
-
+                            {/* <ErrorMessage name="lastname" component="div" className="text-red-500 text-sm" /> */}
                           </div>
                         </div>
 
@@ -386,7 +393,8 @@ export default function Contact() {
                             htmlFor="state"
                             className="block text-sm font-medium text-gray-900"
                           >
-                            State <span className="text-red-500 text-xs">*</span>
+                            State{" "}
+                            <span className="text-red-500 text-xs">*</span>
                           </label>
                           <div className="mt-1">
                             <Field
@@ -394,8 +402,9 @@ export default function Contact() {
                               id="state"
                               name="state"
                               autoComplete="state"
-                              innerRef={(el) => (fieldRefs.current["state"] = el)} // Attach refs
-
+                              innerRef={(el) =>
+                                (fieldRefs.current["state"] = el)
+                              } // Attach refs
                               className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
                             >
                               <option value=""> select a state </option>
@@ -405,11 +414,14 @@ export default function Contact() {
                                 </option>
                               ))}
                             </Field>
-                            <ErrorMessage name="state" component="div" className="text-red-500 text-sm" />
+                            <ErrorMessage
+                              name="state"
+                              component="div"
+                              className="text-red-500 text-sm"
+                            />
                             {/* {errors.firstname && (
           <div className="error">{errors.firstname}</div>
         )} */}
-
                           </div>
                         </div>
 
@@ -419,7 +431,8 @@ export default function Contact() {
                               htmlFor="phone"
                               className="block text-sm font-medium text-gray-900"
                             >
-                              Phone <span className="text-red-500 text-xs">*</span>
+                              Phone{" "}
+                              <span className="text-red-500 text-xs">*</span>
                             </label>
                             {/* <span
                               id="phone-optional"
@@ -430,17 +443,28 @@ export default function Contact() {
                           </div>
                           <div className="mt-1">
                             <Field
-                                                            innerRef={(el) => (fieldRefs.current["phone"] = el)} // Attach refs
-
-                              type="number"
+                              innerRef={(el) =>
+                                (fieldRefs.current["phone"] = el)
+                              } // Attach refs
+                              type="tel"
                               name="phone"
+                              maxLength="10"
                               id="phone"
                               autoComplete="tel"
                               className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
                               aria-describedby="phone-optional"
+                              onChange={(e) => {
+                                setFieldValue(
+                                  "phone",
+                                  e.target.value.replace(/\D/g, "")
+                                );
+                              }}
                             />
-                            <ErrorMessage name="phone" component="div" className="text-red-500 text-sm" />
-
+                            <ErrorMessage
+                              name="phone"
+                              component="div"
+                              className="text-red-500 text-sm"
+                            />
                           </div>
                         </div>
                         {/* <div className="sm:col-span-2">
@@ -466,7 +490,8 @@ export default function Contact() {
                               htmlFor="message"
                               className="block text-sm font-medium text-gray-900"
                             >
-                              Message <span className="text-red-500 text-xs">*</span>
+                              Message{" "}
+                              <span className="text-red-500 text-xs">*</span>
                             </label>
                             <span
                               id="message"
@@ -477,8 +502,9 @@ export default function Contact() {
                           </div>
                           <div className="mt-1">
                             <Field
-                                 innerRef={(el) => (fieldRefs.current["message"] = el)} // Attach refs
-
+                              innerRef={(el) =>
+                                (fieldRefs.current["message"] = el)
+                              } // Attach refs
                               as="textarea"
                               id="message"
                               name="message"
@@ -487,8 +513,11 @@ export default function Contact() {
                               aria-describedby="message-max"
                               // defaultValue={""}
                             />
-                                                        <ErrorMessage name="message" component="div" className="text-red-500 text-sm" />
-
+                            <ErrorMessage
+                              name="message"
+                              component="div"
+                              className="text-red-500 text-sm"
+                            />
                           </div>
                         </div>
                         <div className="sm:col-span-2 sm:flex sm:justify-end">
@@ -497,7 +526,7 @@ export default function Contact() {
                             className="mt-2 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:w-auto"
                             disabled={isSubmitting}
                           >
-                          {isSubmitting?"Submitting" :" Submit" } 
+                            {isSubmitting ? "Submitting" : " Submit"}
                           </button>
                         </div>
                       </Form>
@@ -530,16 +559,18 @@ export default function Contact() {
                     {office.city}
                   </h3>
                   <p
-  className={`${
-    office?.city === "Mumbai" || office?.city === "Hyderabad" ? "animate-pulse" : ""
-  } mt-2 text-base text-gray-500`}
->
-  {office?.address.map((line) => (
-    <span key={line} className="block">
-      {line}
-    </span>
-  ))}
-</p>
+                    className={`${
+                      office?.city === "Mumbai" || office?.city === "Hyderabad"
+                        ? "animate-pulse"
+                        : ""
+                    } mt-2 text-base text-gray-500`}
+                  >
+                    {office?.address.map((line) => (
+                      <span key={line} className="block">
+                        {line}
+                      </span>
+                    ))}
+                  </p>
                 </div>
               ))}
             </div>
