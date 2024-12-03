@@ -17,7 +17,8 @@ const nextConfig = {
             "firebasestorage.googleapis.com",
             "api-dev.autobse.com",
             "ops.adroitauto.in",
-            "autobseimagesandexcel-dev.s3.ap-south-1.amazonaws.com"
+            "autobseimagesandexcel-dev.s3.ap-south-1.amazonaws.com",
+            "aiv2client.autoinspekt.com"
         ],
         minimumCacheTTL: 60, // Cache time in seconds (default is 60)
 

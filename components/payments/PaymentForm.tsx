@@ -13,7 +13,7 @@ import FormField from "@components/ui/FormField";
 import { ResizeImage } from "../image-Resizing/imagePayment";
 import Loader from "@components/ui/Loader";
 import { useRouter } from "next/router";
-import { GetErrorMessage,ToastMessage } from "@utils/ErrorCodes";
+import { GetErrorMessage, ToastMessage } from "@utils/ErrorCodes";
 
 export default function PaymentForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +21,7 @@ export default function PaymentForm() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false); // State to manage button disabled state
 
   const router = useRouter();
+
   const SUPPORTED_FORMATS = [
     "image/jpg",
     "image/jpeg",
@@ -61,20 +62,17 @@ export default function PaymentForm() {
       .max(2147483647, "Amount must not exceed 1 Crore "),
     paymentFor: Yup.string().required("Payment For is required"),
     proof: Yup.string().required("Image is required"),
-    description: Yup.string()
-      .max(255, "Description must not exceed 255 characters")
-     
+    description: Yup.string().max(
+      255,
+      "Description must not exceed 255 characters"
+    ),
   });
 
   const onSubmit = async (values, { resetForm, setSubmitting }) => {
-    setSubmitting(true); // Indicate that the form is submitting
+    setSubmitting(true);
 
     setIsLoading(true);
     console.log("Submitting payment details:", values);
-    // if (values?.paymentFor == "Select Payment") {
-    //   return toast.error("Select an Option");
-    //   setSubmitting(false); // Reset submitting state
-    // }
 
     try {
       // Step 1: Call GraphQL API to create payment
@@ -119,7 +117,6 @@ export default function PaymentForm() {
         } else {
           // throw new Error("Image upload failed");
           toast.error("payment failed.");
-
         }
       }
     } catch (error) {
@@ -128,11 +125,11 @@ export default function PaymentForm() {
         error.response &&
         error.response.errors?.[0]?.errorCode
       ) {
-        const errorCode =  error.response.errors?.[0]?.errorCode;
-        console.log('ERROR CODE ', errorCode);
-        
+        const errorCode = error.response.errors?.[0]?.errorCode;
+        console.log("ERROR CODE ", errorCode);
+
         const userFriendlyMessage = GetErrorMessage(errorCode);
-        ToastMessage(userFriendlyMessage) // Show toast notification
+        ToastMessage(userFriendlyMessage); // Show toast notification
       } else {
         toast.error("An unexpected error occurred. Please try again.");
       }
@@ -241,8 +238,7 @@ export default function PaymentForm() {
                 <span className="text-blue-600">(Payment Receipt)</span>
               </label>
               <input
-                                              accept=".jpg,.jpeg"
-
+                accept=".jpg,.jpeg"
                 // onChange={async (event) => {
                 //   try {
                 //     const file = event.target.files[0];
@@ -256,35 +252,28 @@ export default function PaymentForm() {
                 // }}
 
                 onChange={async (e) => {
-                 
                   const file = e.target.files[0];
 
                   // Check if the file type is JPG or JPEG
                   if (
                     file &&
-                    (file.type === "image/jpeg" ||
-                      file.type === "image/jpg")
+                    (file.type === "image/jpeg" || file.type === "image/jpg")
                   ) {
-                    console.log('@@@@@@');
-                    
+                    console.log("@@@@@@");
+
                     try {
                       const image = await ResizeImage(file);
                       props.setFieldValue("proof", image);
 
-                      console.log('compressed image',image);
-                      
-               
+                      console.log("compressed image", image);
                     } catch (error) {
-                      console.error(
-                        "Error resizing image:",
-                        error
-                      );
+                      console.error("Error resizing image:", error);
                       toast.error(error?.message);
                       // Handle error (e.g., display a custom error message if needed)
                     }
                   } else {
                     // Set error if file type is not supported
-                   props?.setFieldError(
+                    props?.setFieldError(
                       "proof",
                       "Please upload a JPG or JPEG image."
                     );

@@ -53,6 +53,8 @@ import {
   faSquarePlus,
   faSquareMinus,
 } from "@fortawesome/free-solid-svg-icons";
+import { GetErrorMessage, ToastMessage } from "@utils/ErrorCodes";
+import toast from "react-hot-toast";
 
 function Events() {
   const router = useRouter();
@@ -246,15 +248,20 @@ function Events() {
             createBidInput: { amount: Number(amount) },
           });
           Swal.fire("Success!", "Your bid has been submitted.", "success");
-        } catch (e) {
-          console.log('996',e.response.errors[0].message);
-          
-          const errorMessage = e.response.errors[0].message
-            // e.response?.errors?.map((err) => err).join(", ") ||
-            // e.message ||
-            // "An error occurred. Please try again.";
-            
-          Swal.fire(errorMessage);
+        } catch (error) {
+          if (
+            error.response &&
+            error.response &&
+            error.response.errors?.[0]?.errorCode
+          ) {
+            const errorCode = error.response.errors?.[0]?.errorCode;
+            console.log("ERROR CODE ", errorCode);
+    
+            const userFriendlyMessage = GetErrorMessage(errorCode);
+            ToastMessage(userFriendlyMessage); // Show toast notification
+          } else {
+            toast.error("An unexpected error occurred. Please try again.");
+          }
         }
       }
     },
