@@ -122,7 +122,7 @@ export function UpcomingEventHomePage({
               <>
                 <div className="sm:hidden">
                   {data?.upcomingEvents === null ? (
-                    <div className="sm:hidden w-full h-96 flex items-center justify-center">
+                    <div className="sm:hidden w-full h-52 flex items-center justify-center">
                       <p className="text-center text-gray-500 font-medium text-xl mt-4">
                         We couldn't find any results for your search
                       </p>
@@ -143,7 +143,7 @@ export function UpcomingEventHomePage({
                       ))}
                     </div>
                   ) : (
-                    <div className="sm:hidden w-full h-96 flex items-center justify-center">
+                    <div className="sm:hidden w-full h-52 flex items-center justify-center">
                       <p className="font-poppins font-semibold text-black animate-pulse sm:text-xl">
                         No upcoming events at this moment
                       </p>
@@ -156,7 +156,7 @@ export function UpcomingEventHomePage({
                     // <p className="text-center text-gray-500 font-medium text-lg mt-4">
                     //   No search item found
                     // </p>
-                    <div className="w-full h-96 flex items-center justify-center ">
+                    <div className="w-full h-52 flex items-center justify-center ">
                       <p className="font-poppins font-semibold text-black animate-pulse sm:text-xl">
                         We couldn't find any results for your search
                       </p>
@@ -168,7 +168,7 @@ export function UpcomingEventHomePage({
                       tableColumns={columns}
                     />
                   ) : (
-                    <div className="w-full h-96 flex items-center justify-center ">
+                    <div className="w-full h-52 flex items-center justify-center ">
                       <p className="font-poppins font-semibold text-black animate-pulse sm:text-xl">
                         No upcoming events at this moment
                       </p>

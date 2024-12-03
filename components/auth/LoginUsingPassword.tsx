@@ -9,7 +9,7 @@ import { EyeIcon, EyeOffIcon } from "@heroicons/react/outline";
 import { Formik, Form, ErrorMessage } from "formik";
 import FormField from "@components/ui/FormField";
 import * as Yup from "yup";
-import { GetErrorMessage,ToastMessage } from "@utils/ErrorCodes";
+import { GetErrorMessage, ToastMessage } from "@utils/ErrorCodes";
 
 import {
   useLoginUsingPasswordMutation,
@@ -95,11 +95,7 @@ export default function LoginUsingPassword() {
             },
           });
 
-          console.log('result of password login', result);
-          
-
-        // console.log("result of the login", result);
-        // console.log("token", result?.login["access_token"]);
+        console.log("result of password login", result);
 
         if (result?.login["access_token"]) {
           localStorage.setItem("token", result.login["access_token"]);
@@ -123,9 +119,11 @@ export default function LoginUsingPassword() {
           error?.response &&
           error?.response.errors?.[0]?.errorCode
         ) {
-          const errorCode = error?.response?.errors?.[0]?.errorCode
+          const errorCode = error?.response?.errors?.[0]?.errorCode;
+          console.log("ERROR CODE:", errorCode);
+
           const userFriendlyMessage = GetErrorMessage(errorCode);
-          ToastMessage(userFriendlyMessage) // Show toast notification
+          ToastMessage(userFriendlyMessage); // Show toast notification
         } else {
           toast.error("An unexpected error occurred. Please try again.");
         }

@@ -10,7 +10,7 @@ import FormField from "@components/ui/FormField";
 import * as Yup from "yup";
 import graphQLClient from "@utils/useGQLQuery";
 import { states } from "@utils/states";
-import { GetErrorMessage,ToastMessage } from "@utils/ErrorCodes";
+import { GetErrorMessage, ToastMessage } from "@utils/ErrorCodes";
 import {
   useCreateUserMutation,
   CreateUserMutationVariables,
@@ -98,7 +98,7 @@ export default function LoginUsingOtp() {
         if (result?.sendOtp?.status === "Success") {
           setVerificationMode(true);
           setSuccess({
-            text: "User created successfully. Please Enter the OTP.",
+            text: "Please enter the OTP received on your registered mobile number.",
           });
         }
         // else {
@@ -106,37 +106,23 @@ export default function LoginUsingOtp() {
         // }
       }
     } catch (error: any) {
-      console.log('ERROR', error);
-      
-      // console.log("pandi", error?.response?.errors?.[0]?.errorCode );
-
-      // // Extracting the specific error message
-      // const graphqlError =
-      //   error?.response?.errors?.[0]?.errorCode ||
-      //   "An error occurred during OTP sending. Please try again.";
-      // // const graphqlError = error?.response?.errors?.[0]?.extensions?.exception?.originalError?.message?.[0] || "An error occurred during OTP sending. Please try again.";
-
-      // console.log("grahqlError", graphqlError);
-
-      // // Log full error for debugging purposes
+      console.log("ERROR", error);
 
       // // Display the extracted error message to the user
-      console.log('ERROR CODE ', error.response.errors?.[0]?.errorCode);
+      console.log("ERROR CODE ", error.response.errors?.[0]?.errorCode);
       if (
         error.response &&
         error.response &&
         error.response.errors?.[0]?.errorCode
       ) {
-        const errorCode =  error.response.errors?.[0]?.errorCode;
-        console.log('ERROR CODE ', errorCode);
-        
+        const errorCode = error.response.errors?.[0]?.errorCode;
+        console.log("ERROR CODE ", errorCode);
+
         const userFriendlyMessage = GetErrorMessage(errorCode);
-        ToastMessage(userFriendlyMessage) // Show toast notification
+        ToastMessage(userFriendlyMessage); // Show toast notification
       } else {
         toast.error("An unexpected error occurred. Please try again.");
       }
-
-    
     }
   }
 
@@ -152,13 +138,10 @@ export default function LoginUsingOtp() {
         isValid = false;
       }
 
-      // Proceed with OTP sending for login
       if (isValid) {
         const result = await callOTPMutation.mutateAsync({
           sendOtpDto: { mobile: MobilePhone, forSignin: true },
         });
-
-        // console.log("Result of OTP sending for login:", result);
 
         if (result?.sendOtp?.status === "Success") {
           setVerificationMode(true);
@@ -166,11 +149,6 @@ export default function LoginUsingOtp() {
             text: "Please enter the OTP received on your registered mobile number.",
           });
         }
-        // else {
-        //   setError({
-        //     text: "Unable to send OTP. Please contact the support team.",
-        //   });
-        // }
       }
     } catch (error) {
       if (
@@ -178,9 +156,9 @@ export default function LoginUsingOtp() {
         error?.response &&
         error?.response.errors?.[0]?.errorCode
       ) {
-        const errorCode = error?.response?.errors?.[0]?.errorCode
+        const errorCode = error?.response?.errors?.[0]?.errorCode;
         const userFriendlyMessage = GetErrorMessage(errorCode);
-        ToastMessage(userFriendlyMessage) // Show toast notification
+        ToastMessage(userFriendlyMessage); // Show toast notification
       } else {
         toast.error("An unexpected error occurred. Please try again.");
       }
@@ -201,25 +179,15 @@ export default function LoginUsingOtp() {
         isValid = false;
       }
 
-      // console.log('mobileNUmber:',mobileNumber,'otp:',otp);
-
       if (isValid) {
         const result = await callVerifyOTP.mutateAsync({
           verfiyOtpDto: { mobile: mobileNumber, otp },
         });
 
-        // console.log("result of verify otp", result);
-
         if (result?.verifyOtp?.["access_token"]) {
-          // console.log("hit");
-
-          // Perform necessary actions upon successful OTP verification
-
-          // router.push(`/dashboard`);
-
           setVerificationMode(true);
           setSuccess({
-            text: "You have been successfully logged in.",
+            text: `Welcome ${result.verifyOtp["user"]["firstName"]}`,
           });
 
           localStorage.setItem("token", result.verifyOtp?.["access_token"]);
@@ -228,9 +196,7 @@ export default function LoginUsingOtp() {
           localStorage.setItem("name", result.verifyOtp["user"]["firstName"]);
 
           setToken(result.verifyOtp["access_token"]);
-          setSuccess({
-            text: "You have been successfully logged in.",
-          });
+
           router.push(`/dashboard`);
           setMobileNumber("");
         }
@@ -243,25 +209,19 @@ export default function LoginUsingOtp() {
     } catch (error) {
       console.log("error of verify otp", error);
 
-      let graphqlError =
-        error?.response?.errors?.[0]?.message ||
-        "An error occurred during OTP sending. Please try again.";
+      if (
+        error.response &&
+        error.response &&
+        error.response.errors?.[0]?.errorCode
+      ) {
+        const errorCode = error.response.errors?.[0]?.errorCode;
+        console.log("ERROR CODE ", errorCode);
 
-      // Log full error for debugging purposes
-      console.error("Error during OTP sending for user creation:", error);
-      if (graphqlError === "Invalid otp.") {
-        graphqlError = "Invalid OTP";
-        setVerificationMode(true);
-        setOTP("");
+        const userFriendlyMessage = GetErrorMessage(errorCode);
+        ToastMessage(userFriendlyMessage); // Show toast notification
+      } else {
+        toast.error("An unexpected error occurred. Please try again.");
       }
-      //  else {
-      //   setVerificationMode(false);
-      // }
-      // Display the extracted error message to the user
-      setError({
-        text: graphqlError,
-      });
-      // setVerificationMode(false);
     }
   }
 
@@ -390,6 +350,7 @@ export default function LoginUsingOtp() {
                           </div>
 
                           {/* Pan Card */}
+
                           <div className="sm:col-span-2">
                             <FormField
                               field="inputWithChange"
@@ -410,6 +371,7 @@ export default function LoginUsingOtp() {
                           </div>
 
                           {/* State */}
+
                           <div>
                             <FormField
                               field="select"
@@ -499,13 +461,15 @@ export default function LoginUsingOtp() {
 
                         {/* Login Section */}
                         <div className=" mt-3 text-center">
-                          <p className="text-base space-x-1 font-medium text-gray-700 flex justify-center">
+                          <p className="text-base space-x-1 font-medium text-gray-700 flex justify-center" title="Login">
                             Already have an account ?{" "}
                             <Link href="/login">
                               <p className="text-indigo-500 hover:text-indigo-700 hover:underline hover:border hover:cursor-pointer hover:bg-blue-200 rounded-full px-2 py-px">
                                 Sign in
                               </p>
+                              
                             </Link>
+                            
                           </p>
                         </div>
                       </div>

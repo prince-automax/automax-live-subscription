@@ -166,7 +166,7 @@ export function LiveEventHomePage({
                     );
                   })} */}
                   {data?.liveEvents === null ? (
-                  <div className="sm:hidden w-full h-72 flex items-center justify-center">
+                  <div className="sm:hidden w-full h-52 flex items-center justify-center">
                     <p className="text-center text-gray-500 font-medium text-xl mt-4">
                       We couldn't find any results for your search
                     </p>
@@ -186,7 +186,7 @@ export function LiveEventHomePage({
                     ))}
                   </div>
                 ) : (
-                  <div className="sm:hidden w-full h-72 flex items-center justify-center">
+                  <div className="sm:hidden w-full h-52 flex items-center justify-center">
                     <p className="font-roboto font-semibold text-black animate-pulse sm:text-xl">
                       No completed events at this moment
                     </p>

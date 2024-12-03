@@ -27,6 +27,11 @@ import {
   useResetPasswordMutation,
   ResetPasswordMutationVariables,
 } from "@utils/graphql";
+import {
+  GetErrorMessage,
+  ToastMessage,
+  SuccessMessage,
+} from "@utils/ErrorCodes";
 
 export default function ResetPassword() {
   const router = useRouter();
@@ -104,36 +109,39 @@ export default function ResetPassword() {
           sendOtpDto: { mobile: MobilePhone, forSignin: true },
         });
 
-        // console.log("Result of OTP sending for login:", result);
+        console.log("Result of OTP sending for login:", result);
 
         if (result?.sendOtp?.status === "Success") {
+          console.log("ENTERED HERE");
+          SuccessMessage(
+            "Please enter the OTP received on your registered mobile number."
+          );
+
+          // setSuccess({
+          //   text: "Please enter the OTP received on your registered mobile number.",
+          // });
           setVerificationMode(true);
           setMobileMode(false);
-          setSuccess({
-            text: "Please enter the OTP received on your registered mobile number.",
+        } else {
+          setError({
+            text: "Unable to send OTP. Please contact the support team.",
           });
         }
-        // else {
-        //   setError({
-        //     text: "Unable to send OTP. Please contact the support team.",
-        //   });
-        // }
       }
     } catch (error) {
-      console.log('PASSWORD RESET OTP ERROR', error);
-      
-      // Extracting the specific error message
-      const graphqlError =
-        error?.response?.errors?.[0]?.message ||
-        "An error occurred during OTP sending. Please try again.";
+      console.log("PASSWORD RESET OTP ERROR", error);
 
-      // Log full error for debugging purposes
-      console.error("Error during OTP sending for user creation:", error);
-
-      // Display the extracted error message to the user
-      setError({
-        text: graphqlError,
-      });
+      if (
+        error?.response &&
+        error?.response &&
+        error?.response.errors?.[0]?.errorCode
+      ) {
+        const errorCode = error?.response?.errors?.[0]?.errorCode;
+        const userFriendlyMessage = GetErrorMessage(errorCode);
+        ToastMessage(userFriendlyMessage); // Show toast notification
+      } else {
+        toast.error("An unexpected error occurred. Please try again.");
+      }
     }
   }
 
@@ -150,38 +158,22 @@ export default function ResetPassword() {
         isValid = false;
       }
 
-      // console.log('mobileNUmber:',mobileNumber,'otp:',otp);
-
       if (isValid) {
         const result = await callVerifyOTP.mutateAsync({
           verfiyOtpDto: { mobile: mobileNumber, otp },
         });
 
-        // console.log("result of verify otp", result);
-
         if (result?.verifyOtp?.["access_token"]) {
-          // console.log("hit");
-
-          // Perform necessary actions upon successful OTP verification
-
-          // router.push(`/dashboard`);
           setToken(result?.verifyOtp?.["access_token"]);
+          SuccessMessage(
+            "OTP verification successful. please update your new password"
+          );
 
           setVerificationMode(false);
           setUpdatePasswordMode(true);
-          setSuccess({
-            text: "You have been successfully logged in.",
-          });
-
-          //   localStorage.setItem("token", result.verifyOtp?.["access_token"]);
-          //   localStorage.setItem("id", result.verifyOtp?.["user"]["id"]);
-          //   localStorage.setItem("status", result.verifyOtp["user"]["status"]);
-          //   localStorage.setItem("name", result.verifyOtp["user"]["firstName"]);
 
           setToken(result.verifyOtp["access_token"]);
-          setSuccess({
-            text: "You have been successfully logged in.",
-          });
+
           //   router.push(`/dashboard`);
           setMobileNumber("");
         }
@@ -226,8 +218,6 @@ export default function ResetPassword() {
       console.log(result);
 
       if (result?.resetUserPassword?.id) {
-        // setUpdatePasswordMode(false);
-
         toast.success("Password successfully reset, Please Login");
         router.push("/login");
       }
