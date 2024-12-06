@@ -50,20 +50,7 @@ export function LiveEventHomePage({
     skip: 0,
     take: 10,
     search: debouncedSearch,
-    where: {
-      OR: [
-        {
-          eventCategory: {
-            equals: "online",
-          },
-        },
-        {
-          eventCategory: {
-            equals: "open",
-          },
-        },
-      ],
-    },
+    
   };
   const { data, refetch, isLoading } = useLiveEventsQuery<LiveEventsQuery>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),

@@ -508,6 +508,8 @@ export default function Contact() {
                               as="textarea"
                               id="message"
                               name="message"
+                              maxLength="500"
+
                               rows={4}
                               className="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md"
                               aria-describedby="message-max"

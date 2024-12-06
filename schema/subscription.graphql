@@ -24,3 +24,9 @@ subscription EventsSubscription {
   id  
   }
 }
+
+subscription SubscriptionEventUpdates {
+  subscriptionEventUpdates {
+  id  
+  }
+}

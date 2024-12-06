@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import Datatable from "../ui/Datatable";
 import Loader from "../ui/Loader";
 import moment from "moment";
@@ -21,7 +21,8 @@ import {
 } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import Router from "next/router";
-
+import useFilterConfig from "@utils/filterComponent";
+import FilterComponent from "@utils/filterValues";
 export default function UpcomingEventsTable({
   showHeadings,
   hideSearch,
@@ -30,27 +31,45 @@ export default function UpcomingEventsTable({
   const [accessToken, setAccessToken] = useState("");
   const [registered, setRegistered] = useState(false);
   const [registeredStatus, setRegisteredStatus] = useState("");
-  const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [filterValues, setFilterValues] = useState({
+    startDate: undefined,
+    endDate: undefined,
+    locationId: undefined,
+    eventCategory: undefined,
+    sellerId: undefined,
+  });
+
   const id = localStorage.getItem("id");
-
-  React.useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSearch(search), 300);
-    return () => clearTimeout(timer);
-  }, [search]);
-
-  useEffect(() => {
+   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
       setAccessToken(token);
     }
   }, []);
-
+  const hasFilterValues = Object.values(filterValues).some(
+    (value) => value !== undefined
+  );
   const variables = {
+    where: hasFilterValues ? filterValues : undefined, // Include filters only if they exist
+
     skip: 0,
     take: 10,
     search: debouncedSearch,
   };
+
+  const handleFiltersChange = useCallback((name, value) => {
+    setFilterValues((prev) => ({ ...prev, [name]: value }));
+  }, []);
+
+  const handleResetFilters = useCallback(() => {
+    const newFilterValues = { ...filterValues };
+    Object.keys(newFilterValues).forEach((key) => {
+      newFilterValues[key] = undefined;
+    });
+    setFilterValues(newFilterValues);
+  }, [filterValues]); 
+  // Add `filterValues` as a dependency because the function depends on it.
 
   const { data, isLoading, refetch } =
     useUpcomingEventsQuery<UpcomingEventsQuery>(
@@ -193,7 +212,7 @@ export default function UpcomingEventsTable({
   return (
     <>
       <div className="relative bg-white">
-        <div className="relative rounded-md shadow-sm max-w-sm mt-6">
+        {/* <div className="relative rounded-md shadow-sm max-w-sm mt-6">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
           </div>
@@ -204,9 +223,15 @@ export default function UpcomingEventsTable({
             onChange={(e) => setSearch(e.target.value)}
             className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-600 rounded-md"
           />
-        </div>
+        </div> */}
+        <FilterComponent
+          setDebouncedSearch={setDebouncedSearch}
+          handleResetFilters={handleResetFilters}
+          filterValues={filterValues}
+          handleFiltersChange={handleFiltersChange}
+        />
         {/* {data?.upcomingEvents?.length > 0 ? ( */}
-        <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
+        <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl mt-10">
           {showHeadings && (
             <div className="pt-4 pb-1">
               {data &&

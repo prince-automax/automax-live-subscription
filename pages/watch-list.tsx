@@ -486,12 +486,12 @@ function WatchList() {
                         <div className="mt-1 flex flex-row sm:flex-wrap sm:mt-0 space-x-2 sm:space-x-6 justify-around w-full  sm:max-md:justify-around sm:max-md:w-full ">
                           <div className="flex flex-col space-y-2 w-64">
                             <div className=" flex items-center justify-between text-sm text-blue-800 ">
-                              {item?.inspectionLink !== "" &&
-                                item?.inspectionLink !== null && (
-                                  <Link href={item?.inspectionLink}>
+                               {item?.inspectionLink &&
+                                /^(https?:\/\/)/.test(item.inspectionLink) && (
+                                  <Link href={item.inspectionLink}>
                                     <a
                                       target="_blank"
-                                      className="flex items-center text-xs sm:text-sm  text-blue-800"
+                                      className="flex items-center text-xs sm:text-sm text-blue-800"
                                     >
                                       <DocumentReportIcon
                                         className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
@@ -663,8 +663,8 @@ function WatchList() {
                   {/* image only for desktop view starts here */}
                   {item?.image && (
                     <div
-                      className="hidden sm:block flex-none w-70 h-56  sm:max-md:h-56 sm:max-md:w-full md:h-auto sm:w-60 relative p-6 hover:cursor-pointer"
-                      onClick={() => {
+                    className="flex-none w-60 h-56  sm:max-md:h-56 sm:max-md:w-full md:h-auto sm:w-52 relative p-6 hover:cursor-pointer"
+                    onClick={() => {
                         // BindVehicleImage(item);
                         setImages((item?.image).split(","));
                         setShowImageCarouselModal(true);
@@ -831,21 +831,21 @@ function WatchList() {
                             )}
                           </div>
                           <div className="mt-2 flex items-center text-sm text-blue-800">
-                            {item?.inspectionLink !== "" &&
-                              item?.inspectionLink !== null && (
-                                <Link href={item?.inspectionLink}>
-                                  <a
-                                    target="_blank"
-                                    className="flex items-center text-xs sm:text-sm  text-blue-800"
-                                  >
-                                    <DocumentReportIcon
-                                      className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
-                                      aria-hidden="true"
-                                    />
-                                    Inspection Report
-                                  </a>
-                                </Link>
-                              )}
+                          {item?.inspectionLink &&
+                                /^(https?:\/\/)/.test(item.inspectionLink) && (
+                                  <Link href={item.inspectionLink}>
+                                    <a
+                                      target="_blank"
+                                      className="flex items-center text-xs sm:text-sm text-blue-800"
+                                    >
+                                      <DocumentReportIcon
+                                        className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
+                                        aria-hidden="true"
+                                      />
+                                      Inspection Report
+                                    </a>
+                                  </Link>
+                                )}
                           </div>
                           <div className="mt-2">
                             <Link href={`/vehicle/${item.id}`}>

@@ -333,12 +333,69 @@
 #   }
 # }
 
- query LiveEvents($orderBy: [EventOrderByInput!], $take: Int, $skip: Int, $search: String) {
-  liveEvents(orderBy: $orderBy, take: $take, skip: $skip, search: $search) {
+#  query LiveEvents($orderBy: [EventOrderByInput!], $take: Int, $skip: Int, $search: String) {
+#   liveEvents(orderBy: $orderBy, take: $take, skip: $skip, search: $search) {
+#     bidLock
+#     createdAt
+#     createdById
+#     vehiclesCount
+#     downloadableFile_filename
+#     endDate
+#     eventCategory
+#     eventNo
+#     extraTime  
+#     extraTimeTrigerIn
+#     firstVehicleEndDate
+#     gapInBetweenVehicles
+#     id
+#     location {
+#       name
+#       id
+#     }
+#     noOfBids
+#     pauseDate
+#     pausedTotalTime
+#     seller {
+#       name
+#       mobile
+#     }
+#     startDate
+#     status
+#     termsAndConditions
+#     updatedAt
+#     vehicleCategory {
+#       name
+#     }
+#     vehicleLiveTimeIn
+#   }
+# }
+
+query LiveEvents($take: Int, $skip: Int, $search: String, $where: EventWhereUniqueInput, $orderBy: [EventOrderByInput!]) {
+  liveEvents(take: $take, skip: $skip, search: $search, where: $where, orderBy: $orderBy) {
+    eventNo
+    startDate
+    seller {
+      name
+    }
+    eventCategory
+    vehiclesCount
+    location {
+      name
+    }
+    vehicleCategory {
+      name
+    }
+    firstVehicleEndDate
+    id
+  }
+}
+
+query UpcomingEvents($take: Int, $skip: Int, $search: String, $where: EventWhereUniqueInput) {
+  upcomingEvents(take: $take, skip: $skip, search: $search, where: $where) {
     bidLock
     createdAt
-    createdById
     vehiclesCount
+    createdById
     downloadableFile_filename
     endDate
     eventCategory
@@ -350,14 +407,13 @@
     id
     location {
       name
-      id
     }
     noOfBids
     pauseDate
     pausedTotalTime
     seller {
-      name
       mobile
+      name
     }
     startDate
     status
@@ -370,45 +426,9 @@
   }
 }
 
- query UpcomingEvents($take: Int, $skip: Int, $search: String,) {
-  upcomingEvents(take: $take, skip: $skip, search: $search) {
-    bidLock
-    createdAt
-    vehiclesCount
-    createdById
-    downloadableFile_filename
-    endDate
-    eventCategory
-    eventNo
-    extraTime
-    extraTimeTrigerIn
-    firstVehicleEndDate
-    gapInBetweenVehicles
-    id
-    location {
-      name
-    }
-    noOfBids
-    pauseDate
-    pausedTotalTime
-    seller {
-      mobile
-      name
-    }
-    startDate
-    status
-    termsAndConditions
-    updatedAt
-    vehicleCategory {
-      name
-    }
-    vehicleLiveTimeIn
-  }
-  
-}
 
-query CompletedEvents($take: Int, $skip: Int, $search: String, $orderBy: [EventOrderByInput!]) {
-  completedEvents(take: $take, skip: $skip, search: $search, orderBy: $orderBy) {
+query CompletedEvents($take: Int, $skip: Int, $search: String, $orderBy: [EventOrderByInput!], $where: EventWhereUniqueInput) {
+  completedEvents(take: $take, skip: $skip, search: $search, orderBy: $orderBy, where: $where) {
     eventNo
     startDate
     seller {
@@ -427,7 +447,7 @@ query CompletedEvents($take: Int, $skip: Int, $search: String, $orderBy: [EventO
     }
     firstVehicleEndDate
     id
-     vehicleCategory {
+    vehicleCategory {
       name
     }
     downloadableFile_filename

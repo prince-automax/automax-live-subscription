@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import Datatable from "../ui/Datatable";
 import Loader from "../ui/Loader";
 import moment from "moment";
@@ -18,6 +18,7 @@ import graphQLClient from "@utils/useGQLQuery";
 import Router from "next/router";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import FilterComponent from "@utils/filterValues";
 
 export default function EventsTable({
   showHeadings,
@@ -28,8 +29,14 @@ export default function EventsTable({
   const [accessToken, setAccessToken] = useState("");
   const [registered, setRegistered] = useState(false);
   const [registeredStatus, setRegisteredStatus] = useState("");
-  const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [filterValues, setFilterValues] = useState({
+    startDate: undefined,
+    endDate: undefined,
+    locationId: undefined,
+    eventCategory: undefined,
+    sellerId: undefined,
+  });
   const id = localStorage.getItem("id");
 
   useEffect(() => {
@@ -38,25 +45,36 @@ export default function EventsTable({
       setAccessToken(token);
     }
   }, []);
-  React.useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSearch(search), 300);
-    return () => clearTimeout(timer);
-  }, [search]);
+
+  const hasFilterValues = Object.values(filterValues).some(
+    (value) => value !== undefined
+  );
 
   const variables = {
+    where: hasFilterValues ? filterValues : undefined, // Include filters only if they exist
     skip: 0,
     take: 10,
     search: debouncedSearch,
-    where: {
-      eventCategory: {
-        equals: eventCategory,
-      },
-    },
+    
   };
+
   const { data, isLoading } = useCompletedEventsQuery<CompletedEventsQuery>(
     graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     variables
   );
+
+  const handleFiltersChange = useCallback((name, value) => {
+    setFilterValues((prev) => ({ ...prev, [name]: value }));
+  }, []);
+
+  const handleResetFilters = useCallback(() => {
+    const newFilterValues = { ...filterValues };
+    Object.keys(newFilterValues).forEach((key) => {
+      newFilterValues[key] = undefined;
+    });
+    setFilterValues(newFilterValues);
+  }, [filterValues]); // Add `filterValues` as a dependency because the function depends on it.
+
 
   console.log("daata", data);
 
@@ -207,20 +225,14 @@ export default function EventsTable({
   ];
   return (
     <>
-      <div className="relative bg-white">
-        <div className="relative rounded-md shadow-sm max-w-sm mt-6">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-          </div>
-          <input
-            type="text"
-            placeholder="Search completed events..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-600 rounded-md"
-          />
-        </div>
-        <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
+      <div className="relative bg-white space-y-10">
+      <FilterComponent
+          setDebouncedSearch={setDebouncedSearch}
+          handleResetFilters={handleResetFilters}
+          filterValues={filterValues}
+          handleFiltersChange={handleFiltersChange}
+        /> 
+        <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl ">
           {showHeadings && (
             <div className="pt-16 pb-8">
               <h2 className="text-base font-semibold tracking-wider text-primary uppercase">

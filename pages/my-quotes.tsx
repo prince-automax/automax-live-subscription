@@ -174,11 +174,7 @@ const MyQuotes = () => {
       </div>
     </DashboardTemplate>
   );
-  // function AuctionId(){
-  //     return (
-  //         <div></div>
-  //     )
-  // }
+ 
 
   function AuctionDetails({ row }) {
     return (

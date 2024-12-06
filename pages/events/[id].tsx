@@ -72,7 +72,6 @@ function Events() {
   const [showCode, setShowCode] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       const { eventid, type } = router.query;
@@ -103,29 +102,28 @@ function Events() {
     setShowCode(!showCode);
   };
 
-
   // console.log('tik',tick);
-  
-  const { data: timeData ,refetch:timeRefetch } = useTimeQueryQuery<TimeQueryQueryVariables>(
-    client,
-    {},
-    {
-      enabled: !!accessToken && !!id, // Enable query only when `isReady` is true
-      refetchOnWindowFocus: true,
-      refetchInterval: false, // Do not refetch on window focus
-      refetchOnMount: false, // Prevent refetch on component mount
-      // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
-    }
-  );
+
+  const { data: timeData, refetch: timeRefetch } =
+    useTimeQueryQuery<TimeQueryQueryVariables>(
+      client,
+      {},
+      {
+        enabled: !!accessToken && !!id, // Enable query only when `isReady` is true
+        refetchOnWindowFocus: true,
+        refetchInterval: false, // Do not refetch on window focus
+        refetchOnMount: false, // Prevent refetch on component mount
+        // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
+      }
+    );
   useEffect(() => {
-    console.log('hit');
+    console.log("hit");
     // timeRefetch()
     const timer = setInterval(() => {
       setTick((tic) => tic + 1);
     }, 1000);
     return () => clearInterval(timer);
   }, []);
-
 
   useEffect(() => {
     if (timeData && timeData.time) {
@@ -219,8 +217,6 @@ function Events() {
 
   const handleBidSubmission = useCallback(
     async (amount, vehicleId) => {
-      
-      
       const confirmed = await Swal.fire({
         text: `Are you sure to bid for Rs. ${amount}?`,
         title: "BID CONFIRMATION",
@@ -256,7 +252,7 @@ function Events() {
           ) {
             const errorCode = error.response.errors?.[0]?.errorCode;
             console.log("ERROR CODE ", errorCode);
-    
+
             const userFriendlyMessage = GetErrorMessage(errorCode);
             ToastMessage(userFriendlyMessage); // Show toast notification
           } else {
@@ -334,7 +330,7 @@ function Events() {
             const expiryTime = moment(item.bidTimeExpire);
             const currentTime = moment(serverTime).add(tick, "seconds");
             const diff = expiryTime.diff(currentTime, "seconds");
-            
+
             if ((diff > 0 && type == "l") || type == "c") {
               return (
                 <>
@@ -354,7 +350,6 @@ function Events() {
                   >
                     {/* workbook, title, image, vehic info, add to watch, more details , inspection report */}
                     <div className="flex-auto p-3 space-y-5  ">
-                      
                       {/* title of vehicle and seller name */}
                       <div className="sm:flex flex-wrap">
                         <div className="flex-auto">
@@ -378,7 +373,7 @@ function Events() {
                         >
                           <Image
                             alt="img"
-                            src={item?.image}
+                            src={item?.image.split(",")[0]}
                             layout="fill"
                             className="absolute inset-0 w-full h-full object-cover rounded"
                           />
@@ -497,18 +492,21 @@ function Events() {
                                 //   setShowInspectionReportModal(true)
                                 // }
                               >
-                                {item?.inspectionLink !== "" &&
-                                  item?.inspectionLink !== null && (
-                                    <Link href={item?.inspectionLink}>
-                                      <a
-                                        target="_blank"
-                                        className="flex items-center text-sm font-roboto font-medium text-[#2563EB]"
-                                      >
-                                        Inspection Report
-                                      </a>
-                                    </Link>
-                                  )}
-
+                                {item?.inspectionLink &&
+                                /^(https?:\/\/)/.test(item.inspectionLink) && (
+                                  <Link href={item.inspectionLink}>
+                                    <a
+                                      target="_blank"
+                                      className="flex items-center text-xs sm:text-sm text-blue-800"
+                                    >
+                                      <DocumentReportIcon
+                                        className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
+                                        aria-hidden="true"
+                                      />
+                                      Inspection Report  
+                                    </a>
+                                  </Link>
+                                )}
                                 <FontAwesomeIcon icon={faCircleInfo} />
                               </div>
 
@@ -720,7 +718,7 @@ function Events() {
                   >
                     {item?.image && (
                       <div
-                        className="flex-none w-70 h-56  sm:max-md:h-56 sm:max-md:w-full md:h-auto sm:w-60 relative p-6 hover:cursor-pointer"
+                        className="flex-none w-60 h-56  sm:max-md:h-56 sm:max-md:w-full md:h-auto sm:w-52 relative p-6 hover:cursor-pointer"
                         onClick={() => {
                           // BindVehicleImage(item);
                           setImages((item?.image).split(","));
@@ -730,7 +728,7 @@ function Events() {
                       >
                         <Image
                           alt="img"
-                          src={item?.image}
+                          src={item?.image.split(",")[0]}
                           layout="fill"
                           className="absolute inset-0 w-full h-full object-cover rounded"
                         />
@@ -905,53 +903,20 @@ function Events() {
                               </div>
                             )}
 
-                            {/* {IsCompleted(item) && (
-                            <div className="mt-2 flex items-center text-sm text-gray-500">
-                              {!(item.watchedByCount > 0) ? (
-                                <button
-                                  type="button"
-                                  className="inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded text-white bg-blue-800 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                  onClick={() => AddWatchlist(item.id)}
-                                >
-                                  <PlusIcon
-                                    className="-ml-0.5 mr-2 h-4 w-4"
-                                    aria-hidden="true"
-                                  />
-                                  Add to watchlist
-                                </button>
-                              ) : (
-                                <button
-                                  type="button"
-                                  className="inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                  onClick={() => RemoveWatchlist(item.id)}
-                                >
-                                  <MinusIcon
-                                    className="-ml-0.5 mr-2 h-4 w-4"
-                                    aria-hidden="true"
-                                  />
-                                  from watchlist
-                                </button>
-                              )}
-                            </div>
-                          )} */}
+                            
 
                             <div
-                              className="mt-2 flex items-center text-sm text-blue-800 hover:cursor-pointer hover:text-blue-600"
+                              className=" flex items-center text-sm text-blue-800 hover:cursor-pointer hover:text-blue-600"
                               // onClick={() => setShowInspectionReportModal(true)}
                               onClick={() => {}}
                             >
-                              {/* <DocumentReportIcon
-                              className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
-                              aria-hidden="true"
-                            />
-                            Inspection Report
-                             */}
-                              {item?.inspectionLink !== "" &&
-                                item?.inspectionLink !== null && (
-                                  <Link href={item?.inspectionLink}>
+                              
+                              {item?.inspectionLink &&
+                                /^(https?:\/\/)/.test(item.inspectionLink) && (
+                                  <Link href={item.inspectionLink}>
                                     <a
                                       target="_blank"
-                                      className="flex items-center text-xs sm:text-sm  text-blue-800"
+                                      className="flex items-center text-xs sm:text-sm text-blue-800"
                                     >
                                       <DocumentReportIcon
                                         className="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-700"
@@ -1196,8 +1161,7 @@ const EnterBid = ({ row, call, event }) => {
             // console.log("963", value);
 
             Swal.fire({
-              title:
-               `Bid amount must be multiple of ${row.quoteIncreament}`,
+              title: `Bid amount must be multiple of ${row.quoteIncreament}`,
               confirmButtonText: "OK",
               icon: "warning", // You can use 'success', 'error', 'info', or 'question' as well
 

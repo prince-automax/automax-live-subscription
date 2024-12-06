@@ -1,0 +1,16 @@
+query GetLocations {
+  locations {
+    name
+    id
+    state {
+      name
+    }
+  }
+}
+
+query GetSellers {
+  sellers {
+    id
+    name
+  }
+}

@@ -243,6 +243,9 @@ query GetVehicle($where: VehicleWhereUniqueInput!) {
       rtoFine
       shape
       startPrice
+       state,
+    tax,
+    taxValidityDate
       startBidAmount
       # state
       updatedAt

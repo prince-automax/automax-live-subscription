@@ -18,7 +18,8 @@ const nextConfig = {
             "api-dev.autobse.com",
             "ops.adroitauto.in",
             "autobseimagesandexcel-dev.s3.ap-south-1.amazonaws.com",
-            "aiv2client.autoinspekt.com"
+            "aiv2client.autoinspekt.com",
+            "autobse-e4ed2.appspot.com"
         ],
         minimumCacheTTL: 60, // Cache time in seconds (default is 60)
 

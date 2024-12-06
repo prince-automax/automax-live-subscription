@@ -193,14 +193,23 @@ export default function ResetPassword() {
       // Log full error for debugging purposes
       console.error("Error during OTP sending for user creation:", error);
       if (graphqlError === "Invalid otp.") {
-        graphqlError = "Invalid OTP";
+        // graphqlError = "Invalid OTP";
         setVerificationMode(true);
         setOTP("");
       }
-      //  else {
-      //   setVerificationMode(false);
-      // }
-      // Display the extracted error message to the user
+      if (
+        error.response &&
+        error.response &&
+        error.response.errors?.[0]?.errorCode
+      ) {
+        const errorCode = error.response.errors?.[0]?.errorCode;
+        console.log("ERROR CODE ", errorCode);
+
+        const userFriendlyMessage = GetErrorMessage(errorCode);
+        ToastMessage(userFriendlyMessage); // Show toast notification
+      } else {
+        toast.error("An unexpected error occurred. Please try again.");
+      }
       setError({
         text: graphqlError,
       });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import Datatable from "../ui/Datatable";
 import Loader from "../ui/Loader";
 import moment from "moment";
@@ -10,10 +10,8 @@ import {
 import AlertModal from "../ui/AlertModal";
 import {
   useLiveEventsQuery,
-  LiveEventsQueryVariables,
   LiveEventsQuery,
   useGetUserQuery,
-  GetUserQueryVariables,
   GetUserQuery,
 } from "@utils/graphql";
 import { useEventsSubscriptionSubscription } from "@utils/apollo";
@@ -23,7 +21,8 @@ import Link from "next/link";
 import DataTableUILoggedIn from "../ui/DataTableUILoggedIn";
 import toast from "react-hot-toast";
 import { OrderDirection } from "@utils/apollo";
-
+import useFilterConfig from "@utils/filterComponent";
+import FilterComponent from "@utils/filterValues";
 const EventsTable = ({
   showHeadings,
   hideSearch,
@@ -35,8 +34,14 @@ const EventsTable = ({
   const [registered, setRegistered] = useState(false);
   const [registeredStatus, setRegisteredStatus] = useState("");
   const [messageShown, setMessageShown] = useState({});
-  const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [filterValues, setFilterValues] = useState({
+    startDate: undefined,
+    endDate: undefined,
+    locationId: undefined,
+    eventCategory: undefined,
+    sellerId: undefined,
+  });
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -47,30 +52,42 @@ const EventsTable = ({
     }
   }, []);
 
-  React.useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSearch(search), 300);
-    return () => clearTimeout(timer);
-  }, [search]);
-
   const client = React.useMemo(
     () => graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     [accessToken]
   );
 
+  const handleFiltersChange = useCallback((name, value) => {
+    setFilterValues((prev) => ({ ...prev, [name]: value }));
+  }, []);
+
+  const handleResetFilters = useCallback(() => {
+    const newFilterValues = { ...filterValues };
+    Object.keys(newFilterValues).forEach((key) => {
+      newFilterValues[key] = undefined;
+    });
+    setFilterValues(newFilterValues);
+  }, [filterValues]);
   const LiveEventSubscription = useEventsSubscriptionSubscription();
+
+  const hasFilterValues = Object.values(filterValues).some(
+    (value) => value !== undefined
+  );
 
   const variables = useMemo(
     () => ({
       skip: 0,
+      where: hasFilterValues ? filterValues : undefined, // Include filters only if they exist
+
       search: debouncedSearch,
       take: 10,
       orderBy: [
         {
-          endDate: OrderDirection.Desc,
+          endDate: OrderDirection.Asc,
         },
       ],
     }),
-    [debouncedSearch]
+    [debouncedSearch, hasFilterValues, filterValues]
   );
 
   const { data, isLoading, refetch, isFetching } =
@@ -78,10 +95,7 @@ const EventsTable = ({
       enabled: !!accessToken,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
-      // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
     });
-
-  console.log("LIve events", data);
 
   useEffect(() => {
     if (LiveEventSubscription?.data) {
@@ -101,10 +115,8 @@ const EventsTable = ({
 
   const payment = userData ? userData["user"]?.payments : "";
 
-  // console.log(' User payments',userData);
-  // console.log(' User payments stTUA',registered);
+  
   const handleBidNowClick = (eventId) => {
-    // If the message hasn't been shown for this event
     if (!messageShown[eventId]) {
       // Show the message
       toast(
@@ -146,6 +158,7 @@ const EventsTable = ({
     }
   };
 
+
   const PaymentStatus = () => {
     toast(
       "Your Access to this service has been disabled. Please contact Autobse for assistance",
@@ -179,6 +192,7 @@ const EventsTable = ({
     );
   };
 
+
   useEffect(() => {
     if (payment) {
       payment?.map((item) => {
@@ -188,20 +202,16 @@ const EventsTable = ({
           } else {
             setRegisteredStatus(item.status);
           }
-
-          // console.log("trueeeee");
         } else {
-          // console.log("falseeeeeeeeeee");
         }
       });
     }
   }, [payment]);
-  // eventNo
+
   const columns = [
     {
       Header: " No",
       accessor: "eventNo",
-      // Cell: ({ cell: { value } }) => StartDate(value),
     },
     {
       Header: "Event Date",
@@ -276,21 +286,15 @@ const EventsTable = ({
 
   return (
     <>
-      <div className="relative bg-white">
-        <div className="relative rounded-md shadow-sm max-w-sm">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-          </div>
-          <input
-            type="text"
-            placeholder="Search live events..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-600 rounded-md"
-          />
-        </div>
-        {/* {data?.liveEvents?.length > 0 ? ( */}
-        <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl">
+      <div className="relative bg-white   ">
+        <FilterComponent
+          setDebouncedSearch={setDebouncedSearch}
+          handleResetFilters={handleResetFilters}
+          filterValues={filterValues}
+          handleFiltersChange={handleFiltersChange}
+        />
+
+        <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-5xl mt-10">
           {showHeadings && (
             <div className="pt-8 pb-8">
               {data?.liveEvents?.length == 0 ? (
@@ -311,8 +315,6 @@ const EventsTable = ({
             <>
               <>
                 <div className="sm:hidden">
-
-
                   {/* {data?.liveEvents?.map((event, eventIdx) => {
                     return (
                       <MobielViewCard
@@ -327,35 +329,33 @@ const EventsTable = ({
                     );
                   })} */}
 
-{data?.liveEvents === null ? (
-                  <div className="sm:hidden w-full h-52 flex items-center justify-center">
-                    <p className="text-center text-gray-500 font-medium text-xl mt-4">
-                      We couldn't find any results for your search
-                    </p>
-                  </div>
-                ) : data?.liveEvents.length > 0 ? (
-                  <div className="sm:hidden">
-                    {data?.liveEvents?.map((event, eventIdx) => (
-                      <MobielViewCard
-                        key={eventIdx}
-                        index1={eventIdx}
-                        event={event}
-                        allowDownload={allowDownload}
-                        registered={registered}
-                        registeredStatus={registeredStatus}
-                        PaymentStatus={PaymentStatus}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="sm:hidden w-full h-52 flex items-center justify-center">
-                    <p className="font-roboto font-semibold text-black animate-pulse sm:text-xl">
-                      No completed events at this moment
-                    </p>
-                  </div>
-                )}
-
-
+                  {data?.liveEvents === null ? (
+                    <div className="sm:hidden w-full h-52 flex items-center justify-center">
+                      <p className="text-center text-gray-500 font-medium text-xl mt-4">
+                        We couldn't find any results for your search
+                      </p>
+                    </div>
+                  ) : data?.liveEvents.length > 0 ? (
+                    <div className="sm:hidden">
+                      {data?.liveEvents?.map((event, eventIdx) => (
+                        <MobielViewCard
+                          key={eventIdx}
+                          index1={eventIdx}
+                          event={event}
+                          allowDownload={allowDownload}
+                          registered={registered}
+                          registeredStatus={registeredStatus}
+                          PaymentStatus={PaymentStatus}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="sm:hidden w-full h-52 flex items-center justify-center">
+                      <p className="font-roboto font-semibold text-black animate-pulse sm:text-xl">
+                        No completed events at this moment
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="hidden sm:block">
@@ -383,13 +383,6 @@ const EventsTable = ({
             </>
           )}
         </div>
-        {/* ) : (
-          <div className="w-full h-72 flex items-center justify-center ">
-            <p className="font-roboto font-semibold text-black animate-pulse sm:text-xl">
-              No Live events at this moment
-            </p>
-          </div>
-        )} */}
       </div>
     </>
   );
@@ -401,14 +394,6 @@ EventsTable.defaultProps = {
   hideSearch: false,
   allowDownload: false,
 };
-
-function vechileCount(value) {
-  return (
-    <div>
-      <span>{value}</span>
-    </div>
-  );
-}
 
 function View(value, eventCategory) {
   return (

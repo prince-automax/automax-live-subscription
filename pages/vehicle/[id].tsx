@@ -56,7 +56,7 @@ function Vehicle() {
     () => graphQLClient({ Authorization: `Bearer ${accessToken}` }),
     [accessToken]
   );
-  
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
@@ -77,10 +77,10 @@ function Vehicle() {
     client,
     {},
     {
-      enabled: !!accessToken && !!id,                // Enable query only when `isReady` is true
-      refetchOnWindowFocus: true,  
-      refetchInterval:false  ,  // Do not refetch on window focus
-      refetchOnMount: false,            // Prevent refetch on component mount
+      enabled: !!accessToken && !!id, // Enable query only when `isReady` is true
+      refetchOnWindowFocus: true,
+      refetchInterval: false, // Do not refetch on window focus
+      refetchOnMount: false, // Prevent refetch on component mount
       // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
     }
   );
@@ -249,9 +249,9 @@ function Vehicle() {
     <DashboardTemplate>
       <div className="px-6 mb-8 md:flex md:items-center md:justify-between">
         <div className="flex-1 min-w-0">
-          <h2 className="text-xl font-semibold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+          {/* <h2 className="text-xl font-semibold leading-7 text-gray-900 sm:text-3xl sm:truncate">
             Vehicle
-          </h2>
+          </h2> */}
         </div>
         {/* <div className="mt-4 flex md:mt-0 md:ml-4">
           <button
@@ -273,66 +273,69 @@ function Vehicle() {
       <div className="mt-2 max-w-3xl mx-auto grid grid-cols-1 gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
         <div className="space-y-6 lg:col-start-1 lg:col-span-2 w-full">
           {/* deskop view for the image vstarts here */}
-          <section className="hidden sm:block w-full">
-            <Tab.Group
-              as="div"
-              className="flex flex-col max-w-2xl justify-between"
-            >
-              <div className="w-full    max-w-3xl mx-auto sm:block">
-                <Tab.Panels className="w-full aspect-w-1 aspect-h-1">
-                  {images?.map((image, index) => (
-                    <Tab.Panel key={image.id}>
-                      <Image
-                        alt={`image${index}`}
-                        src={image.trim()}
-                        className="w-full h-full sm:rounded-lg "
-                        width={500}
-                        height={300}
-                        objectFit="cover"
-                      />
-                    </Tab.Panel>
-                  ))}
-                </Tab.Panels>
-              </div>
+          {images?.every((image) => image.trim().startsWith("https://")) && (
+            <section className="hidden sm:block w-full">
+              <Tab.Group
+                as="div"
+                className="flex flex-col max-w-2xl justify-between"
+              >
+                <div className="w-full max-w-3xl mx-auto sm:block">
+                  <Tab.Panels className="w-full aspect-w-1 aspect-h-1">
+                    {images?.map((image, index) => (
+                      <Tab.Panel key={image.id}>
+                        <Image
+                          alt={`image${index}`}
+                          src={image.trim()}
+                          className="w-full h-full sm:rounded-lg"
+                          width={500}
+                          height={300}
+                          objectFit="cover"
+                        />
+                      </Tab.Panel>
+                    ))}
+                  </Tab.Panels>
+                </div>
 
-              <div className=" mt-6 w-full max-w-2xl mx-auto sm:block lg:max-w-none">
-                <Tab.List className="grid grid-cols-4 gap-6">
-                  {images?.map((image, index) => (
-                    <Tab
-                      key={index}
-                      className="relative h-24 bg-white rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
-                    >
-                      {({ selected }) => (
-                        <>
-                          {/* <span className="sr-only">{image.name}</span> */}
-                          <span className="absolute inset-0 rounded-md overflow-hidden">
-                            <Image
-                              alt={image}
-                              src={image.trim()}
-                              className="w-full h-full object-center object-cover"
-                              layout="fill"
+                <div className="mt-6 w-full max-w-2xl mx-auto sm:block lg:max-w-none">
+                  <Tab.List className="grid grid-cols-4 gap-6">
+                    {images?.map((image, index) => (
+                      <Tab
+                        key={index}
+                        className="relative h-24 bg-white rounded-md flex items-center justify-center text-sm font-medium uppercase text-gray-900 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring focus:ring-offset-4 focus:ring-opacity-50"
+                      >
+                        {({ selected }) => (
+                          <>
+                            <span className="absolute inset-0 rounded-md overflow-hidden">
+                              <Image
+                                alt={image}
+                                src={image.trim()}
+                                className="w-full h-full object-center object-cover"
+                                layout="fill"
+                              />
+                            </span>
+                            <span
+                              className={classNames(
+                                selected
+                                  ? "ring-indigo-500"
+                                  : "ring-transparent",
+                                "absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
+                              )}
+                              aria-hidden="true"
                             />
-                          </span>
-                          <span
-                            className={classNames(
-                              selected ? "ring-indigo-500" : "ring-transparent",
-                              "absolute inset-0 rounded-md ring-2 ring-offset-2 pointer-events-none"
-                            )}
-                            aria-hidden="true"
-                          />
-                        </>
-                      )}
-                    </Tab>
-                  ))}
-                </Tab.List>
-              </div>
-            </Tab.Group>
-          </section>
+                          </>
+                        )}
+                      </Tab>
+                    ))}
+                  </Tab.List>
+                </div>
+              </Tab.Group>
+            </section>
+          )}
 
           {/* deskop view for the image ends here */}
 
           {/* mobile view of image starts here*/}
-          {vehicle?.image ? (
+          {vehicle?.image && (
             <section className="sm:hidden border-2 ">
               <div className=" h-fit border-2 rounded-lg  ">
                 <Splide options={options} aria-label="React Splide Example">
@@ -350,13 +353,15 @@ function Vehicle() {
                 </Splide>
               </div>
             </section>
-          ) : (
-            <div className=" text-center sm:hidden  ">
-              <p className="font-poppins font-semibold animate-pulse ">
-                No images for this vehicle
-              </p>
-            </div>
-          )}
+          )
+          //  : (
+          //   <div className=" text-center sm:hidden  ">
+          //     <p className="font-poppins font-semibold animate-pulse ">
+          //       No images for this vehicle
+          //     </p>
+          //   </div>
+          // )
+          }
           {/* mobile view of image ends here*/}
 
           <section>
@@ -469,7 +474,7 @@ function Vehicle() {
                 <div className="flex items-center justify-between">
                   <dt className="text-sm text-gray-200">Start Price</dt>
                   <dd className="text-sm font-medium text-gray-200">
-                  ₹ {vehicle?.startPrice? vehicle?.startPrice :"0"}
+                    ₹ {vehicle?.startPrice ? vehicle?.startPrice : "0"}
                   </dd>
                 </div>
                 {vehicle?.event?.bidLock === "locked" ? (
@@ -543,7 +548,8 @@ function Vehicle() {
                     //     position: "center",
                     //   });
                     // }
-                      if (vehicle?.event?.bidLock === "locked" &&
+                    if (
+                      vehicle?.event?.bidLock === "locked" &&
                       vehicle?.currentBidAmount >= parseInt(bidAmount)
                     ) {
                       Swal.fire({
@@ -568,8 +574,7 @@ function Vehicle() {
                       parseInt(bidAmount) % vehicle?.quoteIncreament !== 0
                     ) {
                       Swal.fire({
-                        title:
-                        `Bid amount must be multiple of ${vehicle?.quoteIncreament}`,
+                        title: `Bid amount must be multiple of ${vehicle?.quoteIncreament}`,
                         confirmButtonText: "OK",
                         icon: "warning", //
                         position: "center",
