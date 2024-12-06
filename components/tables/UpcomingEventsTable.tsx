@@ -212,23 +212,13 @@ export default function UpcomingEventsTable({
   return (
     <>
       <div className="relative bg-white">
-        {/* <div className="relative rounded-md shadow-sm max-w-sm mt-6">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-          </div>
-          <input
-            type="text"
-            placeholder="Search upcoming events..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-600 rounded-md"
-          />
-        </div> */}
+       
         <FilterComponent
           setDebouncedSearch={setDebouncedSearch}
           handleResetFilters={handleResetFilters}
           filterValues={filterValues}
           handleFiltersChange={handleFiltersChange}
+          placeholder="Search upcoming events"
         />
         {/* {data?.upcomingEvents?.length > 0 ? ( */}
         <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl mt-10">

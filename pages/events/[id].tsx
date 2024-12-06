@@ -136,15 +136,14 @@ function Events() {
   const BidUpdate = useBidCreationSubscription();
   const UserUpdate = useUserUpdateSubscriptionSubscription();
 
-  // console.log("UserUpdate", UserUpdate);
-  // console.log("BidUpdate", BidUpdate);
+  ;
 
   const { data, isLoading, isError, error, refetch } =
     useGetEventsQuery<GetEventsQuery>(
       client,
       {
         where: { id: id as string },
-        orderBy: [{ bidTimeExpire: OrderDirection.Asc }],
+        orderBy: { bidTimeExpire: OrderDirection.Asc },
         take: 1000,
         skip: 0,
       },

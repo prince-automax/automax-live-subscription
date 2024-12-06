@@ -4,7 +4,7 @@ import {
     DocumentDownloadIcon,
     SearchIcon,
   } from "@heroicons/react/outline";
-const SearchComponent = ({setDebouncedSearch,handleResetFilters}) => {
+const SearchComponent = ({setDebouncedSearch,handleResetFilters,placeholder}) => {
   const [search, setSearch] = useState("");
 //   const [debouncedSearch, setDebouncedSearch] = useState("");
 
@@ -29,7 +29,7 @@ const SearchComponent = ({setDebouncedSearch,handleResetFilters}) => {
     </div>
     <input
       type="text"
-      placeholder="Search live events..."
+      placeholder={placeholder}
       value={search}
       onChange={(e) => setSearch(e.target.value)}
       className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-600 rounded-md"

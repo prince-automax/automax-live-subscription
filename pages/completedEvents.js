@@ -6,7 +6,9 @@ function EventsCalendar() {
 
     return (
         <DashboardTemplate heading="Completed Events" subHeading="List of all completed events">
+             <div className="mt-2">
             <CompletedEventsTable showHeadings={false} allowDownload={true} />
+            </div>
         </DashboardTemplate>
     )
 }

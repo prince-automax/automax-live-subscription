@@ -99,13 +99,13 @@ import CustomFilter from "@utils/filter";
 import SearchComponent from '@utils/searchComponent';
 
 
-const FilterComponent = ({setDebouncedSearch,handleResetFilters,filterValues,handleFiltersChange}) => {
+const FilterComponent = ({setDebouncedSearch,handleResetFilters,filterValues,handleFiltersChange,placeholder}) => {
   const configuration = useFilterConfig();
 
   console.log("789", configuration);
   return (
    <div className=''>
-   <SearchComponent setDebouncedSearch={setDebouncedSearch}  handleResetFilters={handleResetFilters}/>
+   <SearchComponent setDebouncedSearch={setDebouncedSearch}  handleResetFilters={handleResetFilters} placeholder={placeholder}/>
       
 
         <div className="grid grid-cols-3 gap-4   mt-8">

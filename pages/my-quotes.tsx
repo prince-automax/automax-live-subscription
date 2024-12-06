@@ -4,15 +4,8 @@ import withPrivateRoute from "../utils/withPrivateRoute";
 import Datatable from "../components/ui/Datatable";
 import Loader from "../components/ui/Loader";
 import {
-  useAddToWatchlistMutation,
-  AddToWatchlistMutationVariables,
-  useRemoveFromWatchlistMutation,
-  RemoveFromWatchlistMutationVariables,
-  useUserWatchlistQuery,
-  useGetEventsQuery,
-  GetEventsQuery,
-  useCreateBidMutation,
-  CreateBidMutationVariables,
+useUpdateUserMutation,
+UpdateUserMutationVariables,
   useTimeQueryQuery,
   TimeQueryQueryVariables,
   OrderDirection,
@@ -108,14 +101,11 @@ const MyQuotes = () => {
     }
   );
 
-  console.log('data',data);   
-
-  // UpdateVehicleMutationVariables,
-  // useUpdateVehicleMutation,
 
   const callUpdateVehicle =
-    useUpdateVehicleMutation<UpdateVehicleMutationVariables>(client);
-
+  useUpdateVehicleMutation<UpdateVehicleMutationVariables>(client);
+  // UpdateVehicleMutationVariables,
+  // useUpdateVehicleMutation,
   useEffect(() => {
     if (data?.vehicles) {
       // setAPIInterval(0);

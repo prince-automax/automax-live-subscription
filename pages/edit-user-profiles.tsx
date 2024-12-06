@@ -159,7 +159,7 @@ function ProfileUpdate() {
         data: {
           firstName: values.firstName,
           lastName: values.lastName,
-          // email: values.email,
+          email: values.email,
           city: values.city,
           state: values.state,
           country: "India",

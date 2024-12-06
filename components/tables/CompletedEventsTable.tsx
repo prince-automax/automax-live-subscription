@@ -231,6 +231,8 @@ export default function EventsTable({
           handleResetFilters={handleResetFilters}
           filterValues={filterValues}
           handleFiltersChange={handleFiltersChange}
+          placeholder="Search completed events"
+
         /> 
         <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-7xl ">
           {showHeadings && (

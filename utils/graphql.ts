@@ -1696,6 +1696,14 @@ export type ResetPasswordMutationVariables = Exact<{
 
 export type ResetPasswordMutation = { __typename?: 'Mutation', resetUserPassword: { __typename?: 'User', id: string, status: string, firstName: string, username: string } };
 
+export type UpdateBidMutationVariables = Exact<{
+  where: BidWhereUniqueInput;
+  updateBidInput: UpdateBidInput;
+}>;
+
+
+export type UpdateBidMutation = { __typename?: 'Mutation', updateBid: { __typename?: 'Bid', id: string } };
+
 export type CreateBidMutationVariables = Exact<{
   bidVehicleId: Scalars['String'];
   createBidInput: CreateBidInput;
@@ -1823,6 +1831,11 @@ export type EventsSubscriptionSubscriptionVariables = Exact<{ [key: string]: nev
 
 
 export type EventsSubscriptionSubscription = { __typename?: 'Subscription', subscriptionEventUpdates: { __typename?: 'Event', id: string } };
+
+export type SubscriptionEventUpdatesSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SubscriptionEventUpdatesSubscription = { __typename?: 'Subscription', subscriptionEventUpdates: { __typename?: 'Event', id: string } };
 
 export type UserPaymentsQueryVariables = Exact<{
   search?: InputMaybe<Scalars['String']>;
@@ -1998,6 +2011,26 @@ export const useResetPasswordMutation = <
     useMutation<ResetPasswordMutation, TError, ResetPasswordMutationVariables, TContext>(
       ['ResetPassword'],
       (variables?: ResetPasswordMutationVariables) => fetcher<ResetPasswordMutation, ResetPasswordMutationVariables>(client, ResetPasswordDocument, variables, headers)(),
+      options
+    );
+export const UpdateBidDocument = `
+    mutation UpdateBid($where: BidWhereUniqueInput!, $updateBidInput: UpdateBidInput!) {
+  updateBid(where: $where, updateBidInput: $updateBidInput) {
+    id
+  }
+}
+    `;
+export const useUpdateBidMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<UpdateBidMutation, TError, UpdateBidMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<UpdateBidMutation, TError, UpdateBidMutationVariables, TContext>(
+      ['UpdateBid'],
+      (variables?: UpdateBidMutationVariables) => fetcher<UpdateBidMutation, UpdateBidMutationVariables>(client, UpdateBidDocument, variables, headers)(),
       options
     );
 export const CreateBidDocument = `
@@ -2582,6 +2615,13 @@ export const UserUpdateSubscriptionDocument = `
     `;
 export const EventsSubscriptionDocument = `
     subscription EventsSubscription {
+  subscriptionEventUpdates {
+    id
+  }
+}
+    `;
+export const SubscriptionEventUpdatesDocument = `
+    subscription SubscriptionEventUpdates {
   subscriptionEventUpdates {
     id
   }

@@ -383,8 +383,8 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
               </button>
             )}
 
-            <div className="space-y-6 sm:flex sm:items-center sm:max-lg:mt-2 lg:mt-6">
-              <div className="sm:flex-auto">
+            <div className="space-y-6 sm:flex sm:items-center sm:max-lg:mt-4 lg:mt-5 ">
+              <div className="sm:flex-auto  mb-4">
                 {heading && (
                   <h1 className="text-xl font-semibold text-gray-900">
                     {heading}
@@ -392,17 +392,10 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
                 )}
 
                 {subHeading && (
-                  <p className="mt-2 text-sm text-gray-700">{subHeading}</p>
+                  <p className="mt- text-sm text-gray-700">{subHeading}</p>
                 )}
               </div>
-              {/* <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                                <button
-                                    type="button"
-                                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-                                >
-                                    Action
-                                </button>
-                            </div> */}
+              
             </div>
             <section>{children}</section>
           </div>

@@ -115,7 +115,7 @@ const EventsTable = ({
 
   const payment = userData ? userData["user"]?.payments : "";
 
-  
+
   const handleBidNowClick = (eventId) => {
     if (!messageShown[eventId]) {
       // Show the message
@@ -292,6 +292,7 @@ const EventsTable = ({
           handleResetFilters={handleResetFilters}
           filterValues={filterValues}
           handleFiltersChange={handleFiltersChange}
+          placeholder="Search live events..."
         />
 
         <div className="mx-auto max-w-md text-center  sm:max-w-3xl lg:max-w-5xl mt-10">

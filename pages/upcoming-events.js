@@ -6,7 +6,9 @@ function EventsCalendar() {
 
     return (
         <DashboardTemplate heading="Upcoming Events" subHeading="List of all upcoming events">
-            <UpcomingEventsTable showHeadings={false} allowDownload={true} />
+          <div className="mt-2">
+          <UpcomingEventsTable showHeadings={false} allowDownload={true} />
+          </div>
         </DashboardTemplate>
     )
 }
