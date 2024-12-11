@@ -4,15 +4,15 @@ import withPrivateRoute from "../utils/withPrivateRoute";
 import Datatable from "../components/ui/Datatable";
 import Loader from "../components/ui/Loader";
 import {
-useUpdateUserMutation,
-UpdateUserMutationVariables,
+  useUpdateUserMutation,
+  UpdateUserMutationVariables,
   useTimeQueryQuery,
   TimeQueryQueryVariables,
   OrderDirection,
   useMyQuotesQuery,
   MyQuotesQuery,
-  UpdateVehicleMutationVariables,
-  useUpdateVehicleMutation,
+  useUpdateBidMutation,
+  UpdateBidMutationVariables,
 } from "@utils/graphql";
 import graphQLClient from "@utils/useGQLQuery";
 import moment from "moment";
@@ -30,7 +30,7 @@ const MyQuotes = () => {
   const [apiInterval, setAPIInterval] = useState(60000);
   const [tick, setTick] = useState(0);
   const [serverTime, setserverTime] = useState();
-  // const [enabled, setEnabled] = useState(true);
+  const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
     const timerR = setInterval(() => {
@@ -70,7 +70,7 @@ const MyQuotes = () => {
     }
   }, [timeData]);
 
-  const { data, isLoading } = useMyQuotesQuery<MyQuotesQuery>(
+  const { data, isLoading, refetch } = useMyQuotesQuery<MyQuotesQuery>(
     client,
     {
       where: {
@@ -96,16 +96,28 @@ const MyQuotes = () => {
       enabled: !!accessToken && !!userId && !!serverTime, // Enable query only when `isReady` is true
       refetchOnWindowFocus: false,
       refetchInterval: false, // Do not refetch on window focus
-      refetchOnMount: true, // Prevent refetch on component mount
+      refetchOnMount: false, // Prevent refetch on component mount
       // staleTime: 1000 * 60 * 5,         // Cache the result for 5 minutes
     }
   );
 
+  useEffect(() => {
+    if (enabled) {
+      console.log("REFETCH CALLED");
 
-  const callUpdateVehicle =
-  useUpdateVehicleMutation<UpdateVehicleMutationVariables>(client);
-  // UpdateVehicleMutationVariables,
-  // useUpdateVehicleMutation,
+      refetch();
+      setEnabled(false)
+    }
+  }, [enabled, refetch]);
+
+  console.log('enabled', enabled);
+  
+
+  // console.log("data on my quotes", data);
+
+  const callUpdateBidPrice =
+    useUpdateBidMutation<UpdateBidMutationVariables>(client);
+
   useEffect(() => {
     if (data?.vehicles) {
       // setAPIInterval(0);
@@ -164,7 +176,6 @@ const MyQuotes = () => {
       </div>
     </DashboardTemplate>
   );
- 
 
   function AuctionDetails({ row }) {
     return (
@@ -200,8 +211,7 @@ const MyQuotes = () => {
             Category
           </dt>
           <dd className="whitespace-nowrap mt-1 text-xs text-gray-900 sm:mt-0 sm:col-span-2">
-            {row?.vehicleCategory
-?.name}
+            {row?.vehicleCategory?.name}
           </dd>
         </div>
         <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-4">
@@ -299,7 +309,7 @@ const MyQuotes = () => {
     );
   }
 
-  async function CallUpdatePrice(vehicleId, amount, setUpdatePrice) {
+  async function CallUpdatePrice(vehicleId, amount, setUpdatePrice,setAmount) {
     // console.log("888",vehicleId, amount, setUpdatePrice);
 
     const confirmed = await Swal.fire({
@@ -324,16 +334,20 @@ const MyQuotes = () => {
 
     if (confirmed.isConfirmed) {
       try {
-        const result = await callUpdateVehicle.mutateAsync({
-          updateVehicleInput: {
-            bidAmountUpdate: parseInt(amount),
+        const result = await callUpdateBidPrice.mutateAsync({
+          updateBidInput: {
+            amount: parseInt(amount), // Matches the schema and type
           },
           where: {
             id: vehicleId,
           },
         });
+        if (result?.updateBid?.id) {
+          setAmount("")
+          setEnabled(true);
+        }
         console.log("bid result", result);
-
+        // refetch()
         Swal.fire("Success!", "Your bid has been submitted.", "success");
       } catch (error) {
         console.log("error", error);
@@ -346,7 +360,7 @@ const MyQuotes = () => {
   }
 
   function WinDetails({ row }) {
-    // console.log('row',row);
+    // console.log("row", row);
 
     const [amount, setAmount] = useState("");
     const [updatePrice, setUpdatePrice] = useState(false);
@@ -408,7 +422,12 @@ const MyQuotes = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    CallUpdatePrice(row?.id, amount, setUpdatePrice);
+                    CallUpdatePrice(
+                      row?.userVehicleBids[0]?.id,
+                      amount,
+                      setUpdatePrice,
+                      setAmount
+                    );
                   }}
                   className="mt-2 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none"
                 >

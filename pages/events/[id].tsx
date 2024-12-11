@@ -3,6 +3,7 @@ import {
   DocumentReportIcon,
   PlusIcon,
   MinusIcon,
+  SearchIcon
 } from "@heroicons/react/outline";
 
 import {
@@ -71,6 +72,7 @@ function Events() {
   const [images, setImages] = useState([]);
   const [showCode, setShowCode] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -303,6 +305,25 @@ function Events() {
     [RemoveFromWatchlist, userId]
   );
 
+    // Filter data based on search query
+    const filteredData = data?.event?.vehiclesTemp?.filter((item) => {
+      // console.log('ABCD',data?.Object.values(item));
+      
+      const searchLower = searchQuery.toLowerCase();
+      const itemValues = Object.values(item)
+        .flatMap((value) =>
+          typeof value === "object" ? JSON.stringify(value) : value
+        )
+        .map((value) => String(value).toLowerCase());
+     console.log('itemValues',itemValues);
+     
+      return itemValues.some((value) => value.includes(searchLower));
+    });
+  
+
+    console.log(searchQuery);
+    
+
   return (
     // <>
     // </>
@@ -323,9 +344,33 @@ function Events() {
       {isLoading ? (
         <Loader />
       ) : (
+
         <div className="space-y-6 mt-8 ">
+           {/* <input
+        type="text"
+        placeholder="Search..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="border p-2 mb-4 w-full"
+      /> */}
+      <div className="relative rounded-md shadow-sm max-w-sm">
+    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+      <SearchIcon
+        className="h-5 w-5 text-gray-400"
+        aria-hidden="true"
+      />
+    </div>
+    <input
+      type="text"
+        placeholder="KL12G4245 ..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      className="focus:ring-indigo-500 focus:border-indigo-500 block w-52 pl-10 sm:text-sm border-gray-600 rounded-md"
+    />
+  </div> 
+
           {!data?.event?.vehiclesTemp?.length && <div>No Vehicles Found</div>}
-          {data?.event?.vehiclesTemp?.map((item, index) => {
+          {filteredData?.map((item, index) => {
             const expiryTime = moment(item.bidTimeExpire);
             const currentTime = moment(serverTime).add(tick, "seconds");
             const diff = expiryTime.diff(currentTime, "seconds");

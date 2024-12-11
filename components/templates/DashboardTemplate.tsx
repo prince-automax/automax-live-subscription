@@ -110,7 +110,7 @@ export default function DashboardTemplate({ children, heading, subHeading }) {
 
   const eventsNavigations = [
     {
-      name: `Online Events (${liveOnline})`,
+      name: `Live Events (${liveOnline})`,
       href: "/dashboard",
       icon: ClockIcon,
       current:
